@@ -224,6 +224,11 @@ class Vector2
 		this.y = y;
 	}
 	
+	equals(point)
+	{
+		return point.x == this.x && point.y == this.y;
+	}
+	
 	getDistance(point)
 	{
 		return Math.sqrt(Math.pow(this.x - point.x, 2) + Math.pow(this.y - point.y, 2))
@@ -232,6 +237,15 @@ class Vector2
 	getDirection(point)
 	{
 		return Math.atan2(point.y - this.y, point.x - this.x) * 180 / Math.PI;
+	}
+	
+	getVectorTo(point)
+	{
+		let x = point.x - this.x
+		let y = point.y - this.y
+		let sum = Math.abs(x) + Math.abs(y);
+		
+		return new Vector2(x / sum, y / sum);
 	}
 }
 
@@ -361,15 +375,15 @@ class TransformComponent extends ComponentBase
 	}
 	
 	move_to(point, speed)
-	{
-		point.x -= this.position.x;
-		point.y -= this.position.y;
-		
-		var sum = Math.abs(point.x + point.y);
-		var len = Math.sqrt(Math.pow(point.x, 2) + Math.pow(point.y, 2))
-		
-		if(len <= speed) this.setPosition(point);
-		else this.move((point.x / sum) * speed, (point.y / sum) * speed);
+	{	
+		if(!this.position.equals(point))
+		{
+			let len = this.position.getDistance(point)
+			let vector = this.position.getVectorTo(point)
+			
+			if(len <= speed) this.setPosition(point);
+			else this.move(vector.x * speed, vector.y * speed);
+		}
 	}
 	
 	move_around(x, y, angle)
@@ -549,7 +563,7 @@ class RoundMovingComponent extends ComponentBase
 
 class PursuerComponent extends ComponentBase
 {
-	speed = 5;
+	speed = 50;
 	target = null;
 	min_radius = 0;
 	max_radius = 100;
@@ -565,12 +579,12 @@ class PursuerComponent extends ComponentBase
 		if(target_transform)
 		{
 			let transform_component = this.joined["TransformComponent"];
+			
 			let self_pos = transform_component.getPosition();
 			let target_pos = target_transform.getPosition();
+			
 			let speed = Time.delta_time * this.speed;
 			let distance = self_pos.getDistance(target_pos)
-			
-			console.log(target_pos)
 			
 			if(distance < this.min_radius) transform_component.move_to(target_pos, -speed)
 			else if(distance < this.max_radius) transform_component.move_to(target_pos, speed)
