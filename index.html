@@ -10,18 +10,39 @@
 		<script>
 		game = new Game("game-block");
 		game.setSize(640, 480);
+		game.setStyle("border: 1px solid black; margin: auto; display: block;")
 		game.create();
+		
+		/* Entities */
+		ent = new Entity("point_axis");
+		ent.addComponent(new TransformComponent(), {"position" : new Vector2(100, 100)});
+		game.addEntity(ent)
+		
+		ent = new Entity("player");
+		ent.addComponent(new DrawableComponent())
+		ent.addComponent(new TransformComponent(), {"position" : new Vector2(32, 32), "size" : new Vector2(32, 32), "angle" : 0});
+		ent.addComponent(new RectShapeComponent(), {"fill_color" : new Color(255, 0, 0), "line_width" : 2.0});
+		ent.addComponent(new PlayerControlComponent());
+		game.addEntity(ent)
+		
+		ent = new Entity();
+		ent.addComponent(new DrawableComponent())
+		ent.addComponent(new WatcherComponent(), {"target" : game.getObject("point_axis")})
+		ent.addComponent(new TransformComponent(), {"position" : new Vector2(32, 32), "size" : new Vector2(32, 32), "angle" : 0});
+		ent.addComponent(new RectShapeComponent(), {"fill_color" : new Color(255, 0, 0), "line_width" : 2.0});
+		ent.addComponent(new RoundMovingComponent(), {"axis" : new Vector2(100, 100)});
+		game.addEntity(ent)
+		
+		ent = new Entity("test");
+		ent.addComponent(new DrawableComponent())
+		ent.addComponent(new PursuerComponent(), {"target" : game.getObject("player")})
+		ent.addComponent(new WatcherComponent(), {"target" : game.getObject("player")})
+		ent.addComponent(new TransformComponent(), {"position" : new Vector2(320, 320), "size" : new Vector2(32, 32), "angle" : 0});
+		ent.addComponent(new RectShapeComponent(), {"fill_color" : new Color(255, 0, 0), "line_width" : 2.0});
+		game.addEntity(ent)
+		
 		game.start();
-	/*	
-		var ctx=canvas.getContext("2d");
 		
-		ctx.beginPath();
-		ctx.lineCap="round";
-		
-		ctx.moveTo(20,20);
-		ctx.lineTo(200,20);
-		
-		ctx.stroke();*/
 		</script>
 	</body>
 </html>
