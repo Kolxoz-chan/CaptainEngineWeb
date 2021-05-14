@@ -6,39 +6,42 @@
 	<script src="scripts/game_engine.js"></script>
 </head>
 	<body>
+	
 		<div id="game-block"><div>
 		<script>
-		game = new Game("game-block");
+		/* Init game */
+		let game = new Game("game-block");
 		game.setSize(640, 480);
 		game.setStyle("border: 1px solid black; margin: auto; display: block;")
 		game.create();
 		
-		/* Entities */
-		ent = new Entity("point_axis");
-		ent.addComponent(new TransformComponent(), {"position" : new Vector2(100, 100)});
+		/* Load resources */
+		Resources.loadTexture("icon", "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/2d/2d434d23a0f42d15f54a987891499b8124581e3d_medium.jpg")
+		
+		/* Item */
+		ent = new Entity("item");
+		ent.addComponent(new TransformComponent(), {"position" : new Vector2(32, 32), "size" : new Vector2(32, 24)});
+		ent.addComponent(new RectShapeComponent(), {"context" : game.context, "fill_color" : new Color(0, 255, 0), "line_width" : 2.0});
 		game.addEntity(ent)
 		
+		/* Player */
 		ent = new Entity("player");
-		ent.addComponent(new DrawableComponent())
-		ent.addComponent(new TransformComponent(), {"position" : new Vector2(32, 32), "size" : new Vector2(32, 32), "angle" : 0});
-		ent.addComponent(new RectShapeComponent(), {"fill_color" : new Color(255, 0, 0), "line_width" : 2.0});
+		ent.addComponent(new LifeComponent());
+		ent.addComponent(new CameraComponent())
+		ent.addComponent(new MouseWatcherComponent())
 		ent.addComponent(new PlayerControlComponent());
+		ent.addComponent(new TransformComponent(), {"position" : new Vector2(100, 100), "size" : new Vector2(32, 32)});
+		//ent.addComponent(new RectShapeComponent(), {"context" : game.context, "fill_color" : new Color(0, 0, 255), "line_width" : 2.0});
+		ent.addComponent(new ImageComponent(), {"context" : game.context, "texture" : Resources.getTexture("icon")});
 		game.addEntity(ent)
 		
-		ent = new Entity();
-		ent.addComponent(new DrawableComponent())
-		ent.addComponent(new WatcherComponent(), {"target" : game.getObject("point_axis")})
-		ent.addComponent(new TransformComponent(), {"position" : new Vector2(32, 32), "size" : new Vector2(32, 32), "angle" : 0});
-		ent.addComponent(new RectShapeComponent(), {"fill_color" : new Color(255, 0, 0), "line_width" : 2.0});
-		ent.addComponent(new RoundMovingComponent(), {"axis" : new Vector2(100, 100)});
-		game.addEntity(ent)
-		
+		/* Enemy */
 		ent = new Entity("test");
-		ent.addComponent(new DrawableComponent())
-		ent.addComponent(new PursuerComponent(), {"target" : game.getObject("player")})
+		ent.addComponent(new LifeComponent());
+		ent.addComponent(new PursuerComponent(), {"target" : game.getObject("player"), "max_radius" : 200, "middle_radius" : 100, "min_radius" : 90})
 		ent.addComponent(new WatcherComponent(), {"target" : game.getObject("player")})
-		ent.addComponent(new TransformComponent(), {"position" : new Vector2(320, 320), "size" : new Vector2(32, 32), "angle" : 0});
-		ent.addComponent(new RectShapeComponent(), {"fill_color" : new Color(255, 0, 0), "line_width" : 2.0});
+		ent.addComponent(new TransformComponent(), {"position" : new Vector2(320, 320), "size" : new Vector2(32, 16), "angle" : 0});
+		ent.addComponent(new RectShapeComponent(), {"context" : game.context, "fill_color" : new Color(255, 0, 0), "line_width" : 2.0});
 		game.addEntity(ent)
 		
 		game.start();
