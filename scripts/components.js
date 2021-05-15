@@ -1,369 +1,7 @@
-/* Game class */
-class Game
-{
-	/* Public fields */
-	entities = [];
-	names = {};
-	started = false;
-	data = new Date();
-	fps = 60;
-	
-	/* Public methods */
-	constructor(id)
-	{
-		this.canvas = document.createElement("canvas");
-		this.context = this.canvas.getContext("2d");
-		this.block = document.getElementById(id);
-		
-		/* Init classes */
-		Camera.init(this.canvas)
-		Input.init(this.canvas)
-		
-		/* Init events */
-		var arr = ['keydown', 'keyup', 'mousedown', 'mouseup', "mousemove"];
-		for(var i in arr)
-		{
-			document.body.addEventListener(arr[i], Input.handleEvent);
-		}
-	}
-	
-	addEntity(ent)
-	{
-		this.names[ent.name] = ent;
-		this.entities.push(ent)
-		ent.init();
-	}
-	
-	setSize(w, h)
-	{
-		this.canvas.width = w;
-		this.canvas.height = h;
-	}
-	
-	setStyle(style)
-	{
-		this.canvas.style = style;
-	}
-	
-	getObject(name)
-	{
-		if(this.names[name]) return this.names[name];
-		else console.log("WARNING. There is no object named '" + name + "'")
-	}
-	
-	setFPS(value)
-	{
-		this.fps = value
-	}
-	
-	create()
-	{
-		this.block.appendChild(this.canvas);
-	}
-	
-	start()
-	{
-		if(!this.started)
-		{
-			this.started = true;
-			var self = this;
-			setTimeout(() => {this.loop()}, 1000 / this.fps);
-		}
-	}
-	
-	loop()
-	{
-		if(this.started)
-		{
-			Time.update()
-			Input.update()
-			
-			this.update()
-
-			setTimeout(() => {this.loop()}, 1000 / this.fps);
-		}
-	}
-	
-	update()
-	{
-		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		for(var i in this.entities) 
-		{
-			this.entities[i].update();
-		}
-	}
-}
-
-/* Entity class */
-class Entity
-{
-	/* Public fields */
-	components = {};
-	
-	/* Public methods */
-	constructor(name = null)
-	{
-		this.name = name;
-	}
-	
-	init()
-	{
-		for(var key in this.components) this.components[key].init();
-	}
-	
-	update()
-	{
-		for(var key in this.components)
-		{
-			if(this.components[key].isEnabled()) this.components[key].update();
-		}
-	}
-	
-	addComponent(value, data={})
-	{
-		this.components[value.constructor.name] = value;
-		value.setOwner(this);
-		value.setData(data);
-	}
-	
-	hasComponent(name)
-	{
-		return this.components.hasOwnProperty(name);
-	}
-	
-	getComponent(name)
-	{
-		if(!this.hasComponent(name)) console.log("WARNING. Object '" + this.name + "' has not '" + name + "' component!")
-		return this.components[name];
-	}
-}
-
-/* --------------------------------- Other classes  -------------------------------------- */
-class Vector2
-{
-	x = 0;
-	y = 0;
-	
-	constructor(x = 0, y = 0)
-	{
-		this.x = x;
-		this.y = y;
-	}
-	
-	equals(point)
-	{
-		return point.x == this.x && point.y == this.y;
-	}
-	
-	getDistance(point)
-	{
-		return Math.sqrt(Math.pow(this.x - point.x, 2) + Math.pow(this.y - point.y, 2))
-	}
-	
-	getDirection(point)
-	{
-		return Math.atan2(point.y - this.y, point.x - this.x) * 180 / Math.PI + 90;
-	}
-	
-	getVectorTo(point)
-	{
-		let x = point.x - this.x
-		let y = point.y - this.y
-		let sum = Math.abs(x) + Math.abs(y);
-		
-		if (this.equals(point)) return new Vector2(0, 0);
-		else return new Vector2(x / sum, y / sum);
-	}
-}
-
-/* Color class */
-class Color
-{
-	r = 0;
-	g = 0;
-	b = 0;
-	a = 255;
-	
-	constructor(r = 0, g = 0, b = 0, a=255)
-	{
-		this.r = r;
-		this.g = g;
-		this.b = b;
-		this.a = a;
-	}
-	
-	toString()
-	{
-		return "rgba(" + this.r + "," + this.g + "," + this.b + "," + this.a + ")";
-	}
-}
-
-/* Time class */
-class Time
-{
-	static date = new Date();
-	static delta_time = 0;
-	
-	static update()
-	{
-		let time = this.date.getTime()
-		Time.date = new Date();
-		Time.delta_time = (this.date.getTime() - time) / 1000;
-	}
-}
-
-/* Camera class */
-class Camera
-{
-	static context = null;
-	static canvas = null;
-	static center = new Vector2(0, 0);
-	static angle = 0;
-	static zoom = 1.0
-	
-	static init(canvas)
-	{
-		Camera.canvas = canvas;
-		Camera.context = canvas.getContext("2d");
-	}
-	
-	static getPosition()
-	{
-		let size = Camera.getSize();
-		return new Vector2(Camera.center.x - size.x / 2, Camera.center.y - size.y / 2)
-	}
-	
-	static setCenter(point)
-	{
-		Camera.center = point
-	}
-	
-	static apply_transform()
-	{
-		if(Camera.context)
-		{
-			let size = Camera.getSize();
-			Camera.context.translate(-Camera.center.x + size.x / 2, -Camera.center.y + size.y / 2,)
-		}
-	}
-	
-	static getSize()
-	{
-		return new Vector2(Camera.canvas.width, Camera.canvas.height)
-	}
-}
-
-/* Resources class */
-class Resources
-{
-	static textures = {}
-	static loading_counter = 0;
-	
-	static isLoaded()
-	{
-		return Resources.loading_counter == 0;
-	}
-	
-	static loadTexture(name, src)
-	{
-		Resources.loading_counter += 1;
-		
-		Resources.textures[name] = new Image();
-		Resources.textures[name].src = src;
-		Resources.textures[name].onload = function()
-		{
-			Resources.loading_counter -= 1;
-		}
-	}
-	
-	static getTexture(name)
-	{
-		return Resources.textures[name];
-	}
-}
-
-/* Input handler class */
-class Input
-{
-	static canvas = null;
-	static mouse_pos = new Vector2(0, 0);
-	static mouse_clicked = {};
-	static keyboard_clicked = {};
-	
-	static init(canvas)
-	{
-		Input.canvas = canvas;
-	}
-	
-	static update()
-	{
-		for(let key in Input.mouse_clicked) Input.mouse_clicked[key] = false;
-		for(let key in Input.keyboard_clicked) Input.mouse_clicked[key] = false;
-	}
-	
-	static handleEvent(event)
-	{		
-		switch(event.type)
-		{
-			case "keydown": 	Input.keyboard_clicked[event.code] = true; break;
-			case "keyup": 		delete Input.keyboard_clicked[event.code]; break;
-			case "mousedown": 	Input.mouse_clicked[event.button] = true; break;
-			case "mouseup": 	delete Input.mouse_clicked[event.button]; break;
-			case "mousemove":  	if(Input.canvas) Input.mouse_pos = new Vector2(event.clientX-Input.canvas.offsetLeft,event.clientY-Input.canvas.offsetTop); break;
-		}
-	}
-	
-	static getGlobalMouse()
-	{
-		let point = Camera.getPosition()
-		return new Vector2(Input.mouse_pos.x + point.x, Input.mouse_pos.y + point.y);
-	}
-	
-	static getLocalMouse()
-	{
-		return Input.mouse_pos;
-	}
-	
-	static isMousePressed(button)
-	{
-		return Input.mouse_clicked[button] != undefined;
-	}
-	
-	static isMouseClicked(button)
-	{
-		return Input.mouse_clicked[button] == true;
-	}
-	
-	static isKeyPressed(button)
-	{
-		return Input.keyboard_clicked[button] != undefined;
-	}
-	
-	static isKeyClicked(button)
-	{
-		return Input.keyboard_clicked[button] == true;
-	}
-	
-	static isKeysPressed(arr, and=false)
-	{
-		let result = false;
-		if(arr.length > 0)
-		{
-			result = Input.isKeyPressed(arr[0]);
-			
-			for(let i = 1; i<arr.length; i++) 
-			{
-				if(and) result = Input.isKeyPressed(arr[i]) && result;
-				else result = Input.isKeyPressed(arr[i]) || result;
-			}
-		}
-		return result;
-	}
-}
-
 /* --------------------------------- Components  -------------------------------------- */
 class ComponentBase
 {	
+	name = ""
 	enabled = true;
 	joined = {}
 	
@@ -511,6 +149,7 @@ class TransformComponent extends ComponentBase
 
 class DrawableComponent extends ComponentBase
 {	
+	name = "DrawableComponent"
 	fill_color = new Color(255, 255, 255)
 	stroke_color = new Color(0, 0, 0)
 	line_width = 0.0;
@@ -826,6 +465,68 @@ class CameraComponent extends ComponentBase
 	{
 		let transform_component = this.joined["TransformComponent"]
 		Camera.setCenter(transform_component.getCenter())
+	}
+}
+
+/* Base colider component*/
+class ColiderComponent extends ComponentBase
+{	
+	name = "ColiderComponent"
+	solid = true;
+
+	getRect()
+	{
+		return new Rect(0, 0, 0, 0)
+	}
+	
+	isIntersects(colider)
+	{
+		return false;
+	}
+}
+
+/* Rect colider component*/
+class RectColiderComponent extends ComponentBase
+{	
+	offset = new Rect(0, 0, 0, 0)
+
+	init()
+	{
+		this.join("TransformComponent")
+	}
+
+	getRect()
+	{
+		let transform_component = this.joined["TransformComponent"]
+		let position = transform_component.getPosition()
+		let size = transform_component.getSize()
+		
+		return new Rect(position.x, position.y, size.x, size.y)
+	}
+	
+	isIntersects(colider)
+	{
+		return false;
+	}
+	
+	isContained(point)
+	{
+		let rect = this.getRect();
+		
+		
+	}
+}
+
+
+/* Circle colider component*/
+class CircleColiderComponent extends ComponentBase
+{	
+	radius = 10
+
+	getRect()
+	{	
+		let value = this.radius * 2;
+		return new Rect(value, value, value, value);
 	}
 }
 

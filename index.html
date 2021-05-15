@@ -3,7 +3,9 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Полигон для теста</title>
-	<script src="scripts/game_engine.js"></script>
+	<script src="scripts/objects.js"></script>
+	<script src="scripts/components.js"></script>
+	<script src="scripts/engine.js"></script>
 </head>
 	<body>
 	
@@ -16,13 +18,17 @@
 		game.create();
 		
 		/* Load resources */
-		Resources.loadTexture("icon", "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/2d/2d434d23a0f42d15f54a987891499b8124581e3d_medium.jpg")
+		Resources.textures_dir = "file:///C:/Users/uservso/Desktop/MalgrandaLando/textures/"
+		
+		Resources.loadTexture("soldier_01", "soldier_01.png")
+		Resources.loadTexture("campfire_01", "campfire_01.png")
+		
 		
 		/* Item */
 		ent = new Entity("item");
-		ent.addComponent(new TransformComponent(), {"position" : new Vector2(32, 32), "size" : new Vector2(32, 24)});
-		ent.addComponent(new RectShapeComponent(), {"context" : game.context, "fill_color" : new Color(0, 255, 0), "line_width" : 2.0});
-		game.addEntity(ent)
+		ent.addComponent(new TransformComponent(), {"position" : new Vector2(32, 32), "size" : new Vector2(32, 32)});
+		ent.addComponent(new ImageComponent(), {"context" : game.context, "texture" : Resources.getTexture("campfire_01")});		
+		game.addObject(ent)
 		
 		/* Player */
 		ent = new Entity("player");
@@ -30,19 +36,18 @@
 		ent.addComponent(new CameraComponent())
 		ent.addComponent(new MouseWatcherComponent())
 		ent.addComponent(new PlayerControlComponent());
-		ent.addComponent(new TransformComponent(), {"position" : new Vector2(100, 100), "size" : new Vector2(32, 32)});
-		//ent.addComponent(new RectShapeComponent(), {"context" : game.context, "fill_color" : new Color(0, 0, 255), "line_width" : 2.0});
-		ent.addComponent(new ImageComponent(), {"context" : game.context, "texture" : Resources.getTexture("icon")});
-		game.addEntity(ent)
+		ent.addComponent(new TransformComponent(), {"position" : new Vector2(100, 100), "size" : new Vector2(32, 40)});
+		ent.addComponent(new ImageComponent(), {"context" : game.context, "texture" : Resources.getTexture("soldier_01")});
+		game.addObject(ent)
 		
 		/* Enemy */
 		ent = new Entity("test");
 		ent.addComponent(new LifeComponent());
 		ent.addComponent(new PursuerComponent(), {"target" : game.getObject("player"), "max_radius" : 200, "middle_radius" : 100, "min_radius" : 90})
 		ent.addComponent(new WatcherComponent(), {"target" : game.getObject("player")})
-		ent.addComponent(new TransformComponent(), {"position" : new Vector2(320, 320), "size" : new Vector2(32, 16), "angle" : 0});
-		ent.addComponent(new RectShapeComponent(), {"context" : game.context, "fill_color" : new Color(255, 0, 0), "line_width" : 2.0});
-		game.addEntity(ent)
+		ent.addComponent(new TransformComponent(), {"position" : new Vector2(320, 320), "size" : new Vector2(32, 40), "angle" : 0});
+		ent.addComponent(new ImageComponent(), {"context" : game.context, "texture" : Resources.getTexture("soldier_01")});
+		game.addObject(ent)
 		
 		game.start();
 		
