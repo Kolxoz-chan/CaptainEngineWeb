@@ -154,7 +154,6 @@ class DrawableComponent extends ComponentBase
 	stroke_color = new Color(0, 0, 0)
 	line_width = 0.0;
 	opacity = 1.0;
-	context = null;
 	
 	getOpacity()
 	{
@@ -178,10 +177,10 @@ class DrawableComponent extends ComponentBase
 	
 	applyStyles()
 	{
-		this.context.globalAlpha = this.opacity;
-		this.context.fillStyle = this.fill_color;
-		this.context.strokeStyle = this.stroke_color;
-		this.context.lineWidth = this.line_width;
+		Game.context.globalAlpha = this.opacity;
+		Game.context.fillStyle = this.fill_color;
+		Game.context.strokeStyle = this.stroke_color;
+		Game.context.lineWidth = this.line_width;
 	}
 	
 	applyTransformation()
@@ -194,9 +193,9 @@ class DrawableComponent extends ComponentBase
 		
 		Camera.apply_transform()
 		
-		this.context.translate(position.x + size.x * axis.x, position.y + size.y * axis.y)
-		this.context.rotate(Math.PI / 180 * angle);
-		this.context.translate(-size.x * axis.x - position.x, -size.y * axis.y - position.y)
+		Game.context.translate(position.x + size.x * axis.x, position.y + size.y * axis.y)
+		Game.context.rotate(Math.PI / 180 * angle);
+		Game.context.translate(-size.x * axis.x - position.x, -size.y * axis.y - position.y)
 	}
 }
 
@@ -210,7 +209,7 @@ class RectShapeComponent extends DrawableComponent
 	
 	update()
 	{		
-		if(this.context && this.opacity > 0.0)
+		if(this.opacity > 0.0)
 		{
 			/* Get data */
 			let transform_component = this.joined["TransformComponent"]
@@ -222,11 +221,11 @@ class RectShapeComponent extends DrawableComponent
 			this.applyTransformation()
 			
 			/* Draw */
-			this.context.fillRect(position.x, position.y, size.x, size.y);
-			if(this.line_width > 0.0) this.context.strokeRect(position.x, position.y, size.x, size.y);
+			Game.context.fillRect(position.x, position.y, size.x, size.y);
+			if(this.line_width > 0.0) Game.context.strokeRect(position.x, position.y, size.x, size.y);
 			
 			/* Reset*/
-			this.context.resetTransform();
+			Game.context.resetTransform();
 		}
 	}
 }
@@ -242,7 +241,7 @@ class ImageComponent extends DrawableComponent
 	
 	update()
 	{		
-		if(this.context && this.texture && this.opacity > 0.0)
+		if(this.texture && this.opacity > 0.0)
 		{	
 			/* Get data */
 			let transform_component = this.joined["TransformComponent"]
@@ -254,11 +253,11 @@ class ImageComponent extends DrawableComponent
 			this.applyTransformation()
 			
 			/* Draw */
-			this.context.drawImage(this.texture, position.x, position.y, size.x, size.y);
-			if(this.line_width > 0.0) this.context.strokeRect(position.x, position.y, size.x, size.y);
+			Game.context.drawImage(this.texture, position.x, position.y, size.x, size.y);
+			if(this.line_width > 0.0) Game.context.strokeRect(position.x, position.y, size.x, size.y);
 			
 			/* Reset*/
-			this.context.resetTransform();
+			Game.context.resetTransform();
 		}
 	}
 }
@@ -472,21 +471,47 @@ class CameraComponent extends ComponentBase
 class ColiderComponent extends ComponentBase
 {	
 	name = "ColiderComponent"
-	solid = true;
-
-	getRect()
-	{
-		return new Rect(0, 0, 0, 0)
-	}
+	objects = []
 	
 	isIntersects(colider)
 	{
+		let A = this.getRect()
+		let B = colider.getRect()
+		let C = A.getCommon(B)
+
+		if(!C.isNullSize())
+		{
+			for(let y = C.y; y < C.y + C.h; y++)
+			{
+				for(let x = C.x; x < C.x + C.w; x++)
+				{
+					if(this.isContained(new Vector2(x, y))) return true;
+				}
+			}
+		}
 		return false;
+	}
+	
+	update()
+	{
+		this.objects = [];
+		let container = this.owner.getContainer()
+		for(let i in container.entities)
+		{
+			if(container.entities[i].hasComponent("ColiderComponent") && this.owner !== container.entities[i])
+			{
+				let colider = container.entities[i].getComponent("ColiderComponent")
+				if(this.isIntersects(colider)) 
+				{
+					this.objects.push(container.entities[i])
+				}
+			}
+		}
 	}
 }
 
 /* Rect colider component*/
-class RectColiderComponent extends ComponentBase
+class RectColiderComponent extends ColiderComponent
 {	
 	offset = new Rect(0, 0, 0, 0)
 
@@ -500,33 +525,73 @@ class RectColiderComponent extends ComponentBase
 		let transform_component = this.joined["TransformComponent"]
 		let position = transform_component.getPosition()
 		let size = transform_component.getSize()
-		
+
 		return new Rect(position.x, position.y, size.x, size.y)
-	}
-	
-	isIntersects(colider)
-	{
-		return false;
 	}
 	
 	isContained(point)
 	{
-		let rect = this.getRect();
-		
-		
+		let rect = this.getRect
+		return rect.isContained(point)
 	}
 }
 
 
 /* Circle colider component*/
-class CircleColiderComponent extends ComponentBase
+class CircleColiderComponent extends ColiderComponent
 {	
-	radius = 10
+	radius = 20
+	offset = new Vector2(0, 0)
+	
+	init()
+	{
+		this.join("TransformComponent")
+	}
 
 	getRect()
 	{	
-		let value = this.radius * 2;
-		return new Rect(value, value, value, value);
+		let transform_component = this.joined["TransformComponent"];
+		let center = transform_component.getCenter();
+		
+		let diameter = this.radius * 2;
+		return new Rect(center.x - this.radius, center.y - this.radius, diameter, diameter);
+	}
+	
+	isContained(point)
+	{
+		let transform_component = this.joined["TransformComponent"];
+		let center = transform_component.getCenter();
+		return point.getDistance(center) <= this.radius;
 	}
 }
 
+/* Usable component */
+class UsableComonent extends ComponentBase
+{
+	name = "UsableComonent"
+	key = "KeyE"
+	subject = null
+	
+	init()
+	{
+		this.join("ColiderComponent")
+	}
+
+	update()
+	{	
+		let colider = this.joined["ColiderComponent"];
+		if(Input.isKeyClicked(key))
+		{
+			for(let i in colider.objects)
+			{
+				this.action(colider.objects[i])
+			}
+		}
+	}
+	
+	action(object)
+	{
+		/* Abstract method */
+		if(object === Game.getObject(this.subject)) console.log("Разжечь" + " (" + this.key + ")")
+	}
+}

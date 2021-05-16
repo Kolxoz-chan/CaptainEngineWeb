@@ -2,22 +2,24 @@
 class Game
 {
 	/* Public fields */
-	entities = [];
-	names = {};
-	started = false;
-	data = new Date();
-	fps = 60;
+	static current_level = null;
+	static names = {};
+	static started = false;
+	static fps = 60;
 	
 	/* Public methods */
-	constructor(id)
+	static init(id, w, h, style = "")
 	{
-		this.canvas = document.createElement("canvas");
-		this.context = this.canvas.getContext("2d");
-		this.block = document.getElementById(id);
+		/* Init canvas*/
+		Game.canvas = document.createElement("canvas");
+		Game.canvas.width = w;
+		Game.canvas.height = h;
+		Game.canvas.style = style;
 		
-		/* Init classes */
-		Camera.init(this.canvas)
-		Input.init(this.canvas)
+		/* Create canvas */
+		Game.context = Game.canvas.getContext("2d");
+		Game.block = document.getElementById(id);
+		Game.block.appendChild(Game.canvas);
 		
 		/* Init events */
 		var arr = ['keydown', 'keyup', 'mousedown', 'mouseup', "mousemove"];
@@ -27,70 +29,53 @@ class Game
 		}
 	}
 	
-	addObject(obj)
+	static setLevel(lvl)
 	{
-		this.names[obj.name] = obj;
-		this.entities.push(obj)
-		obj.init();
+		Game.current_level = lvl;
 	}
 	
-	setSize(w, h)
+	static getObject(name)
 	{
-		this.canvas.width = w;
-		this.canvas.height = h;
-	}
-	
-	setStyle(style)
-	{
-		this.canvas.style = style;
-	}
-	
-	getObject(name)
-	{
-		if(this.names[name]) return this.names[name];
+		if(Game.names[name]) return Game.names[name];
 		else console.log("WARNING. There is no object named '" + name + "'")
 	}
 	
-	setFPS(value)
+	static setFPS(value)
 	{
-		this.fps = value
+		Game.fps = value
 	}
 	
-	create()
+	static start()
 	{
-		this.block.appendChild(this.canvas);
-	}
-	
-	start()
-	{
-		if(!this.started)
+		if(!Game.started)
 		{
-			this.started = true;
-			var self = this;
-			setTimeout(() => {this.loop()}, 1000 / this.fps);
+			Game.started = true;
+			var self = Game;
+			setTimeout(() => {Game.loop()}, 1000 / Game.fps);
 		}
 	}
 	
-	loop()
+	static stop()
 	{
-		if(this.started)
+		Game.started = false;
+	}
+	
+	static loop()
+	{
+		if(Game.started)
 		{
 			Time.update()
 			Input.update()
-			
-			this.update()
+			Game.update()
 
-			setTimeout(() => {this.loop()}, 1000 / this.fps);
+			setTimeout(() => {Game.loop()}, 1000 / Game.fps);
 		}
 	}
 	
-	update()
+	static update()
 	{
-		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		for(var i in this.entities) 
-		{
-			this.entities[i].update();
-		}
+		Game.context.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
+		Game.current_level.update();
 	}
 }
 
@@ -111,17 +96,9 @@ class Time
 /* Camera class */
 class Camera
 {
-	static context = null;
-	static canvas = null;
 	static center = new Vector2(0, 0);
 	static angle = 0;
 	static zoom = 1.0
-	
-	static init(canvas)
-	{
-		Camera.canvas = canvas;
-		Camera.context = canvas.getContext("2d");
-	}
 	
 	static getPosition()
 	{
@@ -136,16 +113,16 @@ class Camera
 	
 	static apply_transform()
 	{
-		if(Camera.context)
+		if(Game.context)
 		{
 			let size = Camera.getSize();
-			Camera.context.translate(-Camera.center.x + size.x / 2, -Camera.center.y + size.y / 2,)
+			Game.context.translate(-Camera.center.x + size.x / 2, -Camera.center.y + size.y / 2,)
 		}
 	}
 	
 	static getSize()
 	{
-		return new Vector2(Camera.canvas.width, Camera.canvas.height)
+		return new Vector2(Game.canvas.width, Game.canvas.height)
 	}
 }
 
@@ -164,13 +141,13 @@ class Resources
 	static loadTexture(name, src)
 	{
 		src = Resources.textures_dir + src
-		Resources.loading_counter += 1;
+		Resources.loading_counter++;
 		
 		Resources.textures[name] = new Image();
 		Resources.textures[name].src = src;
 		Resources.textures[name].onload = function()
 		{
-			Resources.loading_counter -= 1;
+			Resources.loading_counter--;
 		}
 	}
 	
@@ -183,15 +160,9 @@ class Resources
 /* Input handler class */
 class Input
 {
-	static canvas = null;
 	static mouse_pos = new Vector2(0, 0);
 	static mouse_clicked = {};
 	static keyboard_clicked = {};
-	
-	static init(canvas)
-	{
-		Input.canvas = canvas;
-	}
 	
 	static update()
 	{
@@ -207,7 +178,7 @@ class Input
 			case "keyup": 		delete Input.keyboard_clicked[event.code]; break;
 			case "mousedown": 	Input.mouse_clicked[event.button] = true; break;
 			case "mouseup": 	delete Input.mouse_clicked[event.button]; break;
-			case "mousemove":  	if(Input.canvas) Input.mouse_pos = new Vector2(event.clientX-Input.canvas.offsetLeft,event.clientY-Input.canvas.offsetTop); break;
+			case "mousemove":  	if(Game.canvas) Input.mouse_pos = new Vector2(event.clientX-Game.canvas.offsetLeft,event.clientY-Game.canvas.offsetTop); break;
 		}
 	}
 	

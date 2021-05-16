@@ -1,7 +1,8 @@
 /* Entity class */
 class Entity
 {
-	/* Public fields */
+	enabled = true;
+	container = null;
 	components = {};
 	
 	/* Public methods */
@@ -43,18 +44,84 @@ class Entity
 		if(!this.hasComponent(name)) console.log("WARNING. Object '" + this.name + "' has not '" + name + "' component!")
 		return this.components[name];
 	}
+	
+	getContainer()
+	{
+		return this.container
+	}
 }
 
 /* Layer of objects*/
-class Layer
+class ObjectsLayer
 {
+	name = ""
+	enabled = true;
+	container = null;
 	entities = []
+	
+	constructor(name)
+	{
+		this.name = name;
+	}
 	
 	addObject(obj)
 	{
-		this.names[obj.name] = obj;
+		if(obj.name.length) Game.names[obj.name] = obj;
 		this.entities.push(obj)
+		obj.container = this;
 		obj.init();
+	}
+	
+	getObjecrt(name)
+	{
+		for(let i in this.entities)
+		{
+			if(this.entities[i].name == name) return this.entities[i];
+		}
+		return name
+	}
+	
+	update()
+	{
+		for(let i in this.entities)
+		{
+			if(this.entities[i].enabled) this.entities[i].update()
+		}
+	}
+}
+
+/* Level class */
+class Level
+{
+	name = ""
+	layers = [];
+	
+	constructor(name)
+	{
+		this.name = name;
+	}
+	
+	addLayer(layer)
+	{
+		layer.container = this;
+		this.layers.push(layer)
+	}
+	
+	getLayer(name)
+	{
+		for(let i in this.layers)
+		{
+			if(this.layers[i].name == name) return this.layers[i];
+		}
+		return name
+	}
+	
+	update()
+	{
+		for(let i in this.layers)
+		{
+			if(this.layers[i].enabled) this.layers[i].update()
+		}
 	}
 }
 
@@ -99,33 +166,37 @@ class Vector2
 /* Rect class */
 class Rect
 {
-	poisition = new Vector2();
-	size = new Vector2();
+	x = 0; 
+	y = 0; 
+	w = 0; 
+	h = 0;
 	
 	constructor(x = 0, y = 0, w = 0, h = 0)
 	{
-		this.poisition = new Vector2(x, y);
-		this.size = new Vector2(w, h);
+		this.x = x
+		this.y = y
+		this.w = w
+		this.h = h
 	}
 	
 	leftTop()
 	{
-		return new Vector2(this.poisition.x, this.poisition.y)
+		return new Vector2(this.x, this.y)
 	}
 	
 	leftBottom()
 	{
-		return new Vector2(this.poisition.x, this.poisition.y + this.size.y)
+		return new Vector2(this.x, this.y + this.h)
 	}
 	
 	rightTop()
 	{
-		return new Vector2(this.poisition.x + this.size.x, this.poisition.y)
+		return new Vector2(this.x + this.w, this.y)
 	}
 	
 	rightBottom()
 	{
-		return new Vector2(this.poisition.x + this.size.x, this.poisition.y + this.size.y)
+		return new Vector2(this.x + this.w, this.y + this.h)
 	}
 	
 	isConteined(point)
@@ -139,20 +210,43 @@ class Rect
 	isIntersects(rect)
 	{
 		let A1 = this.leftTop();
-		let B1 = this.leftBottom();
-		let C1 = this.rightTop();
-		let D1 = this.rightBottom();
+		let B1 = this.rightBottom();
 		
 		let A2 = rect.leftTop();
-		let B2 = rect.leftBottom();
-		let C2 = rect.rightTop();
-		let D2 = rect.rightBottom();
+		let B2 = rect.rightBottom();
 		
-		return
-			A1.x <= B2.x && A1.y <= D2.y &&
-			B1.x >= A2.x && B1.y <= C2.y &&
-			C1.x >= D2.x && C1.y >= B2.y &&
-			D1.x <= С2.x && D1.y >= A2.y
+		return A1.x <= B2.x && A1.y <= B2.y && B1.x >= A2.x && B1.y >= A2.y
+			
+	}
+	
+	equals(rect)
+	{
+		return rect.x == this.x && rect.y == this.y && rect.w == this.w && rect.h == this.h;
+	}
+	
+	isNullSize()
+	{
+		return this.w == 0 && this.h == 0;
+	}
+	
+	getCommon(rect)
+	{
+		let result = new Rect(0, 0, 0, 0);
+		
+		if(this.isIntersects(rect))
+		{
+			let A1 = this.leftTop();
+			let B1 = this.rightBottom();
+			
+			let A2 = rect.leftTop();
+			let B2 = rect.rightBottom();
+			
+			result.x = A1.x > A2.x ? A1.x : A2.x
+			result.y = A1.y > A2.y ? A1.y : A2.y
+			result.w = B1.x < B2.x ? B1.x - A1.x : B2.x - A2.x
+			result.h = B1.y < B2.y ? B1.y - A1.y: B2.y - A2.y
+		}
+		return result;
 	}
 }
 

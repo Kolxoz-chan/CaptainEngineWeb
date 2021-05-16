@@ -11,11 +11,9 @@
 	
 		<div id="game-block"><div>
 		<script>
+		
 		/* Init game */
-		let game = new Game("game-block");
-		game.setSize(640, 480);
-		game.setStyle("border: 1px solid black; margin: auto; display: block;")
-		game.create();
+		Game.init("game-block", 640, 480, "border: 1px solid black; margin: auto; display: block;");
 		
 		/* Load resources */
 		Resources.textures_dir = "file:///C:/Users/uservso/Desktop/MalgrandaLando/textures/"
@@ -23,12 +21,18 @@
 		Resources.loadTexture("soldier_01", "soldier_01.png")
 		Resources.loadTexture("campfire_01", "campfire_01.png")
 		
+		/* Test level */
+		let level = new Level("test_level")
+		let layer = new ObjectsLayer("objects")
+		level.addLayer(layer);
+		Game.setLevel(level);
 		
 		/* Item */
-		ent = new Entity("item");
+		let ent = new Entity("item");
 		ent.addComponent(new TransformComponent(), {"position" : new Vector2(32, 32), "size" : new Vector2(32, 32)});
-		ent.addComponent(new ImageComponent(), {"context" : game.context, "texture" : Resources.getTexture("campfire_01")});		
-		game.addObject(ent)
+		ent.addComponent(new ImageComponent(), {"texture" : Resources.getTexture("campfire_01")});	
+		ent.addComponent(new CircleColiderComponent(), {"radius" : 16});		
+		layer.addObject(ent)
 		
 		/* Player */
 		ent = new Entity("player");
@@ -37,19 +41,21 @@
 		ent.addComponent(new MouseWatcherComponent())
 		ent.addComponent(new PlayerControlComponent());
 		ent.addComponent(new TransformComponent(), {"position" : new Vector2(100, 100), "size" : new Vector2(32, 40)});
-		ent.addComponent(new ImageComponent(), {"context" : game.context, "texture" : Resources.getTexture("soldier_01")});
-		game.addObject(ent)
+		ent.addComponent(new ImageComponent(), {"texture" : Resources.getTexture("soldier_01")});
+		ent.addComponent(new CircleColiderComponent(), {"radius" : 16});
+		layer.addObject(ent)
 		
 		/* Enemy */
 		ent = new Entity("test");
 		ent.addComponent(new LifeComponent());
-		ent.addComponent(new PursuerComponent(), {"target" : game.getObject("player"), "max_radius" : 200, "middle_radius" : 100, "min_radius" : 90})
-		ent.addComponent(new WatcherComponent(), {"target" : game.getObject("player")})
+		ent.addComponent(new PursuerComponent(), {"target" : Game.getObject("player"), "max_radius" : 200, "middle_radius" : 100, "min_radius" : 90})
+		ent.addComponent(new WatcherComponent(), {"target" : Game.getObject("player")})
 		ent.addComponent(new TransformComponent(), {"position" : new Vector2(320, 320), "size" : new Vector2(32, 40), "angle" : 0});
-		ent.addComponent(new ImageComponent(), {"context" : game.context, "texture" : Resources.getTexture("soldier_01")});
-		game.addObject(ent)
+		ent.addComponent(new ImageComponent(), {"texture" : Resources.getTexture("soldier_01")});
+		ent.addComponent(new CircleColiderComponent(), {"radius" : 16});
+		layer.addObject(ent)
 		
-		game.start();
+		Game.start();
 		
 		</script>
 	</body>
