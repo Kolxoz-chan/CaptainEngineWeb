@@ -566,12 +566,8 @@ class CircleColiderComponent extends ColiderComponent
 }
 
 /* Usable component */
-class UsableComonent extends ComponentBase
-{
-	name = "UsableComonent"
-	key = "KeyE"
-	subject = null
-	
+class TriggerComonent extends ComponentBase
+{	
 	init()
 	{
 		this.join("ColiderComponent")
@@ -580,18 +576,15 @@ class UsableComonent extends ComponentBase
 	update()
 	{	
 		let colider = this.joined["ColiderComponent"];
-		if(Input.isKeyClicked(key))
+		for(let i in colider.objects)
 		{
-			for(let i in colider.objects)
-			{
-				this.action(colider.objects[i])
-			}
+			this.action(colider.objects[i])
 		}
 	}
 	
 	action(object)
 	{
 		/* Abstract method */
-		if(object === Game.getObject(this.subject)) console.log("Разжечь" + " (" + this.key + ")")
+		console.log(object.name)
 	}
 }

@@ -16,7 +16,7 @@
 		Game.init("game-block", 640, 480, "border: 1px solid black; margin: auto; display: block;");
 		
 		/* Load resources */
-		Resources.textures_dir = "file:///C:/Users/uservso/Desktop/MalgrandaLando/textures/"
+		Resources.textures_dir = "https://raw.githubusercontent.com/Kolxoz-chan/MalgrandaLando/main/textures/"
 		
 		Resources.loadTexture("soldier_01", "soldier_01.png")
 		Resources.loadTexture("campfire_01", "campfire_01.png")
@@ -43,6 +43,7 @@
 		ent.addComponent(new TransformComponent(), {"position" : new Vector2(100, 100), "size" : new Vector2(32, 40)});
 		ent.addComponent(new ImageComponent(), {"texture" : Resources.getTexture("soldier_01")});
 		ent.addComponent(new CircleColiderComponent(), {"radius" : 16});
+		ent.addComponent(new TriggerComonent());
 		layer.addObject(ent)
 		
 		/* Enemy */
