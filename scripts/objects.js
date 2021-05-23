@@ -167,6 +167,11 @@ class Vector2
 		return point.x == this.x && point.y == this.y;
 	}
 	
+	add(point)
+	{
+		return new Vector2(this.x + point.x, this.y + point.y)
+	}
+	
 	getDistance(point)
 	{
 		return Math.sqrt(Math.pow(this.x - point.x, 2) + Math.pow(this.y - point.y, 2))

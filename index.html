@@ -20,8 +20,8 @@
 		Game.resetCursor()
 		
 		/* --- Load resources --------------------------------------------------- */
-		//Resources.textures_dir = "https://raw.githubusercontent.com/Kolxoz-chan/MalgrandaLando/main/textures/"
-		Resources.textures_dir = "file:///C:/Users/Сергей/Desktop/MalgrandaLando/textures/"
+		Resources.textures_dir = "https://raw.githubusercontent.com/Kolxoz-chan/MalgrandaLando/main/textures/"
+		//Resources.textures_dir = "file:///C:/Users/Сергей/Desktop/MalgrandaLando/textures/"
 		Resources.loadTexture("target", "target.png")
 		
 		/* Load target prefabs  */
@@ -38,9 +38,13 @@
 		
 		/* --- Load GUI --------------------------------------------------------- */
 		let form = new Form();
-		form.setPosition(new Vector2(10, 10));
+		form.setPosition(new Vector2(54, 76));
 		form.setSize(new Vector2(100, 100));
 		Game.addWidget(form);
+		
+		let label = new Label("Очки:")
+		label.setPosition(new Vector2(0, 0));
+		form.layout.addWidget(label);
 		
 		/* --- Load data -------------------------------------------------------- */
 		let level = new Level("test_level")
