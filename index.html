@@ -4,6 +4,7 @@
 	<meta charset="utf-8" />
 	<title>Полигон для теста</title>
 	<script src="scripts/objects.js"></script>
+	<script src="scripts/gui.js"></script>
 	<script src="scripts/components.js"></script>
 	<script src="scripts/engine.js"></script>
 </head>
@@ -12,50 +13,57 @@
 		<div id="game-block"><div>
 		<script>
 		
-		/* Init game */
-		Game.init("game-block", 640, 480, "border: 1px solid black; margin: auto; display: block;");
+		/* --- Init game -------------------------------------------------------  */
+		Game.init("game-block", 640, 480, "background-color: black; margin: auto; display: block;");
+		Game.setEventHandlers(['keydown', 'keyup', 'mousedown', 'mouseup', "mousemove"])
+		Game.setDefaultCursor("none")
+		Game.resetCursor()
 		
-		/* Load resources */
-		Resources.textures_dir = "https://raw.githubusercontent.com/Kolxoz-chan/MalgrandaLando/main/textures/"
+		/* --- Load resources --------------------------------------------------- */
+		//Resources.textures_dir = "https://raw.githubusercontent.com/Kolxoz-chan/MalgrandaLando/main/textures/"
+		Resources.textures_dir = "file:///C:/Users/Сергей/Desktop/MalgrandaLando/textures/"
+		Resources.loadTexture("target", "target.png")
 		
-		Resources.loadTexture("soldier_01", "soldier_01.png")
-		Resources.loadTexture("campfire_01", "campfire_01.png")
+		/* Load target prefabs  */
+		let prefab = new Prefab();
+		prefab.addComponent("LifeComponent", {"health_max" : 1});
+		prefab.addComponent("TransformComponent", {"size" : new Vector2(48, 48)});
+		prefab.addComponent("ImageComponent", {"texture" : "target"});
+		prefab.addComponent("CircleColiderComponent");
+		prefab.addComponent("DamageClickableComponent", {"global_cursor" : false});
+		prefab.addComponent("RespawnComponent", {"time" : 3.0});
+		prefab.addComponent("DeathDisolveComponent");
+		prefab.addComponent("PathMovingComponent");
+		Resources.addPrefab("simple_target", prefab);
 		
-		/* Test level */
+		/* --- Load GUI --------------------------------------------------------- */
+		let form = new Form();
+		form.setPosition(new Vector2(10, 10));
+		form.setSize(new Vector2(100, 100));
+		Game.addWidget(form);
+		
+		/* --- Load data -------------------------------------------------------- */
 		let level = new Level("test_level")
 		let layer = new ObjectsLayer("objects")
 		level.addLayer(layer);
 		Game.setLevel(level);
 		
-		/* Item */
-		let ent = new Entity("item");
-		ent.addComponent(new TransformComponent(), {"position" : new Vector2(32, 32), "size" : new Vector2(32, 32)});
-		ent.addComponent(new ImageComponent(), {"texture" : Resources.getTexture("campfire_01")});	
-		ent.addComponent(new CircleColiderComponent(), {"radius" : 16});		
-		layer.addObject(ent)
-		
 		/* Player */
-		ent = new Entity("player");
-		ent.addComponent(new LifeComponent());
-		ent.addComponent(new CameraComponent())
-		ent.addComponent(new MouseWatcherComponent())
+		let ent = new Entity("player");
+		ent.addComponent(new CursoreCameraComponent());
 		ent.addComponent(new PlayerControlComponent());
-		ent.addComponent(new TransformComponent(), {"position" : new Vector2(100, 100), "size" : new Vector2(32, 40)});
-		ent.addComponent(new ImageComponent(), {"texture" : Resources.getTexture("soldier_01")});
-		ent.addComponent(new CircleColiderComponent(), {"radius" : 16});
-		ent.addComponent(new TriggerComonent());
 		layer.addObject(ent)
 		
-		/* Enemy */
-		ent = new Entity("test");
-		ent.addComponent(new LifeComponent());
-		ent.addComponent(new PursuerComponent(), {"target" : Game.getObject("player"), "max_radius" : 200, "middle_radius" : 100, "min_radius" : 90})
-		ent.addComponent(new WatcherComponent(), {"target" : Game.getObject("player")})
-		ent.addComponent(new TransformComponent(), {"position" : new Vector2(320, 320), "size" : new Vector2(32, 40), "angle" : 0});
-		ent.addComponent(new ImageComponent(), {"texture" : Resources.getTexture("soldier_01")});
-		ent.addComponent(new CircleColiderComponent(), {"radius" : 16});
-		layer.addObject(ent)
-		
+		/* Targets */
+		let target = Resources.getPrefab("simple_target")
+		layer.addObject(target.getEntity({
+			"TransformComponent" : {"position" : new Vector2(48, 48)},
+			"PathMovingComponent" : {"speed" : 100, "path" : [new Vector2(48, 48), new Vector2(600, 48), new Vector2(600, 400), new Vector2(48, 400)]}}))
+			
+		layer.addObject(target.getEntity({"TransformComponent" : {"position" : new Vector2(123, 67)}}))
+		layer.addObject(target.getEntity({"TransformComponent" : {"position" : new Vector2(56, 333)}}))
+
+		/* --- Start game -------------------------------------------------------- */
 		Game.start();
 		
 		</script>

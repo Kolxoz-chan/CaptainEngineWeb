@@ -26,6 +26,11 @@ class ComponentBase
 		this.name = value
 	}
 	
+	isEnabled()
+	{
+		return this.enabled;
+	}
+	
 	setEnabled(value)
 	{
 		this.enabled = value
@@ -110,11 +115,14 @@ class TransformComponent extends ComponentBase
 	
 	move_to(point, speed)
 	{	
-		let len = this.position.getDistance(point)
-		let vector = this.position.getVectorTo(point)
-		
-		if(len <= speed) this.setPosition(point.x, point.y);
-		else this.move(vector.x * speed, vector.y * speed);
+		let len = this.position.getDistance(point);
+		if(len > 0)
+		{
+			
+			let vector = this.position.getVectorTo(point)
+			if(len <= speed) this.setPosition(point.x, point.y);
+			else this.move(vector.x * speed, vector.y * speed);
+		}
 	}
 	
 	move_around(x, y, angle)
@@ -147,6 +155,7 @@ class TransformComponent extends ComponentBase
 	}
 }
 
+/* Drawable сomponent */
 class DrawableComponent extends ComponentBase
 {	
 	name = "DrawableComponent"
@@ -253,7 +262,7 @@ class ImageComponent extends DrawableComponent
 			this.applyTransformation()
 			
 			/* Draw */
-			Game.context.drawImage(this.texture, position.x, position.y, size.x, size.y);
+			Game.context.drawImage(Resources.getTexture(this.texture), position.x, position.y, size.x, size.y);
 			if(this.line_width > 0.0) Game.context.strokeRect(position.x, position.y, size.x, size.y);
 			
 			/* Reset*/
@@ -281,10 +290,10 @@ class PathMovingComponent extends ComponentBase
 			let pos = transform_component.getPosition();
 			let point = this.path[this.current_point];
 			
-			transform_component.move_to(point.x, point.y, this.speed * Time.delta_time)
+			transform_component.move_to(point, this.speed * Time.delta_time)
 			
-			if(point.x == pos.x && point.y == pos.y) this.current_point++;
-			if(this.current_point == this.path.length) this.current_point = 0;
+			if(point.equals(pos)) this.current_point++;
+			if(this.current_point >= this.path.length) this.current_point = 0;
 		}
 	}
 }
@@ -415,13 +424,19 @@ class PlayerControlComponent extends ComponentBase
 		if(Input.isKeysPressed(this.controls["GoBack"])) transform_component.move(0, speed);
 		if(Input.isKeysPressed(this.controls["GoLeft"])) transform_component.move(-speed, 0);
 		if(Input.isKeysPressed(this.controls["GoRight"])) transform_component.move(speed, 0);
+		if(Input.isKeysPressed(["KeyQ"])) Game.setFullScreen(true);
 	}
 }
 
 class LifeComponent extends ComponentBase
 {	
-	health_max = 100
-	health_value = this.health_max
+	health_max = 100;
+	health_value = undefined;
+	
+	init()
+	{	
+		if(!this.health_value) this.resurrect()
+	}
 	
 	resurrect()
 	{
@@ -435,21 +450,40 @@ class LifeComponent extends ComponentBase
 	
 	isFine()
 	{
-		this.health_value == this.health_max; 
+		return this.health_value == this.health_max; 
 	}
 	
 	isAlife()
 	{
-		this.health_value > 0;
+		return this.health_value > 0;
 	}
 	
 	addHealth(value)
 	{
+		
 		this.health_value += value
 		if(this.health_value > this.health_max) 
 		{
 			this.health_value = this.health_max
 		}
+	}
+}
+
+/* Score component */
+class ScoreComponent extends ComponentBase
+{	
+	score = 0
+	max_score = Number.MAX_VALUE
+	min_score = Number.MIN_VALUE
+	
+	init()
+	{	
+		if(!this.health_value) this.resurrect()
+	}
+	
+	addScore(value)
+	{
+		
 	}
 }
 
@@ -485,7 +519,8 @@ class ColiderComponent extends ComponentBase
 			{
 				for(let x = C.x; x < C.x + C.w; x++)
 				{
-					if(this.isContained(new Vector2(x, y))) return true;
+					let point = new Vector2(x, y)
+					if(this.isContained(point) && colider.isContained(point)) return true;
 				}
 			}
 		}
@@ -540,12 +575,13 @@ class RectColiderComponent extends ColiderComponent
 /* Circle colider component*/
 class CircleColiderComponent extends ColiderComponent
 {	
-	radius = 20
+	radius = undefined
 	offset = new Vector2(0, 0)
 	
 	init()
 	{
-		this.join("TransformComponent")
+		let size = this.join("TransformComponent").getSize()
+		if(!this.radius) this.radius = Math.max(size.x, size.y) / 2;
 	}
 
 	getRect()
@@ -565,7 +601,7 @@ class CircleColiderComponent extends ColiderComponent
 	}
 }
 
-/* Usable component */
+/* Trigger component */
 class TriggerComonent extends ComponentBase
 {	
 	init()
@@ -581,10 +617,105 @@ class TriggerComonent extends ComponentBase
 			this.action(colider.objects[i])
 		}
 	}
-	
-	action(object)
+}
+
+/* Clickable component */
+class ClickableComponent extends ComponentBase
+{	
+	key = 0
+	global_cursor = true;
+
+	init()
 	{
-		/* Abstract method */
-		console.log(object.name)
+		this.join("ColiderComponent")
+	}
+	
+	update()
+	{
+		let colider = this.joined["ColiderComponent"];
+		if(Input.isMouseClicked(this.key))
+		{	
+			let position = this.global_cursor ? Input.getGlobalMouse() : Input.getLocalMouse();
+			if(colider.isContained(position)) this.action();
+		}
+	}
+}
+
+/* Damage clickable component */
+class DamageClickableComponent extends ClickableComponent
+{	
+	value = 1;
+
+	init()
+	{
+		super.init()
+		this.join("LifeComponent")
+	}
+	
+	action()
+	{
+		let life = this.joined["LifeComponent"];
+		if(life.isAlife()) life.addHealth(-this.value);
+	}
+}
+
+/* Respawn component */
+class RespawnComponent extends ComponentBase
+{	
+	time = 5.0;
+	timer = undefined;
+	position = undefined;
+
+	init()
+	{
+		let transform = this.join("TransformComponent")
+		this.join("LifeComponent")
+		
+		if(!this.timer) this.timer = this.time
+		if(!this.position) this.position = transform.getPosition();
+	}
+	
+	update()
+	{
+		let life = this.joined["LifeComponent"];
+		if(!life.isAlife())
+		{
+			this.timer -= Time.delta_time;
+			if(this.timer <= 0.0)
+			{
+				this.joined["TransformComponent"].setPosition(this.position.x, this.position.y);
+				life.resurrect();
+				this.timer = this.time;
+			}
+		}
+	}
+}
+
+/* Hiding after death */
+class DeathDisolveComponent extends ComponentBase
+{
+	init()
+	{
+		this.join("DrawableComponent")
+		this.join("LifeComponent")
+	}
+	
+	update()
+	{
+		let life = this.joined["LifeComponent"];
+		let draw = this.joined["DrawableComponent"];
+		
+		if(life.isAlife() && !draw.isEnabled()) draw.setEnabled(true);
+		else if(!life.isAlife() && draw.isEnabled()) draw.setEnabled(false);
+
+	}
+}
+
+/* Cursore camera */
+class CursoreCameraComponent extends ComponentBase
+{	
+	update()
+	{
+		Camera.setCenter(Input.getLocalMouse())
 	}
 }

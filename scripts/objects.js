@@ -1,3 +1,23 @@
+/* Native classes */
+Object.copy = function(obj, target = {})
+{
+	for(let i in obj) 
+	{	
+		if(obj[i] instanceof Array)
+		{
+			target[i] = Object.copy(obj[i], []);
+			continue;
+		}
+		if(obj[i] instanceof Object) 
+		{
+			target[i] = Object.copy(obj[i], {});
+			continue;
+		}
+		target[i] = obj[i];
+	}
+	return target;
+}
+
 /* Entity class */
 class Entity
 {
@@ -39,6 +59,11 @@ class Entity
 		return this.components.hasOwnProperty(name);
 	}
 	
+	setEnabled(value)
+	{
+		this.enabled = value;
+	}
+	
 	getComponent(name)
 	{
 		if(!this.hasComponent(name)) console.log("WARNING. Object '" + this.name + "' has not '" + name + "' component!")
@@ -66,7 +91,7 @@ class ObjectsLayer
 	
 	addObject(obj)
 	{
-		if(obj.name.length) Game.names[obj.name] = obj;
+		if(obj.name) Game.names[obj.name] = obj;
 		this.entities.push(obj)
 		obj.container = this;
 		obj.init();
@@ -158,7 +183,7 @@ class Vector2
 		let y = point.y - this.y
 		let sum = Math.abs(x) + Math.abs(y);
 		
-		if (this.equals(point)) return new Vector2(0, 0);
+		if(sum == 0) return new Vector2(0, 0);
 		else return new Vector2(x / sum, y / sum);
 	}
 }
@@ -270,4 +295,37 @@ class Color
 	{
 		return "rgba(" + this.r + "," + this.g + "," + this.b + "," + this.a + ")";
 	}
+}
+
+/* Prefab class */
+class Prefab
+{
+	components = {}
+	
+	addComponent(name, props = {})
+	{
+		this.components[name] = props
+	}
+	
+	getEntity(props = {})
+	{
+		let comps = Object.copy(this.components);
+		
+		for(let i in props)
+		{
+			for(let x in props[i])
+			{
+				comps[i][x] = props[i][x]
+			}
+		}
+		
+		let obj = new Entity()
+		for(let i in comps)
+		{
+			obj.addComponent(eval("new " + i + "()"), comps[i])
+		}
+		
+		return obj;
+	}
+	
 }

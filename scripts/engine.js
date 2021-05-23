@@ -3,9 +3,11 @@ class Game
 {
 	/* Public fields */
 	static current_level = null;
+	static widgets = [];
 	static names = {};
 	static started = false;
 	static fps = 60;
+	static default_cursor = "auto"
 	
 	/* Public methods */
 	static init(id, w, h, style = "")
@@ -15,18 +17,31 @@ class Game
 		Game.canvas.width = w;
 		Game.canvas.height = h;
 		Game.canvas.style = style;
+		Game.resetCursor()
 		
 		/* Create canvas */
 		Game.context = Game.canvas.getContext("2d");
 		Game.block = document.getElementById(id);
 		Game.block.appendChild(Game.canvas);
-		
-		/* Init events */
-		var arr = ['keydown', 'keyup', 'mousedown', 'mouseup', "mousemove"];
+	}
+	
+	static setEventHandlers(arr)
+	{
 		for(var i in arr)
 		{
 			document.body.addEventListener(arr[i], Input.handleEvent);
 		}
+	}
+	
+	static setFullScreen(value)
+	{
+		if(value) Game.canvas.requestFullscreen();
+		else document.requestFullscreen();
+	}
+	
+	static isFullScreen()
+	{
+		return Game.canvas.fullscreenEnabled
 	}
 	
 	static setLevel(lvl)
@@ -34,10 +49,30 @@ class Game
 		Game.current_level = lvl;
 	}
 	
+	static resetCursor()
+	{
+		Game.setCursor(Game.default_cursor)
+	}
+	
+	static setCursor(name)
+	{
+		Game.canvas.style.cursor = name
+	}
+	
+	static setDefaultCursor(name)
+	{
+		Game.default_cursor = name
+	}
+	
 	static getObject(name)
 	{
 		if(Game.names[name]) return Game.names[name];
 		else console.log("WARNING. There is no object named '" + name + "'")
+	}
+	
+	static addWidget(widget)
+	{
+		this.widgets.push(widget)
 	}
 	
 	static setFPS(value)
@@ -76,6 +111,11 @@ class Game
 	{
 		Game.context.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
 		Game.current_level.update();
+		Game.context.resetTransform();
+		for(let i in this.widgets)
+		{
+			if(this.widgets[i].isEnabled()) this.widgets[i].update()
+		}
 	}
 }
 
@@ -87,36 +127,50 @@ class Time
 	
 	static update()
 	{
-		let time = this.date.getTime()
+		let time = Time.date.getTime()
 		Time.date = new Date();
-		Time.delta_time = (this.date.getTime() - time) / 1000;
+		Time.delta_time = (Time.date.getTime() - time) / 1000;
 	}
 }
 
 /* Camera class */
 class Camera
 {
-	static center = new Vector2(0, 0);
+	static position = new Vector2(0, 0);
 	static angle = 0;
 	static zoom = 1.0
 	
+	static getCenter()
+	{
+		let pos = Camera.getPosition();
+		let size = Camera.getSize();
+		
+		return new Vector2(pos.x + size.x / 2, pos.y + size.y / 2)
+	}
+	
 	static getPosition()
 	{
-		let size = Camera.getSize();
-		return new Vector2(Camera.center.x - size.x / 2, Camera.center.y - size.y / 2)
+		return Camera.position;
+	}
+	
+	static setPosition(point)
+	{
+		Camera.position = point;
 	}
 	
 	static setCenter(point)
 	{
-		Camera.center = point
+		let size = Camera.getSize();
+		Camera.setPosition(new Vector2(point.x - size.x / 2, point.y - size.y / 2))
 	}
 	
 	static apply_transform()
 	{
 		if(Game.context)
 		{
+			let center = Camera.getCenter()
 			let size = Camera.getSize();
-			Game.context.translate(-Camera.center.x + size.x / 2, -Camera.center.y + size.y / 2,)
+			Game.context.translate(-center.x + size.x / 2, -center.y + size.y / 2)
 		}
 	}
 	
@@ -130,6 +184,8 @@ class Camera
 class Resources
 {
 	static textures = {}
+	static prefabs = {}
+	
 	static loading_counter = 0;
 	static textures_dir = "";
 	
@@ -151,9 +207,24 @@ class Resources
 		}
 	}
 	
+	static addPrefab(name, asset)
+	{
+		Resources.prefabs[name] = asset;
+	}
+	
 	static getTexture(name)
 	{
 		return Resources.textures[name];
+	}
+	
+	static getTexture(name)
+	{
+		return Resources.textures[name];
+	}
+	
+	static getPrefab(name)
+	{
+		return Resources.prefabs[name];
 	}
 }
 
@@ -163,15 +234,23 @@ class Input
 	static mouse_pos = new Vector2(0, 0);
 	static mouse_clicked = {};
 	static keyboard_clicked = {};
+	static mouse_clicked_cur = {};
+	static keyboard_clicked_cur = {};
 	
 	static update()
 	{
-		for(let key in Input.mouse_clicked) Input.mouse_clicked[key] = false;
-		for(let key in Input.keyboard_clicked) Input.mouse_clicked[key] = false;
+		for(let key in Input.mouse_clicked) Input.mouse_clicked_cur[key] = false;
+		for(let key in Input.keyboard_clicked) Input.keyboard_clicked_cur[key] = false;
+		Input.mouse_clicked_cur = Input.mouse_clicked;
+		Input.keyboard_clicked_cur = Input.keyboard_clicked;
+		Input.mouse_clicked = {};
+		Input.keyboard_clicked = {};
+		
 	}
 	
 	static handleEvent(event)
 	{		
+		//console.log(event)
 		switch(event.type)
 		{
 			case "keydown": 	Input.keyboard_clicked[event.code] = true; break;
@@ -180,6 +259,7 @@ class Input
 			case "mouseup": 	delete Input.mouse_clicked[event.button]; break;
 			case "mousemove":  	if(Game.canvas) Input.mouse_pos = new Vector2(event.clientX-Game.canvas.offsetLeft,event.clientY-Game.canvas.offsetTop); break;
 		}
+		//console.log(Input.mouse_clicked)
 	}
 	
 	static getGlobalMouse()
@@ -195,22 +275,22 @@ class Input
 	
 	static isMousePressed(button)
 	{
-		return Input.mouse_clicked[button] != undefined;
+		return Input.mouse_clicked_cur[button] != undefined;
 	}
 	
 	static isMouseClicked(button)
 	{
-		return Input.mouse_clicked[button] == true;
+		return Input.mouse_clicked_cur[button] == true;
 	}
 	
 	static isKeyPressed(button)
 	{
-		return Input.keyboard_clicked[button] != undefined;
+		return Input.keyboard_clicked_cur[button] != undefined;
 	}
 	
 	static isKeyClicked(button)
 	{
-		return Input.keyboard_clicked[button] == true;
+		return Input.keyboard_clicked_cur[button] == true;
 	}
 	
 	static isKeysPressed(arr, and=false)
