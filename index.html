@@ -23,6 +23,7 @@
 		Resources.textures_dir = "https://raw.githubusercontent.com/Kolxoz-chan/MalgrandaLando/main/textures/"
 		//Resources.textures_dir = "file:///C:/Users/Сергей/Desktop/MalgrandaLando/textures/"
 		Resources.loadTexture("target", "target.png")
+		Resources.loadTexture("simple_sight", "simple_sight.png")
 		
 		/* Load target prefabs  */
 		let prefab = new Prefab();
@@ -38,12 +39,28 @@
 		
 		/* --- Load GUI --------------------------------------------------------- */
 		let form = new Form();
-		form.setPosition(new Vector2(54, 76));
-		form.setSize(new Vector2(100, 100));
+		form.setStyle({"background_style" : null, "border_color" : null})
+		form.setPositionType(Widget.RELATIVE, Widget.RELATIVE)
+		form.setPosition(new Vector2(0.5, 0.5));
+		form.setSizeType(Widget.RELATIVE, Widget.RELATIVE)
+		form.setSize(new Vector2(1.0, 1.0));
 		Game.addWidget(form);
 		
-		let label = new Label("Очки:")
+		let label = new Label("1000/0")
+		label.setStyle({"font" : new Font("Arial", 32), "background_style" : new Color(255, 140, 0)})
 		label.setPosition(new Vector2(0, 0));
+		form.layout.addWidget(label);
+		
+		label = new Label("01:30")
+		label.setStyle({"font" : new Font("Arial", 32), "background_style" : new Color(255, 255, 0)})
+		label.setPositionType(Widget.RELATIVE, Widget.RELATIVE)
+		label.setPosition(new Vector2(0.5, 0.0));
+		form.layout.addWidget(label);
+		
+		let pic = new Picture("01:30")
+		pic.setPositionType(Widget.RELATIVE, Widget.RELATIVE)
+		pic.setPosition(new Vector2(0.5, 0.5));
+		pic.setImage(new Texture("simple_sight"))
 		form.layout.addWidget(label);
 		
 		/* --- Load data -------------------------------------------------------- */

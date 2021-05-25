@@ -162,6 +162,11 @@ class Vector2
 		this.y = y;
 	}
 	
+	copy()
+	{
+		return new Vector2(this.x, this.y); 
+	}
+	
 	equals(point)
 	{
 		return point.x == this.x && point.y == this.y;
@@ -170,6 +175,11 @@ class Vector2
 	add(point)
 	{
 		return new Vector2(this.x + point.x, this.y + point.y)
+	}
+	
+	invert()
+	{
+		return new Vector2(-this.x, -this.y)
 	}
 	
 	getDistance(point)
@@ -302,6 +312,45 @@ class Color
 	}
 }
 
+/* Font class */
+class Font
+{
+	name = ""
+	size = 14
+	style = 0
+	
+	constructor(name, size=14, style=0)
+	{
+		this.name = name
+		this.size = size
+		this.style = style
+	}
+	
+	toString()
+	{
+		return this.size + "px " + this.name
+	}
+}
+
+/* Textures class */
+class Texture
+{
+	name = ""
+	rect = new Rect()
+	
+	constructor(name, rect = null)
+	{
+		this.name = name
+		this.rect = rect
+	}
+	
+	draw(position, size = null)
+	{
+		if(size) Game.context.drawImage(Resources.getTexture(this.name), position.x, position.y, size.x, size.y);
+		else Game.context.drawImage(Resources.getTexture(this.name), position.x, position.y);
+	}
+}
+
 /* Prefab class */
 class Prefab
 {
@@ -332,5 +381,4 @@ class Prefab
 		
 		return obj;
 	}
-	
 }

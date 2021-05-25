@@ -70,6 +70,11 @@ class Game
 		else console.log("WARNING. There is no object named '" + name + "'")
 	}
 	
+	static getSize()
+	{
+		return new Vector2(Game.canvas.width, Game.canvas.height)
+	}
+	
 	static addWidget(widget)
 	{
 		this.widgets.push(widget)
