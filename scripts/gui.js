@@ -231,6 +231,15 @@ class Picture extends Widget
 		}
 	}
 	
+	getSize()
+	{
+		let size = this.size.copy()
+		if(this.size_type.x == Widget.RELATIVE) size.x *= this.parent ? this.parent.getSize().x : Game.canvas.width
+		if(this.size_type.y == Widget.RELATIVE) size.y *= this.parent ? this.parent.getSize().y : Game.canvas.height
+		
+		return size;
+	}
+	
 	setImage(image)
 	{
 		this.image = image
@@ -246,8 +255,8 @@ class Picture extends Widget
 			Game.context.globalAlpha = this.style.opacity;
 			Game.context.strokeStyle = this.style.border_color;
 		
-			this.texture.draw(position, size)
-			if(this.line_width > 0.0) Game.context.strokeRect(position.x, position.y, size.x, size.y);
+			this.image.draw(pos, size)
+			if(this.line_width > 0.0) Game.context.strokeRect(pos.x, pos.y, size.x, size.y);
 		}
 	}
 }

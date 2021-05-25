@@ -60,8 +60,9 @@
 		let pic = new Picture("01:30")
 		pic.setPositionType(Widget.RELATIVE, Widget.RELATIVE)
 		pic.setPosition(new Vector2(0.5, 0.5));
+		pic.setSize(new Vector2(32, 32));
 		pic.setImage(new Texture("simple_sight"))
-		form.layout.addWidget(label);
+		form.layout.addWidget(pic);
 		
 		/* --- Load data -------------------------------------------------------- */
 		let level = new Level("test_level")
