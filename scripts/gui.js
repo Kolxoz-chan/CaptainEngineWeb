@@ -3,6 +3,7 @@ class Layout
 {
 	parent = undefined
 	widgets = []
+	names = {}
 	padding = 5;
 }
 
@@ -19,6 +20,7 @@ class FreeLayout extends Layout
 	{
 		this.widgets.push(widget)
 		widget.parent = this.parent
+		if(widget.name) this.names[widget.name] = widget;
 	}
 	
 	update()
@@ -36,6 +38,7 @@ class Widget
 	static ABSOLUTE = 0;
 	static RELATIVE = 1;
 	
+	name = null;
 	enabled = true;
 	parent = undefined;
 	layout = new FreeLayout(this);
@@ -46,6 +49,14 @@ class Widget
 	
 	position_type = {"x" : Widget.ABSOLUTE, "y" : Widget.ABSOLUTE}
 	size_type = {"x" : Widget.ABSOLUTE, "y" : Widget.ABSOLUTE}
+	
+	// Events
+	onUpdate = undefined;
+	
+	constructor(name = null)
+	{
+		this.name = name
+	}
 	
 	isEnabled()
 	{
@@ -84,18 +95,17 @@ class Widget
 	
 	getSpace()
 	{
-		if(this.parent)
-		{
-			return this.parent.getSize().add(this.getSize().invert())
-		}
-		return Game.getSize().add(this.getSize().invert());
+		let size = this.parent ? this.parent.getSize() : Game.getSize();
+		return size.add(this.getSize().invert());
 	}
 	
 	getSize()
 	{
 		let size = this.size.copy()
-		if(this.size_type.x == Widget.RELATIVE) size.x *= this.parent ? this.parent.getSize().x : Game.canvas.width
-		if(this.size_type.y == Widget.RELATIVE) size.y *= this.parent ? this.parent.getSize().y : Game.canvas.height
+		let padding = 0; //this.parent ? this.parent.padding * 2 : 0;
+		
+		if(this.size_type.x == Widget.RELATIVE) size.x = size.x * (this.parent ? this.parent.getSize().x : Game.canvas.width) - padding;
+		if(this.size_type.y == Widget.RELATIVE) size.y = size.y * (this.parent ? this.parent.getSize().y : Game.canvas.height) - padding;
 		
 		return size;
 	}
@@ -104,12 +114,14 @@ class Widget
 	{
 		let pos = this.position.copy()
 		let space = this.getSpace()
+		
 		if(this.position_type.x == Widget.RELATIVE) pos.x *= space.x
 		if(this.position_type.y == Widget.RELATIVE) pos.y *= space.y
+		
 		if(this.parent)
 		{
 			let position = this.parent.getPosition();
-			let value = new Vector2(position.x + this.layout.padding, position.y + this.layout.padding)
+			let value = new Vector2(position.x, position.y)
 			return pos.add(value)
 		}
 		return pos;
@@ -119,9 +131,9 @@ class Widget
 /* Form widget */
 class Form extends Widget
 {	
-	constructor()
+	constructor(name = null)
 	{
-		super()
+		super(name)
 		this.style = {
 			"font_name" : "Verdana",
 			"font_size" : 14,
@@ -140,6 +152,9 @@ class Form extends Widget
 
 	update()
 	{
+		// Handle event
+		if(this.onUpdate) this.onUpdate();
+		
 		Game.context.globalAlpha = this.style.opacity;
 		Game.context.fillStyle = this.style.background_style;
 		Game.context.strokeStyle = this.style.border_color;
@@ -161,9 +176,9 @@ class Label extends Widget
 	icon = null
 	text = ""
 	
-	constructor(text = "")
+	constructor(text = "", name = null)
 	{
-		super()
+		super(name)
 		this.text = text;
 		this.style = {
 			"font" : null,
@@ -173,6 +188,11 @@ class Label extends Widget
 			"background_style" : new Color(255, 255, 255),
 			"icon_size" : new Vector2(32, 32)
 		}
+	}
+	
+	setText(text)
+	{
+		this.text = text;
 	}
 	
 	getSize()
@@ -199,6 +219,9 @@ class Label extends Widget
 	
 	update()
 	{	
+		// Handle event
+		if(this.onUpdate) this.onUpdate();
+	
 		if(this.style.font)
 		{
 			let pos = this.getPosition()
@@ -220,24 +243,15 @@ class Picture extends Widget
 {
 	image = ""
 	
-	constructor(image = null)
+	constructor(image = null, name = null)
 	{
-		super()
+		super(name)
 		this.image = image;
 		this.style = {
 			"opacity" : 1.0,
 			"border_width" : 2,
 			"border_color" : new Color(0, 0, 0),
 		}
-	}
-	
-	getSize()
-	{
-		let size = this.size.copy()
-		if(this.size_type.x == Widget.RELATIVE) size.x *= this.parent ? this.parent.getSize().x : Game.canvas.width
-		if(this.size_type.y == Widget.RELATIVE) size.y *= this.parent ? this.parent.getSize().y : Game.canvas.height
-		
-		return size;
 	}
 	
 	setImage(image)
@@ -247,6 +261,9 @@ class Picture extends Widget
 	
 	update()
 	{	
+		// Handle event
+		if(this.onUpdate) this.onUpdate();
+	
 		if(this.image)
 		{
 			let pos = this.getPosition()

@@ -1,60 +1,10 @@
 /* --------------------------------- Components  -------------------------------------- */
-class ComponentBase
-{	
-	name = ""
-	enabled = true;
-	joined = {}
-	
-	init()
-	{
-		/* Abstract method */
-	}
-	
-	update()
-	{
-		/* Abstract method */
-	}
 
-	join(name)
-	{
-		this.joined[name] = this.owner.getComponent(name)
-		return this.joined[name];
-	}
-	
-	setName(value)
-	{
-		this.name = value
-	}
-	
-	isEnabled()
-	{
-		return this.enabled;
-	}
-	
-	setEnabled(value)
-	{
-		this.enabled = value
-	}
-	
-	setOwner(owner)
-	{
-		this.owner = owner
-	}
-	
-	isEnabled()
-	{
-		return this.enabled
-	}
-	
-	setData(data)
-	{
-		for(var name in data)
-		{
-			this[name] = data[name]
-		}
-	}
-}
+/* Character stats stats */
+class LifeComponent extends AttributeComponent {}
+class ScoreComponent extends AttributeComponent {}
 
+/* Transform component*/
 class TransformComponent extends ComponentBase
 {	
 	position = new Vector2(0, 0);
@@ -152,59 +102,6 @@ class TransformComponent extends ComponentBase
 		let center = this.getCenter()
 		let angle = center.getDirection(point)
 		this.setAngle(angle)
-	}
-}
-
-/* Drawable сomponent */
-class DrawableComponent extends ComponentBase
-{	
-	name = "DrawableComponent"
-	fill_color = new Color(255, 255, 255)
-	stroke_color = new Color(0, 0, 0)
-	line_width = 0.0;
-	opacity = 1.0;
-	
-	getOpacity()
-	{
-		return this.opacity
-	}
-	
-	setFillColor(color)
-	{
-		this.fill_color = color;
-	}
-	
-	setStrokeColor(color)
-	{
-		this.stroke_color = color;
-	}
-	
-	setLineWidth(value)
-	{
-		this.line_width = value
-	}
-	
-	applyStyles()
-	{
-		Game.context.globalAlpha = this.opacity;
-		Game.context.fillStyle = this.fill_color;
-		Game.context.strokeStyle = this.stroke_color;
-		Game.context.lineWidth = this.line_width;
-	}
-	
-	applyTransformation()
-	{
-		let transform_component = this.joined["TransformComponent"]
-		let position = transform_component.getPosition()
-		let size = transform_component.getSize()
-		let angle = transform_component.getAngle()
-		let axis = transform_component.getAxis()
-		
-		Camera.apply_transform()
-		
-		Game.context.translate(position.x + size.x * axis.x, position.y + size.y * axis.y)
-		Game.context.rotate(Math.PI / 180 * angle);
-		Game.context.translate(-size.x * axis.x - position.x, -size.y * axis.y - position.y)
 	}
 }
 
@@ -312,8 +209,9 @@ class WatcherComponent extends ComponentBase
 		
 		if(this.target)
 		{
+			let obj = Game.getObject(this.target)
 			let self_component = this.joined["TransformComponent"]
-			let target_component = this.target.getComponent("TransformComponent")
+			let target_component = obj.getComponent("TransformComponent")
 			self_component.rotate_at(target_component.getCenter())
 		}
 	}
@@ -365,21 +263,25 @@ class PursuerComponent extends ComponentBase
 	
 	update()
 	{
-		let target_transform = this.target.getComponent("TransformComponent")
-		
-		if(target_transform)
+		if(this.target)
 		{
-			let transform_component = this.joined["TransformComponent"];
+			let obj = Game.getObject(this.target)
+			let target_transform = obj.getComponent("TransformComponent")
 			
-			let self_pos = transform_component.getPosition();
-			let target_pos = target_transform.getPosition();
-			
-			let speed = Time.delta_time * this.speed;
-			let distance = self_pos.getDistance(target_pos)
-			
-			if(distance < this.min_radius) transform_component.move_to(target_pos, -speed)
-			else if(distance < this.middle_radius) return;
-			else if(distance < this.max_radius) transform_component.move_to(target_pos, speed)
+			if(target_transform)
+			{
+				let transform_component = this.joined["TransformComponent"];
+				
+				let self_pos = transform_component.getPosition();
+				let target_pos = target_transform.getPosition();
+				
+				let speed = Time.delta_time * this.speed;
+				let distance = self_pos.getDistance(target_pos)
+				
+				if(distance < this.min_radius) transform_component.move_to(target_pos, -speed)
+				else if(distance < this.middle_radius) return;
+				else if(distance < this.max_radius) transform_component.move_to(target_pos, speed)
+			}
 		}
 	}
 }
@@ -428,65 +330,6 @@ class PlayerControlComponent extends ComponentBase
 	}
 }
 
-class LifeComponent extends ComponentBase
-{	
-	health_max = 100;
-	health_value = undefined;
-	
-	init()
-	{	
-		if(!this.health_value) this.resurrect()
-	}
-	
-	resurrect()
-	{
-		this.health_value = this.health_max
-	}
-	
-	kill()
-	{
-		this.health_value = 0
-	}
-	
-	isFine()
-	{
-		return this.health_value == this.health_max; 
-	}
-	
-	isAlife()
-	{
-		return this.health_value > 0;
-	}
-	
-	addHealth(value)
-	{
-		
-		this.health_value += value
-		if(this.health_value > this.health_max) 
-		{
-			this.health_value = this.health_max
-		}
-	}
-}
-
-/* Score component */
-class ScoreComponent extends ComponentBase
-{	
-	score = 0
-	max_score = Number.MAX_VALUE
-	min_score = Number.MIN_VALUE
-	
-	init()
-	{	
-		if(!this.health_value) this.resurrect()
-	}
-	
-	addScore(value)
-	{
-		
-	}
-}
-
 class CameraComponent extends ComponentBase
 {	
 	init()
@@ -498,50 +341,6 @@ class CameraComponent extends ComponentBase
 	{
 		let transform_component = this.joined["TransformComponent"]
 		Camera.setCenter(transform_component.getCenter())
-	}
-}
-
-/* Base colider component*/
-class ColiderComponent extends ComponentBase
-{	
-	name = "ColiderComponent"
-	objects = []
-	
-	isIntersects(colider)
-	{
-		let A = this.getRect()
-		let B = colider.getRect()
-		let C = A.getCommon(B)
-
-		if(!C.isNullSize())
-		{
-			for(let y = C.y; y < C.y + C.h; y++)
-			{
-				for(let x = C.x; x < C.x + C.w; x++)
-				{
-					let point = new Vector2(x, y)
-					if(this.isContained(point) && colider.isContained(point)) return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	update()
-	{
-		this.objects = [];
-		let container = this.owner.getContainer()
-		for(let i in container.entities)
-		{
-			if(container.entities[i].hasComponent("ColiderComponent") && this.owner !== container.entities[i])
-			{
-				let colider = container.entities[i].getComponent("ColiderComponent")
-				if(this.isIntersects(colider)) 
-				{
-					this.objects.push(container.entities[i])
-				}
-			}
-		}
 	}
 }
 
@@ -601,46 +400,6 @@ class CircleColiderComponent extends ColiderComponent
 	}
 }
 
-/* Trigger component */
-class TriggerComonent extends ComponentBase
-{	
-	init()
-	{
-		this.join("ColiderComponent")
-	}
-
-	update()
-	{	
-		let colider = this.joined["ColiderComponent"];
-		for(let i in colider.objects)
-		{
-			this.action(colider.objects[i])
-		}
-	}
-}
-
-/* Clickable component */
-class ClickableComponent extends ComponentBase
-{	
-	key = 0
-	global_cursor = true;
-
-	init()
-	{
-		this.join("ColiderComponent")
-	}
-	
-	update()
-	{
-		let colider = this.joined["ColiderComponent"];
-		if(Input.isMouseClicked(this.key))
-		{	
-			let position = this.global_cursor ? Input.getGlobalMouse() : Input.getLocalMouse();
-			if(colider.isContained(position)) this.action();
-		}
-	}
-}
-
 /* Damage clickable component */
 class DamageClickableComponent extends ClickableComponent
 {	
@@ -655,7 +414,38 @@ class DamageClickableComponent extends ClickableComponent
 	action()
 	{
 		let life = this.joined["LifeComponent"];
-		if(life.isAlife()) life.addHealth(-this.value);
+		if(!life.isZero()) life.addValue(-this.value);
+	}
+}
+
+/* Target bonus clickable component */
+class TargetBonusClickableComponent extends ClickableComponent
+{	
+	score = 100;
+	target = null
+
+	init()
+	{
+		super.init()
+		this.join("TransformComponent")
+		this.join("ColiderComponent")
+	}
+	
+	action()
+	{
+		if(this.target)
+		{
+			let obj = Game.getObject(this.target);
+			if(obj)
+			{
+				let center = this.joined["TransformComponent"].getCenter();
+				let radius = this.joined["ColiderComponent"].radius;
+				let mouse = this.getCursore();
+				
+				let score = obj.getComponent("ScoreComponent");
+				score.addValue(Math.round(this.score * (1 - mouse.getDistance(center) / radius)))
+			}
+		}
 	}
 }
 
@@ -678,20 +468,20 @@ class RespawnComponent extends ComponentBase
 	update()
 	{
 		let life = this.joined["LifeComponent"];
-		if(!life.isAlife())
+		if(life.isZero())
 		{
 			this.timer -= Time.delta_time;
 			if(this.timer <= 0.0)
 			{
 				this.joined["TransformComponent"].setPosition(this.position.x, this.position.y);
-				life.resurrect();
+				life.resetMax();
 				this.timer = this.time;
 			}
 		}
 	}
 }
 
-/* Hiding after death */
+/* Hiding after death component */
 class DeathDisolveComponent extends ComponentBase
 {
 	init()
@@ -705,17 +495,51 @@ class DeathDisolveComponent extends ComponentBase
 		let life = this.joined["LifeComponent"];
 		let draw = this.joined["DrawableComponent"];
 		
-		if(life.isAlife() && !draw.isEnabled()) draw.setEnabled(true);
-		else if(!life.isAlife() && draw.isEnabled()) draw.setEnabled(false);
+		if(!life.isZero() && !draw.isEnabled()) draw.setEnabled(true);
+		else if(life.isZero() && draw.isEnabled()) draw.setEnabled(false);
 
 	}
 }
 
-/* Cursore camera */
-class CursoreCameraComponent extends ComponentBase
+/* Cursore camera component */
+class CursoreWatcherComponent extends ComponentBase
 {	
+	init()
+	{
+		this.join("TransformComponent")
+	}
+
 	update()
 	{
-		Camera.setCenter(Input.getLocalMouse())
+		let transform = this.joined["TransformComponent"];
+		let offset = transform ? transform.getPosition() : new Vector2(0, 0);
+		Camera.setCenter(Input.getLocalMouse().add(offset))
+	}
+}
+
+/* Temporary component */
+class TemporaryComponent extends TimerComponent
+{
+	time = 5.0
+	
+	action()
+	{
+		this.owner.container.delete(this.owner)
+	}
+}
+
+/* Temporary component */
+class PunishmentMissclickComponent extends MissclickComponent
+{
+	value = 100
+	
+	init()
+	{
+		this.join("ScoreComponent")
+	}
+	
+	action()
+	{
+		this.joined["ScoreComponent"].addValue(-this.value);
 	}
 }

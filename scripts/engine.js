@@ -6,6 +6,7 @@ class Game
 	static widgets = [];
 	static names = {};
 	static started = false;
+	static resizable = false;
 	static fps = 60;
 	static default_cursor = "auto"
 	
@@ -14,8 +15,7 @@ class Game
 	{
 		/* Init canvas*/
 		Game.canvas = document.createElement("canvas");
-		Game.canvas.width = w;
-		Game.canvas.height = h;
+		this.setSize(new Vector2(w, h))
 		Game.canvas.style = style;
 		Game.resetCursor()
 		
@@ -35,8 +35,23 @@ class Game
 	
 	static setFullScreen(value)
 	{
-		if(value) Game.canvas.requestFullscreen();
+		if(value) 
+		{
+			Game.canvas.requestFullscreen();
+			if(this.resizable) this.setSize(this.getMaxSize())
+		}
 		else document.requestFullscreen();
+	}
+	
+	static setSize(size)
+	{
+		Game.canvas.width = size.x;
+		Game.canvas.height = size.y;
+	}
+	
+	static setResizable(value)
+	{
+		this.resizable = value;
 	}
 	
 	static isFullScreen()
@@ -73,6 +88,11 @@ class Game
 	static getSize()
 	{
 		return new Vector2(Game.canvas.width, Game.canvas.height)
+	}
+	
+	static getMaxSize()
+	{
+		return new Vector2(window.screen.width, window.screen.height)
 	}
 	
 	static addWidget(widget)
@@ -168,6 +188,7 @@ class Camera
 		let size = Camera.getSize();
 		Camera.setPosition(new Vector2(point.x - size.x / 2, point.y - size.y / 2))
 	}
+	
 	
 	static apply_transform()
 	{

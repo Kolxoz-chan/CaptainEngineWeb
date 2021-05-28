@@ -5,6 +5,8 @@
 	<title>Полигон для теста</title>
 	<script src="scripts/objects.js"></script>
 	<script src="scripts/gui.js"></script>
+	<script src="scripts/base_components.js"></script>
+	<script src="scripts/action_components.js"></script>
 	<script src="scripts/components.js"></script>
 	<script src="scripts/engine.js"></script>
 </head>
@@ -17,6 +19,7 @@
 		Game.init("game-block", 800, 600, "background-color: black; margin: auto; display: block;");
 		Game.setEventHandlers(['keydown', 'keyup', 'mousedown', 'mouseup', "mousemove"])
 		Game.setDefaultCursor("none")
+		Game.setResizable(true)
 		Game.resetCursor()
 		
 		/* --- Load resources --------------------------------------------------- */
@@ -35,6 +38,8 @@
 		prefab.addComponent("RespawnComponent", {"time" : 3.0});
 		prefab.addComponent("DeathDisolveComponent");
 		prefab.addComponent("PathMovingComponent");
+		prefab.addComponent("TargetBonusClickableComponent", {"global_cursor" : false, "target" : "player"});
+		//prefab.addComponent("TemporaryComponent");
 		Resources.addPrefab("simple_target", prefab);
 		
 		/* --- Load GUI --------------------------------------------------------- */
@@ -44,24 +49,39 @@
 		form.setPosition(new Vector2(0.5, 0.5));
 		form.setSizeType(Widget.RELATIVE, Widget.RELATIVE)
 		form.setSize(new Vector2(1.0, 1.0));
+		form.onUpdate = function()
+		{
+			let player = Game.getObject("player")
+			let score = player.getComponent("ScoreComponent").score
+			let time = player.getComponent("TimerComponent").getTime()
+			
+			time = Math.ceil(time);
+			let minutes = Math.floor(time / 60);
+			let seconds = Math.floor(time % 60);
+			
+			if(minutes < 10) minutes = "0" + minutes.toString();
+			if(seconds < 10) seconds = "0" + seconds.toString();
+
+			this.layout.names["score_label"].setText(score)
+			this.layout.names["timer_label"].setText(`${minutes}:${seconds}`)
+		}
 		Game.addWidget(form);
 		
-		let label = new Label("1000/0")
+		let label = new Label("", "score_label")
 		label.setStyle({"font" : new Font("Arial", 32), "background_style" : new Color(255, 140, 0)})
 		label.setPosition(new Vector2(0, 0));
 		form.layout.addWidget(label);
 		
-		label = new Label("01:30")
+		label = new Label("", "timer_label")
 		label.setStyle({"font" : new Font("Arial", 32), "background_style" : new Color(255, 255, 0)})
 		label.setPositionType(Widget.RELATIVE, Widget.RELATIVE)
 		label.setPosition(new Vector2(0.5, 0.0));
 		form.layout.addWidget(label);
 		
-		let pic = new Picture("01:30")
+		let pic = new Picture(new Texture("simple_sight"))
 		pic.setPositionType(Widget.RELATIVE, Widget.RELATIVE)
 		pic.setPosition(new Vector2(0.5, 0.5));
 		pic.setSize(new Vector2(32, 32));
-		pic.setImage(new Texture("simple_sight"))
 		form.layout.addWidget(pic);
 		
 		/* --- Load data -------------------------------------------------------- */
@@ -72,15 +92,21 @@
 		
 		/* Player */
 		let ent = new Entity("player");
-		ent.addComponent(new CursoreCameraComponent());
+		ent.addComponent(new PunishmentMissclickComponent(), {"container" : "objects"});
+		ent.addComponent(new CursoreWatcherComponent());
 		ent.addComponent(new PlayerControlComponent());
+		ent.addComponent(new ScoreComponent());
+		ent.addComponent(new TimerComponent(), {"time" : 90, "action" : function()
+		{
+			
+		}});
 		layer.addObject(ent)
 		
 		/* Targets */
 		let target = Resources.getPrefab("simple_target")
 		layer.addObject(target.getEntity({
 			"TransformComponent" : {"position" : new Vector2(48, 48)},
-			"PathMovingComponent" : {"speed" : 100, "path" : [new Vector2(48, 48), new Vector2(600, 48), new Vector2(600, 400), new Vector2(48, 400)]}}))
+			"PathMovingComponent" : {"speed" : 120, "path" : [new Vector2(48, 48), new Vector2(600, 48), new Vector2(600, 400), new Vector2(48, 400)]}}))
 			
 		layer.addObject(target.getEntity({"TransformComponent" : {"position" : new Vector2(123, 67)}}))
 		layer.addObject(target.getEntity({"TransformComponent" : {"position" : new Vector2(56, 333)}}))

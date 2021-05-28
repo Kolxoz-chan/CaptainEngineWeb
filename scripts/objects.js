@@ -76,16 +76,22 @@ class Entity
 	}
 }
 
-/* Layer of objects*/
-class ObjectsLayer
+class Container
 {
 	name = ""
 	enabled = true;
 	container = null;
 	entities = []
+}
+
+/* Layer of objects*/
+class ObjectsLayer extends Container
+{
+	delete_queue = []
 	
 	constructor(name)
 	{
+		super() 
 		this.name = name;
 	}
 	
@@ -106,8 +112,19 @@ class ObjectsLayer
 		return name
 	}
 	
+	delete(obj)
+	{
+		this.delete_queue.push(obj);
+	}
+	
 	update()
 	{
+		for(let i in this.delete_queue)
+		{
+			let index = this.entities.indexOf(this.delete_queue[i])
+			this.entities.shift(index)
+		}
+		
 		for(let i in this.entities)
 		{
 			if(this.entities[i].enabled) this.entities[i].update()
