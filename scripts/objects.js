@@ -10,7 +10,7 @@ Object.copy = function(obj, target = {})
 		}
 		if(obj[i] instanceof Object) 
 		{
-			target[i] = Object.copy(obj[i], {});
+			target[i] = Object.copy(obj[i], new obj[i].constructor());
 			continue;
 		}
 		target[i] = obj[i];
@@ -122,8 +122,10 @@ class ObjectsLayer extends Container
 		for(let i in this.delete_queue)
 		{
 			let index = this.entities.indexOf(this.delete_queue[i])
-			this.entities.shift(index)
+			this.entities.splice(index, 1)
 		}
+		
+		this.delete_queue = []
 		
 		for(let i in this.entities)
 		{
@@ -345,7 +347,7 @@ class Font
 	
 	toString()
 	{
-		return this.size + "px " + this.name
+		return `${this.size}px ${this.name}`
 	}
 }
 

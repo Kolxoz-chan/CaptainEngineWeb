@@ -155,8 +155,8 @@ class ColiderComponent extends ComponentBase
 /* Attribute component*/
 class AttributeComponent extends ComponentBase
 {	
-	value = 0
-	min_value = Number.MIN_VALUE
+	value = null
+	min_value = -Number.MAX_VALUE
 	max_value = Number.MAX_VALUE
 	
 	addValue(value)
@@ -168,7 +168,7 @@ class AttributeComponent extends ComponentBase
 	{
 		this.value = value;
 		if(this.value < this.min_value) this.value = this.min_value
-		if(this.value > this.max_value) this.value = this.min_value
+		if(this.value > this.max_value) this.value = this.max_value
 	}
 	
 	getValue()

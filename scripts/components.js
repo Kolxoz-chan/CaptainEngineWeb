@@ -1,8 +1,21 @@
 /* --------------------------------- Components  -------------------------------------- */
 
 /* Character stats stats */
-class LifeComponent extends AttributeComponent {}
-class ScoreComponent extends AttributeComponent {}
+class ScoreComponent extends AttributeComponent 
+{
+	value = 0;
+}
+
+class LifeComponent extends AttributeComponent 
+{
+	max_value = 100;
+	min_value = 0
+	
+	init()
+	{
+		if(!this.value) this.value = this.max_value
+	}
+}
 
 /* Transform component*/
 class TransformComponent extends ComponentBase
@@ -136,6 +149,7 @@ class RectShapeComponent extends DrawableComponent
 	}
 }
 
+/* Image component */
 class ImageComponent extends DrawableComponent
 {
 	texture = null;
@@ -168,6 +182,43 @@ class ImageComponent extends DrawableComponent
 	}
 }
 
+/* Text component */
+class TextComponent extends DrawableComponent
+{
+	text = "";
+	font = null
+	outline = true;
+	
+	init()
+	{	
+		this.join("TransformComponent")
+	}
+	
+	update()
+	{		
+		if(this.text.length && this.opacity > 0.0 && this.font)
+		{	
+			/* Get data */
+			let transform_component = this.joined["TransformComponent"]
+			let position = transform_component.getPosition()
+			let size = transform_component.getSize()
+			
+			/* Settings */
+			this.applyStyles();
+			this.applyTransformation()
+			
+			/* Draw */
+			Game.context.font = this.font;
+			if(this.outline) Game.context.strokeText(this.text, position.x, position.y);
+			Game.context.fillText(this.text, position.x, position.y);
+			
+			/* Reset*/
+			Game.context.resetTransform();
+		}
+	}
+}
+
+/* Path Moving Component */
 class PathMovingComponent extends ComponentBase
 {
 	path = [];
@@ -195,6 +246,7 @@ class PathMovingComponent extends ComponentBase
 	}
 }
 
+/* Watcher Component */
 class WatcherComponent extends ComponentBase
 {
 	target = null;
@@ -217,6 +269,7 @@ class WatcherComponent extends ComponentBase
 	}
 }
 
+/* Mouse Watcher Component */
 class MouseWatcherComponent extends ComponentBase
 {	
 	init()
@@ -231,6 +284,7 @@ class MouseWatcherComponent extends ComponentBase
 	}
 }
 
+/* Round Moving Component */
 class RoundMovingComponent extends ComponentBase
 {
 	speed = 50;
@@ -460,8 +514,6 @@ class RespawnComponent extends ComponentBase
 	{
 		let transform = this.join("TransformComponent")
 		this.join("LifeComponent")
-		
-		if(!this.timer) this.timer = this.time
 		if(!this.position) this.position = transform.getPosition();
 	}
 	
@@ -470,6 +522,7 @@ class RespawnComponent extends ComponentBase
 		let life = this.joined["LifeComponent"];
 		if(life.isZero())
 		{
+			if(!this.timer) this.timer = this.time
 			this.timer -= Time.delta_time;
 			if(this.timer <= 0.0)
 			{
@@ -528,7 +581,7 @@ class TemporaryComponent extends TimerComponent
 	}
 }
 
-/* Temporary component */
+/* Punishment Missclick Component */
 class PunishmentMissclickComponent extends MissclickComponent
 {
 	value = 100
@@ -541,5 +594,22 @@ class PunishmentMissclickComponent extends MissclickComponent
 	action()
 	{
 		this.joined["ScoreComponent"].addValue(-this.value);
+	}
+}
+
+/* Score Indicator Spawner */
+class ScoreIndicatorSpawner extends AttributeChangeEvent
+{	
+	container = null
+	prefab = null
+
+	action(old_value, new_value)
+	{
+		let value = new_value - old_value
+		let layer = Game.current_level.getLayer(this.container)
+		let prefab = Resources.getPrefab(this.prefab)
+		layer.addObject(prefab.getEntity({
+			"TransformComponent" : {"position" : Input.getLocalMouse()},
+			"TextComponent" : {"text" : String(value), "fill_color" : value > 0 ? new Color(0, 255, 0) : new Color(255, 0, 0)}}))
 	}
 }

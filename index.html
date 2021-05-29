@@ -30,7 +30,7 @@
 		
 		/* Load target prefabs  */
 		let prefab = new Prefab();
-		prefab.addComponent("LifeComponent", {"health_max" : 1});
+		prefab.addComponent("LifeComponent", {"max_value" : 1});
 		prefab.addComponent("TransformComponent", {"size" : new Vector2(48, 48)});
 		prefab.addComponent("ImageComponent", {"texture" : "target"});
 		prefab.addComponent("CircleColiderComponent");
@@ -39,8 +39,15 @@
 		prefab.addComponent("DeathDisolveComponent");
 		prefab.addComponent("PathMovingComponent");
 		prefab.addComponent("TargetBonusClickableComponent", {"global_cursor" : false, "target" : "player"});
-		//prefab.addComponent("TemporaryComponent");
 		Resources.addPrefab("simple_target", prefab);
+		
+		/* Score indicator */
+		prefab = new Prefab();
+		prefab.addComponent("TransformComponent");
+		prefab.addComponent("TextComponent", {"line_width" : 5.0, "font" : new Font("Arial", 24)});
+		//prefab.addComponent("DeathDisolveComponent");
+		prefab.addComponent("TemporaryComponent", {"time" : 3.0});
+		Resources.addPrefab("score_indicator", prefab);
 		
 		/* --- Load GUI --------------------------------------------------------- */
 		let form = new Form();
@@ -52,7 +59,7 @@
 		form.onUpdate = function()
 		{
 			let player = Game.getObject("player")
-			let score = player.getComponent("ScoreComponent").score
+			let score = player.getComponent("ScoreComponent").getValue()
 			let time = player.getComponent("TimerComponent").getTime()
 			
 			time = Math.ceil(time);
@@ -69,13 +76,14 @@
 		
 		let label = new Label("", "score_label")
 		label.setStyle({"font" : new Font("Arial", 32), "background_style" : new Color(255, 140, 0)})
-		label.setPosition(new Vector2(0, 0));
+		label.setPositionType(Widget.RELATIVE, Widget.RELATIVE)
+		label.setPosition(new Vector2(0.01, 0.01));
 		form.layout.addWidget(label);
 		
 		label = new Label("", "timer_label")
 		label.setStyle({"font" : new Font("Arial", 32), "background_style" : new Color(255, 255, 0)})
 		label.setPositionType(Widget.RELATIVE, Widget.RELATIVE)
-		label.setPosition(new Vector2(0.5, 0.0));
+		label.setPosition(new Vector2(0.5, 0.01));
 		form.layout.addWidget(label);
 		
 		let pic = new Picture(new Texture("simple_sight"))
@@ -95,6 +103,7 @@
 		ent.addComponent(new PunishmentMissclickComponent(), {"container" : "objects"});
 		ent.addComponent(new CursoreWatcherComponent());
 		ent.addComponent(new PlayerControlComponent());
+		ent.addComponent(new ScoreIndicatorSpawner(), {"attribute" : "ScoreComponent", "prefab" : "score_indicator", "container" : "objects"});
 		ent.addComponent(new ScoreComponent());
 		ent.addComponent(new TimerComponent(), {"time" : 90, "action" : function()
 		{
@@ -108,8 +117,13 @@
 			"TransformComponent" : {"position" : new Vector2(48, 48)},
 			"PathMovingComponent" : {"speed" : 120, "path" : [new Vector2(48, 48), new Vector2(600, 48), new Vector2(600, 400), new Vector2(48, 400)]}}))
 			
-		layer.addObject(target.getEntity({"TransformComponent" : {"position" : new Vector2(123, 67)}}))
-		layer.addObject(target.getEntity({"TransformComponent" : {"position" : new Vector2(56, 333)}}))
+		layer.addObject(target.getEntity({
+			"TransformComponent" : {"position" : new Vector2(123, 67)},
+			"PathMovingComponent" : {"speed" : 120, "path" : [new Vector2(123, 67), new Vector2(123, 600)]}}))
+			
+		layer.addObject(target.getEntity({
+			"TransformComponent" : {"position" : new Vector2(56, 333)},
+			"PathMovingComponent" : {"speed" : 120, "path" : [new Vector2(56, 333), new Vector2(700, 333)]}}))
 
 		/* --- Start game -------------------------------------------------------- */
 		Game.start();

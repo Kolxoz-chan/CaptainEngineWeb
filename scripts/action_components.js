@@ -68,7 +68,7 @@ class TimerComponent extends ComponentBase
 	}
 }
 
-// Missclick component
+/* Missclick component */
 class MissclickComponent extends ComponentBase
 { 
 	key = 0;
@@ -93,5 +93,26 @@ class MissclickComponent extends ComponentBase
 			}
 			if(result) this.action()
 		}
+	}
+}
+
+/* Attribute Change Event */
+class AttributeChangeEvent extends ComponentBase
+{
+	attribute = null
+	value = null
+	// action = null
+	
+	init()
+	{
+		if(this.attribute) this.value = this.join(this.attribute).getValue()
+	}
+
+	update()
+	{
+		let attribute = this.joined[this.attribute]
+		let new_value = attribute.getValue();
+		if(this.value != new_value && this.action) this.action(this.value, new_value)
+		this.value = new_value;
 	}
 }

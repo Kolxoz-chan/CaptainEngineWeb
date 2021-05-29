@@ -136,7 +136,6 @@ class Game
 	{
 		Game.context.clearRect(0, 0, Game.canvas.width, Game.canvas.height);
 		Game.current_level.update();
-		Game.context.resetTransform();
 		for(let i in this.widgets)
 		{
 			if(this.widgets[i].isEnabled()) this.widgets[i].update()
