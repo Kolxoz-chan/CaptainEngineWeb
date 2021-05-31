@@ -214,7 +214,7 @@ class Resources
 	
 	static loading_counter = 0;
 	static textures_dir = "";
-	static audio_dir = ""
+	static sounds_dir = ""
 	
 	static isLoaded()
 	{
@@ -231,7 +231,7 @@ class Resources
 	
 	static loadAudio(name, src)
 	{
-		Resources.textures[name] = new Audio(Resources.audio_dir + src);
+		Resources.sounds[name] = new Audio(Resources.sounds_dir + src);
 	}
 	
 	static addPrefab(asset)
@@ -244,9 +244,9 @@ class Resources
 		return Resources.textures[name];
 	}
 	
-	static getTexture(name)
+	static getAudio(name)
 	{
-		return Resources.textures[name];
+		return Resources.sounds[name];
 	}
 	
 	static getPrefab(name)

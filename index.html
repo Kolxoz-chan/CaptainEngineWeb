@@ -24,11 +24,12 @@
 		
 		/* --- Load resources --------------------------------------------------- */
 		Resources.textures_dir = "https://raw.githubusercontent.com/Kolxoz-chan/MalgrandaLando/main/textures/"
-		Resources.audio_dir = "https://raw.githubusercontent.com/Kolxoz-chan/MalgrandaLando/main/audio/"
+		Resources.sounds_dir = "https://raw.githubusercontent.com/Kolxoz-chan/MalgrandaLando/main/sounds/"
 
 		Resources.loadTexture("target", "target.png")
 		Resources.loadTexture("simple_sight", "simple_sight.png")
-		Resources.loadAudio("ricochet", "ricochet.mp3")
+		Resources.loadAudio("ricochet_01", "ricochet_01.mp3")
+		Resources.loadAudio("shot_01", "shot_01.mp3")
 		
 		/* Load target prefabs  */
 		let prefab = new Prefab("simple_target");
@@ -39,6 +40,7 @@
 		prefab.addComponent("CircleColiderComponent", {"enabled" : true});
 		prefab.addComponent("RespawnComponent", {"time" : 3.0});
 		prefab.addComponent("PathMovingComponent");
+		prefab.addComponent("SoundComponent", {"sound" : "shot_01"});
 		prefab.addComponent("DeadDisablerComponent", {"disablers" : ["DrawableComponent"]});
 		Resources.addPrefab(prefab);
 		
@@ -106,6 +108,7 @@
 		ent.addComponent(new PlayerControlComponent());
 		ent.addComponent(new ScoreIndicatorSpawnerComponent(), {"attribute" : "ScoreComponent", "prefab" : "score_indicator", "container" : "objects"});
 		ent.addComponent(new ScoreComponent());
+		ent.addComponent(new SoundClickComponent(), {"miss_sound" : "ricochet"});
 		ent.addComponent(new CursoreColider(), {"global_cursor" : false});
 		ent.addComponent(new DamageClickComponent(), {"order" : ClickComponent.LAST});
 		ent.addComponent(new AwardClickComponent(), {"order" : ClickComponent.LAST});

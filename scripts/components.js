@@ -247,6 +247,20 @@ class PathMovingComponent extends ComponentBase
 }
 
 /* Watcher Component */
+class SoundComponent extends ComponentBase
+{
+	sound = null;
+	autoplay = false;
+	loop = false;
+	
+	play()
+	{
+		let audio = Resources.getAudio(this.sound)
+		audio.play();
+	}
+}
+
+/* Watcher Component */
 class WatcherComponent extends ComponentBase
 {
 	target = null;
@@ -258,7 +272,6 @@ class WatcherComponent extends ComponentBase
 	
 	update()
 	{
-		
 		if(this.target)
 		{
 			let obj = Game.getObject(this.target)
@@ -671,5 +684,27 @@ class AwardClickComponent extends ClickComponent
 	{
 		let score = this.joined["ScoreComponent"];
 		score.addValue(-this.penalty)
+	}
+}
+
+/* Damage clickable component */
+class SoundClickComponent extends ClickComponent
+{	
+	miss_sound = null
+
+	action(obj)
+	{	
+		if(obj.hasComponent("SoundComponent"))
+		{
+			obj.getComponent("SoundComponent").play();
+		}
+	}
+	
+	miss()
+	{
+		if(this.miss_sound)
+		{
+			Resources.getAudio(this.miss_sound).play()
+		}
 	}
 }
