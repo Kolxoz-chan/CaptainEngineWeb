@@ -2,7 +2,8 @@ class ComponentBase
 {	
 	name = ""
 	enabled = true;
-	joined = {}
+	joined = {};
+	default = {};
 	
 	init()
 	{
@@ -12,6 +13,12 @@ class ComponentBase
 	update()
 	{
 		/* Abstract method */
+	}
+	
+	reset()
+	{
+		let arr = Object.copy(this.default)
+		for(let i in arr) this[i] = arr[i]
 	}
 
 	join(name)
@@ -84,6 +91,11 @@ class DrawableComponent extends ComponentBase
 		this.line_width = value
 	}
 	
+	setOpacity(value)
+	{
+		this.opacity = value
+	}
+	
 	applyStyles()
 	{
 		Game.context.globalAlpha = this.opacity;
@@ -113,6 +125,7 @@ class ColiderComponent extends ComponentBase
 {	
 	name = "ColiderComponent"
 	objects = []
+	coliding = true;
 	
 	isIntersects(colider)
 	{

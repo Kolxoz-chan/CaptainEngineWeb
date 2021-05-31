@@ -51,6 +51,7 @@ class TimerComponent extends ComponentBase
 {	
 	time = 60.0
 	//action = null;
+	//tic = null;
 	
 	getTime()
 	{
@@ -64,40 +65,16 @@ class TimerComponent extends ComponentBase
 			this.enabled = false;
 			if(this.action) this.action()
 		}
-		else this.time -= Time.delta_time;
-	}
-}
-
-/* Missclick component */
-class MissclickComponent extends ComponentBase
-{ 
-	key = 0;
-	container = null
-	// action = null
-	
-	update()
-	{
-		if(Input.isMouseClicked(this.key) && this.container && this.action)
+		else 
 		{
-			let result = true;
-			let layer = Game.current_level.getLayer(this.container);
-			for(let i in layer.entities)
-			{
-
-				if(layer.entities[i].hasComponent("ColiderComponent"))
-				{
-					
-					let colider = layer.entities[i].getComponent("ColiderComponent")
-					if(colider.isContained(Input.getLocalMouse())) result = false;
-				}
-			}
-			if(result) this.action()
+			this.time -= Time.delta_time;
+			if(this.tic) this.tic();
 		}
 	}
 }
 
 /* Attribute Change Event */
-class AttributeChangeEvent extends ComponentBase
+class AttributeEventComponent extends ComponentBase
 {
 	attribute = null
 	value = null
@@ -114,5 +91,77 @@ class AttributeChangeEvent extends ComponentBase
 		let new_value = attribute.getValue();
 		if(this.value != new_value && this.action) this.action(this.value, new_value)
 		this.value = new_value;
+	}
+}
+
+/* Attribute Change Event */
+class DeadEventComponent extends ComponentBase
+{
+	is_alife = false;
+	// revival_action = null
+	// dead_action = null
+	
+	init()
+	{
+		this.is_alife = this.join("LifeComponent").isGreaterZero();
+	}
+
+	update()
+	{
+		let life = this.joined["LifeComponent"]
+		if(!life.isGreaterZero() && this.is_alife)
+		{
+			this.is_alife = false
+			if(this.dead_action) this.dead_action()
+		}
+		else if(life.isGreaterZero() && !this.is_alife)
+		{
+			this.is_alife = true
+			if(this.revival_action) this.revival_action()
+		}
+	}
+}
+
+/* Attribute Change Event */
+class ClickComponent extends ComponentBase
+{
+	// Constants
+	static FIRST = 1;
+	static ALL = 2
+	static LAST = 3;
+	
+	key = 0
+	order = ClickComponent.ALL
+	// action = null
+	// miss = null
+	
+	init()
+	{
+		this.join("CursoreColider");
+	}
+
+	update()
+	{
+		if(Input.isMouseClicked(this.key))
+		{
+			let colider = this.joined["CursoreColider"]
+			if(colider)
+			{
+				let count = colider.objects.length
+				if(count > 0)
+				{
+					if(this.action)
+					{
+						switch(this.order)
+						{
+							case ClickComponent.ALL: for(let i in colider.objects) this.action(colider.objects[i]); break;
+							case ClickComponent.FIRST: this.action(colider.objects[0]); break;
+							case ClickComponent.LAST: this.action(colider.objects[count - 1]); break;
+						}
+					}
+				}
+				else if(this.miss) this.miss()
+			}
+		}
 	}
 }

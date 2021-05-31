@@ -454,52 +454,19 @@ class CircleColiderComponent extends ColiderComponent
 	}
 }
 
-/* Damage clickable component */
-class DamageClickableComponent extends ClickableComponent
-{	
-	value = 1;
-
-	init()
-	{
-		super.init()
-		this.join("LifeComponent")
-	}
+/* Hiding after death component */
+class GravityComponent extends ComponentBase
+{
+	vector = new Vector2(0, 0)
 	
-	action()
-	{
-		let life = this.joined["LifeComponent"];
-		if(!life.isZero()) life.addValue(-this.value);
-	}
-}
-
-/* Target bonus clickable component */
-class TargetBonusClickableComponent extends ClickableComponent
-{	
-	score = 100;
-	target = null
-
 	init()
 	{
-		super.init()
 		this.join("TransformComponent")
-		this.join("ColiderComponent")
 	}
 	
-	action()
+	update()
 	{
-		if(this.target)
-		{
-			let obj = Game.getObject(this.target);
-			if(obj)
-			{
-				let center = this.joined["TransformComponent"].getCenter();
-				let radius = this.joined["ColiderComponent"].radius;
-				let mouse = this.getCursore();
-				
-				let score = obj.getComponent("ScoreComponent");
-				score.addValue(Math.round(this.score * (1 - mouse.getDistance(center) / radius)))
-			}
-		}
+		this.joined["TransformComponent"].move(this.vector.x, this.vector.y)
 	}
 }
 
@@ -535,22 +502,19 @@ class RespawnComponent extends ComponentBase
 }
 
 /* Hiding after death component */
-class DeathDisolveComponent extends ComponentBase
+class DissolveComponent extends TimerComponent
 {
+	max_time = undefined;
+	
 	init()
 	{
+		this.max_time = this.time
 		this.join("DrawableComponent")
-		this.join("LifeComponent")
 	}
 	
-	update()
+	tic()
 	{
-		let life = this.joined["LifeComponent"];
-		let draw = this.joined["DrawableComponent"];
-		
-		if(!life.isZero() && !draw.isEnabled()) draw.setEnabled(true);
-		else if(life.isZero() && draw.isEnabled()) draw.setEnabled(false);
-
+		this.joined["DrawableComponent"].setOpacity(this.time / this.max_time)
 	}
 }
 
@@ -581,24 +545,8 @@ class TemporaryComponent extends TimerComponent
 	}
 }
 
-/* Punishment Missclick Component */
-class PunishmentMissclickComponent extends MissclickComponent
-{
-	value = 100
-	
-	init()
-	{
-		this.join("ScoreComponent")
-	}
-	
-	action()
-	{
-		this.joined["ScoreComponent"].addValue(-this.value);
-	}
-}
-
 /* Score Indicator Spawner */
-class ScoreIndicatorSpawner extends AttributeChangeEvent
+class ScoreIndicatorSpawnerComponent extends AttributeEventComponent
 {	
 	container = null
 	prefab = null
@@ -611,5 +559,117 @@ class ScoreIndicatorSpawner extends AttributeChangeEvent
 		layer.addObject(prefab.getEntity({
 			"TransformComponent" : {"position" : Input.getLocalMouse()},
 			"TextComponent" : {"text" : String(value), "fill_color" : value > 0 ? new Color(0, 255, 0) : new Color(255, 0, 0)}}))
+	}
+}
+
+/* Dead Disabler Component */
+class DeadDisablerComponent extends DeadEventComponent
+{	
+	reversable = true
+	enablers = []
+	disablers = []
+	
+	revival_action()
+	{
+		if(this.reversable)
+		{
+			for(let i in this.enablers)
+			{
+				let component = this.owner.getComponent(this.enablers[i])
+				if(component) component.setEnabled(false);
+			}
+			for(let i in this.disablers) 
+			{
+				let component = this.owner.getComponent(this.disablers[i])
+				if(component) component.setEnabled(true);
+			}
+		}
+	}
+	
+	dead_action()
+	{
+		for(let i in this.enablers)
+		{
+			let component = this.owner.getComponent(this.enablers[i])
+			if(component) component.setEnabled(true);
+		}
+		for(let i in this.disablers) 
+		{
+			let component = this.owner.getComponent(this.disablers[i])
+			if(component) component.setEnabled(false);
+		}
+	}
+}
+
+/* Image component */
+class CursoreColider extends ComponentBase
+{
+	objects = []
+	container = null;
+	global_cursor = true;
+	
+	getCursore()
+	{
+		return this.global_cursor ? Input.getGlobalMouse() : Input.getLocalMouse();
+	}
+	
+	update()
+	{	
+		this.objects = [];
+		let container = this.container ? Game.current_level.getLayer(this.container) : this.owner.container;
+		for(let i in container.entities)
+		{
+			if(container.entities[i].hasComponent("ColiderComponent"))
+			{
+				let colider = container.entities[i].getComponent("ColiderComponent")
+				if(colider.isContained(this.getCursore())) this.objects.push(container.entities[i])
+			}
+		}
+	}
+}
+
+/* Damage clickable component */
+class DamageClickComponent extends ClickComponent
+{	
+	value = 1;
+	
+	action(obj)
+	{
+		let life = obj.getComponent("LifeComponent");
+		if(life)
+		{
+			if(!life.isZero()) life.addValue(-this.value);
+		}
+	}
+}
+
+/* Damage clickable component */
+class AwardClickComponent extends ClickComponent
+{	
+	penalty = 100
+
+	init()
+	{
+		super.init()
+		this.join("ScoreComponent")
+	}
+	
+	action(obj)
+	{	
+		if(obj.hasComponent("TransformComponent") && obj.hasComponent("ColiderComponent") && obj.hasComponent("ScoreComponent"))
+		{
+			let center = obj.getComponent("TransformComponent").getCenter();
+			let radius = obj.getComponent("ColiderComponent").radius;
+			let score = obj.getComponent("ScoreComponent").getValue();
+			let mouse = this.joined["CursoreColider"].getCursore();
+			
+			this.joined["ScoreComponent"].addValue(Math.ceil(score * (1 - mouse.getDistance(center) / radius)))
+		}
+	}
+	
+	miss()
+	{
+		let score = this.joined["ScoreComponent"];
+		score.addValue(-this.penalty)
 	}
 }

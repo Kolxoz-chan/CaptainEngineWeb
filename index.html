@@ -24,30 +24,32 @@
 		
 		/* --- Load resources --------------------------------------------------- */
 		Resources.textures_dir = "https://raw.githubusercontent.com/Kolxoz-chan/MalgrandaLando/main/textures/"
-		//Resources.textures_dir = "file:///C:/Users/Сергей/Desktop/MalgrandaLando/textures/"
+		Resources.audio_dir = "https://raw.githubusercontent.com/Kolxoz-chan/MalgrandaLando/main/audio/"
+
 		Resources.loadTexture("target", "target.png")
 		Resources.loadTexture("simple_sight", "simple_sight.png")
+		Resources.loadAudio("ricochet", "ricochet.mp3")
 		
 		/* Load target prefabs  */
-		let prefab = new Prefab();
+		let prefab = new Prefab("simple_target");
 		prefab.addComponent("LifeComponent", {"max_value" : 1});
+		prefab.addComponent("ScoreComponent", {"value" : 100});
 		prefab.addComponent("TransformComponent", {"size" : new Vector2(48, 48)});
 		prefab.addComponent("ImageComponent", {"texture" : "target"});
-		prefab.addComponent("CircleColiderComponent");
-		prefab.addComponent("DamageClickableComponent", {"global_cursor" : false});
+		prefab.addComponent("CircleColiderComponent", {"enabled" : true});
 		prefab.addComponent("RespawnComponent", {"time" : 3.0});
-		prefab.addComponent("DeathDisolveComponent");
 		prefab.addComponent("PathMovingComponent");
-		prefab.addComponent("TargetBonusClickableComponent", {"global_cursor" : false, "target" : "player"});
-		Resources.addPrefab("simple_target", prefab);
+		prefab.addComponent("DeadDisablerComponent", {"disablers" : ["DrawableComponent"]});
+		Resources.addPrefab(prefab);
 		
 		/* Score indicator */
-		prefab = new Prefab();
+		prefab = new Prefab("score_indicator");
 		prefab.addComponent("TransformComponent");
 		prefab.addComponent("TextComponent", {"line_width" : 5.0, "font" : new Font("Arial", 24)});
-		//prefab.addComponent("DeathDisolveComponent");
+		prefab.addComponent("DissolveComponent", {"time" : 3.0});
 		prefab.addComponent("TemporaryComponent", {"time" : 3.0});
-		Resources.addPrefab("score_indicator", prefab);
+		prefab.addComponent("GravityComponent", {"vector" : new Vector2(0, -0.5)});
+		Resources.addPrefab(prefab);
 		
 		/* --- Load GUI --------------------------------------------------------- */
 		let form = new Form();
@@ -100,11 +102,13 @@
 		
 		/* Player */
 		let ent = new Entity("player");
-		ent.addComponent(new PunishmentMissclickComponent(), {"container" : "objects"});
 		ent.addComponent(new CursoreWatcherComponent());
 		ent.addComponent(new PlayerControlComponent());
-		ent.addComponent(new ScoreIndicatorSpawner(), {"attribute" : "ScoreComponent", "prefab" : "score_indicator", "container" : "objects"});
+		ent.addComponent(new ScoreIndicatorSpawnerComponent(), {"attribute" : "ScoreComponent", "prefab" : "score_indicator", "container" : "objects"});
 		ent.addComponent(new ScoreComponent());
+		ent.addComponent(new CursoreColider(), {"global_cursor" : false});
+		ent.addComponent(new DamageClickComponent(), {"order" : ClickComponent.LAST});
+		ent.addComponent(new AwardClickComponent(), {"order" : ClickComponent.LAST});
 		ent.addComponent(new TimerComponent(), {"time" : 90, "action" : function()
 		{
 			

@@ -210,9 +210,11 @@ class Resources
 {
 	static textures = {}
 	static prefabs = {}
+	static sounds = {}
 	
 	static loading_counter = 0;
 	static textures_dir = "";
+	static audio_dir = ""
 	
 	static isLoaded()
 	{
@@ -221,20 +223,20 @@ class Resources
 	
 	static loadTexture(name, src)
 	{
-		src = Resources.textures_dir + src
 		Resources.loading_counter++;
 		
 		Resources.textures[name] = new Image();
-		Resources.textures[name].src = src;
-		Resources.textures[name].onload = function()
-		{
-			Resources.loading_counter--;
-		}
+		Resources.textures[name].src = Resources.textures_dir + src;
 	}
 	
-	static addPrefab(name, asset)
+	static loadAudio(name, src)
 	{
-		Resources.prefabs[name] = asset;
+		Resources.textures[name] = new Audio(Resources.audio_dir + src);
+	}
+	
+	static addPrefab(asset)
+	{
+		Resources.prefabs[asset.name] = asset;
 	}
 	
 	static getTexture(name)
@@ -295,7 +297,7 @@ class Input
 	
 	static getLocalMouse()
 	{
-		return Input.mouse_pos;
+		return new Vector2(Input.mouse_pos.x, Input.mouse_pos.y);
 	}
 	
 	static isMousePressed(button)

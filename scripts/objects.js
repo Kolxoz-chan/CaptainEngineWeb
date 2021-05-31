@@ -36,6 +36,11 @@ class Entity
 		for(var key in this.components) this.components[key].init();
 	}
 	
+	reset()
+	{
+		for(var key in this.components) this.components[key].reset();
+	}
+	
 	update()
 	{
 		for(var key in this.components)
@@ -100,6 +105,7 @@ class ObjectsLayer extends Container
 		if(obj.name) Game.names[obj.name] = obj;
 		this.entities.push(obj)
 		obj.container = this;
+		obj.reset();
 		obj.init();
 	}
 	
@@ -373,7 +379,13 @@ class Texture
 /* Prefab class */
 class Prefab
 {
+	name = ""
 	components = {}
+	
+	constructor(name = "")
+	{
+		this.name = name
+	}
 	
 	addComponent(name, props = {})
 	{
