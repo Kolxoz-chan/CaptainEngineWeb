@@ -29,6 +29,7 @@
 
 		Resources.loadTexture("target", "target.png")
 		Resources.loadTexture("simple_sight", "simple_sight.png")
+		Resources.loadTexture("shelf_01", "bg/shelf_01.png")
 		Resources.loadAudio("ricochet_01", "ricochet_01.mp3")
 		Resources.loadAudio("shot_01", "shot_01.mp3")
 		
@@ -51,7 +52,7 @@
 		prefab.addComponent("TextComponent", {"line_width" : 5.0, "font" : new Font("Arial", 24)});
 		prefab.addComponent("DissolveComponent", {"time" : 3.0});
 		prefab.addComponent("TemporaryComponent", {"time" : 3.0});
-		prefab.addComponent("GravityComponent", {"vector" : new Vector2(0, -0.5)});
+		prefab.addComponent("GravityComponent", {"vector" : new Vector2(0, -20)});
 		Resources.addPrefab(prefab);
 		
 		/* --- Load GUI --------------------------------------------------------- */

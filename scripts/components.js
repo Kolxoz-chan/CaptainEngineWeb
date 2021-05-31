@@ -21,9 +21,16 @@ class LifeComponent extends AttributeComponent
 class TransformComponent extends ComponentBase
 {	
 	position = new Vector2(0, 0);
+	velocity = new Vector2(0, 0);
 	size = new Vector2(1, 1);
 	axis = new Vector2(0.5, 0.5);
 	angle = 0.0;
+	
+	update()
+	{
+		this.position = this.position.add(this.velocity);
+		this.velocity = new Vector2(0, 0);
+	}
 	
 	setPosition(x, y)
 	{
@@ -70,10 +77,9 @@ class TransformComponent extends ComponentBase
 		return this.axis;
 	}
 	
-	move(x, y)
+	move(vector)
 	{
-		this.position.x += x;
-		this.position.y += y;
+		this.velocity = this.velocity.add(vector);
 	}
 	
 	move_to(point, speed)
@@ -81,10 +87,9 @@ class TransformComponent extends ComponentBase
 		let len = this.position.getDistance(point);
 		if(len > 0)
 		{
-			
 			let vector = this.position.getVectorTo(point)
-			if(len <= speed) this.setPosition(point.x, point.y);
-			else this.move(vector.x * speed, vector.y * speed);
+			if(len <= speed) this.move(point.sub(this.position));  
+			else this.move(vector.mul(speed));
 		}
 	}
 	
@@ -96,7 +101,7 @@ class TransformComponent extends ComponentBase
 		point.x = (this.position.x - x) * Math.cos(angle) - (this.position.y - y) * Math.sin(angle) + x;
 		point.y = (this.position.x - x) * Math.sin(angle) + (this.position.y - y) * Math.cos(angle) + y;
 		
-		this.move(point.x - this.position.x, point.y - this.position.y)
+		this.move(point.sub(this.position))
 	}
 	
 	scale(w, h)
@@ -390,10 +395,10 @@ class PlayerControlComponent extends ComponentBase
 		else this.running = false;
 		
 		/* Moving */
-		if(Input.isKeysPressed(this.controls["GoAhead"])) transform_component.move(0, -speed);
-		if(Input.isKeysPressed(this.controls["GoBack"])) transform_component.move(0, speed);
-		if(Input.isKeysPressed(this.controls["GoLeft"])) transform_component.move(-speed, 0);
-		if(Input.isKeysPressed(this.controls["GoRight"])) transform_component.move(speed, 0);
+		if(Input.isKeysPressed(this.controls["GoAhead"])) transform_component.move(new Vector2(0, -speed));
+		if(Input.isKeysPressed(this.controls["GoBack"])) transform_component.move(new Vector2(0, speed));
+		if(Input.isKeysPressed(this.controls["GoLeft"])) transform_component.move(new Vector2(-speed, 0));
+		if(Input.isKeysPressed(this.controls["GoRight"])) transform_component.move(new Vector2(speed, 0));
 		if(Input.isKeysPressed(["KeyQ"])) Game.setFullScreen(true);
 	}
 }
@@ -480,7 +485,7 @@ class GravityComponent extends ComponentBase
 	
 	update()
 	{
-		this.joined["TransformComponent"].move(this.vector.x, this.vector.y)
+		this.joined["TransformComponent"].move(this.vector.mul(Time.delta_time))
 	}
 }
 

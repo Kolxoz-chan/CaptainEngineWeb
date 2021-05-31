@@ -197,9 +197,24 @@ class Vector2
 		return point.x == this.x && point.y == this.y;
 	}
 	
-	add(point)
+	add(vector)
 	{
-		return new Vector2(this.x + point.x, this.y + point.y)
+		return new Vector2(this.x + vector.x, this.y + vector.y)
+	}
+	
+	sub(vector)
+	{
+		return new Vector2(this.x - vector.x, this.y - vector.y)
+	}
+	
+	mul(value)
+	{
+		return new Vector2(this.x * value, this.y * value)
+	}
+	
+	mulVec(vector)
+	{
+		return new Vector2(this.x * vector.x, this.y * vector.y)
 	}
 	
 	invert()
