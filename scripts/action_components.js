@@ -18,10 +18,13 @@ class ClickableComponent extends ComponentBase
 	update()
 	{
 		let colider = this.joined["ColiderComponent"];
-		if(Input.isMouseClicked(this.key) && this.action)
-		{	
-			let position = this.getCursore()
-			if(colider.isContained(position)) this.action();
+		if(colider)
+		{
+			if(Input.isMouseClicked(this.key) && this.action && colider.isEnabled())
+			{	
+				let position = this.getCursore()
+				if(colider.isContained(position)) this.action();
+			}
 		}
 	}
 }
@@ -147,20 +150,23 @@ class ClickComponent extends ComponentBase
 			let colider = this.joined["CursoreColider"]
 			if(colider)
 			{
-				let count = colider.objects.length
-				if(count > 0)
+				if(colider.isEnabled())
 				{
-					if(this.action)
+					let count = colider.objects.length
+					if(count > 0)
 					{
-						switch(this.order)
+						if(this.action)
 						{
-							case ClickComponent.ALL: for(let i in colider.objects) this.action(colider.objects[i]); break;
-							case ClickComponent.FIRST: this.action(colider.objects[0]); break;
-							case ClickComponent.LAST: this.action(colider.objects[count - 1]); break;
+							switch(this.order)
+							{
+								case ClickComponent.ALL: for(let i in colider.objects) this.action(colider.objects[i]); break;
+								case ClickComponent.FIRST: this.action(colider.objects[0]); break;
+								case ClickComponent.LAST: this.action(colider.objects[count - 1]); break;
+							}
 						}
 					}
+					else if(this.miss) this.miss()
 				}
-				else if(this.miss) this.miss()
 			}
 		}
 	}

@@ -256,6 +256,7 @@ class SoundComponent extends ComponentBase
 	play()
 	{
 		let audio = Resources.getAudio(this.sound)
+		audio.currentTime=0;
 		audio.play();
 	}
 }
@@ -635,7 +636,10 @@ class CursoreColider extends ComponentBase
 			if(container.entities[i].hasComponent("ColiderComponent"))
 			{
 				let colider = container.entities[i].getComponent("ColiderComponent")
-				if(colider.isContained(this.getCursore())) this.objects.push(container.entities[i])
+				if(colider.isEnabled())
+				{
+					if(colider.isContained(this.getCursore())) this.objects.push(container.entities[i])
+				}
 			}
 		}
 	}
@@ -704,7 +708,9 @@ class SoundClickComponent extends ClickComponent
 	{
 		if(this.miss_sound)
 		{
-			Resources.getAudio(this.miss_sound).play()
+			let audio = Resources.getAudio(this.miss_sound)
+			audio.currentTime=0;
+			audio.play();
 		}
 	}
 }

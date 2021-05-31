@@ -7,6 +7,7 @@
 	<script src="scripts/gui.js"></script>
 	<script src="scripts/base_components.js"></script>
 	<script src="scripts/action_components.js"></script>
+	<script src="scripts/container_components.js"></script>
 	<script src="scripts/components.js"></script>
 	<script src="scripts/engine.js"></script>
 </head>
@@ -37,11 +38,11 @@
 		prefab.addComponent("ScoreComponent", {"value" : 100});
 		prefab.addComponent("TransformComponent", {"size" : new Vector2(48, 48)});
 		prefab.addComponent("ImageComponent", {"texture" : "target"});
-		prefab.addComponent("CircleColiderComponent", {"enabled" : true});
+		prefab.addComponent("CircleColiderComponent", {"coliding" : false});
 		prefab.addComponent("RespawnComponent", {"time" : 3.0});
-		prefab.addComponent("PathMovingComponent");
+		prefab.addComponent("PathMovingComponent", {"speed" : 150});
 		prefab.addComponent("SoundComponent", {"sound" : "shot_01"});
-		prefab.addComponent("DeadDisablerComponent", {"disablers" : ["DrawableComponent"]});
+		prefab.addComponent("DeadDisablerComponent", {"disablers" : ["DrawableComponent", "ColiderComponent"]});
 		Resources.addPrefab(prefab);
 		
 		/* Score indicator */
@@ -108,13 +109,13 @@
 		ent.addComponent(new PlayerControlComponent());
 		ent.addComponent(new ScoreIndicatorSpawnerComponent(), {"attribute" : "ScoreComponent", "prefab" : "score_indicator", "container" : "objects"});
 		ent.addComponent(new ScoreComponent());
-		ent.addComponent(new SoundClickComponent(), {"miss_sound" : "ricochet"});
+		ent.addComponent(new SoundClickComponent(), {"miss_sound" : "ricochet_01"});
 		ent.addComponent(new CursoreColider(), {"global_cursor" : false});
 		ent.addComponent(new DamageClickComponent(), {"order" : ClickComponent.LAST});
 		ent.addComponent(new AwardClickComponent(), {"order" : ClickComponent.LAST});
 		ent.addComponent(new TimerComponent(), {"time" : 90, "action" : function()
 		{
-			
+			// Game over
 		}});
 		layer.addObject(ent)
 		
@@ -122,15 +123,15 @@
 		let target = Resources.getPrefab("simple_target")
 		layer.addObject(target.getEntity({
 			"TransformComponent" : {"position" : new Vector2(48, 48)},
-			"PathMovingComponent" : {"speed" : 120, "path" : [new Vector2(48, 48), new Vector2(600, 48), new Vector2(600, 400), new Vector2(48, 400)]}}))
+			"PathMovingComponent" : {"path" : [new Vector2(48, 48), new Vector2(600, 48), new Vector2(600, 400), new Vector2(48, 400)]}}))
 			
 		layer.addObject(target.getEntity({
 			"TransformComponent" : {"position" : new Vector2(123, 67)},
-			"PathMovingComponent" : {"speed" : 120, "path" : [new Vector2(123, 67), new Vector2(123, 600)]}}))
+			"PathMovingComponent" : {"path" : [new Vector2(123, 67), new Vector2(123, 600)]}}))
 			
 		layer.addObject(target.getEntity({
 			"TransformComponent" : {"position" : new Vector2(56, 333)},
-			"PathMovingComponent" : {"speed" : 120, "path" : [new Vector2(56, 333), new Vector2(700, 333)]}}))
+			"PathMovingComponent" : {"path" : [new Vector2(56, 333), new Vector2(700, 333)]}}))
 
 		/* --- Start game -------------------------------------------------------- */
 		Game.start();

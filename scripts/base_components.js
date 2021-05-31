@@ -149,16 +149,22 @@ class ColiderComponent extends ComponentBase
 	
 	update()
 	{
-		this.objects = [];
-		let container = this.owner.getContainer()
-		for(let i in container.entities)
+		if(this.coliding)
 		{
-			if(container.entities[i].hasComponent("ColiderComponent") && this.owner !== container.entities[i])
+			this.objects = [];
+			let container = this.owner.getContainer()
+			for(let i in container.entities)
 			{
-				let colider = container.entities[i].getComponent("ColiderComponent")
-				if(this.isIntersects(colider)) 
+				if(container.entities[i].hasComponent("ColiderComponent") && this.owner !== container.entities[i])
 				{
-					this.objects.push(container.entities[i])
+					let colider = container.entities[i].getComponent("ColiderComponent")
+					if(colider.isEnabled())
+					{
+						if(this.isIntersects(colider)) 
+						{
+							this.objects.push(container.entities[i])
+						}
+					}
 				}
 			}
 		}
