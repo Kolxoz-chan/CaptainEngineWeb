@@ -5,22 +5,40 @@ class Layout
 	widgets = []
 	names = {}
 	padding = 5;
+	
+	addWidget(widget)
+	{
+		this.widgets.push(widget)
+		widget.parent = this.parent
+		if(widget.name) this.names[widget.name] = widget;
+	}
 }
 
-/* Base free layout */
-class FreeLayout extends Layout
+/* Free layout */
+class VBoxLayout extends Layout
 {	
 	constructor(parent)
 	{
 		super()
 		this.parent = parent
 	}
-
-	addWidget(widget)
+	
+	update()
 	{
-		this.widgets.push(widget)
-		widget.parent = this.parent
-		if(widget.name) this.names[widget.name] = widget;
+		for(let i in this.widgets)
+		{
+			if(this.widgets[i].isEnabled()) this.widgets[i].update()
+		}
+	}
+}
+
+/* Vbox layout */
+class FreeLayout extends Layout
+{	
+	constructor(parent)
+	{
+		super()
+		this.parent = parent
 	}
 	
 	update()
@@ -56,6 +74,16 @@ class Widget
 	constructor(name = null)
 	{
 		this.name = name
+	}
+	
+	show()
+	{
+		this.enabled = true
+	}
+	
+	hide()
+	{
+		this.enabled = false
 	}
 	
 	isEnabled()
@@ -131,6 +159,8 @@ class Widget
 /* Form widget */
 class Form extends Widget
 {	
+	enabled = false;
+
 	constructor(name = null)
 	{
 		super(name)
@@ -274,6 +304,48 @@ class Picture extends Widget
 		
 			this.image.draw(pos, size)
 			if(this.line_width > 0.0) Game.context.strokeRect(pos.x, pos.y, size.x, size.y);
+		}
+	}
+}
+
+/* Button widget */
+class Button extends Label
+{
+	constructor(text = "", name = null)
+	{
+		super(name)
+		this.text = text;
+		this.style = {
+			"font" : null,
+			"opacity" : 1.0,
+			"border_width" : 2,
+			"border_color" : new Color(0, 0, 0),
+			"background_style" : new Color(255, 255, 255),
+			"icon_size" : new Vector2(32, 32)
+		}
+	}
+	
+	update()
+	{	
+		// Handle event
+		if(this.onUpdate) this.onUpdate();
+	
+		if(this.style.font)
+		{
+			let pos = this.getPosition()
+			let size = this.getSize()
+		
+			Game.context.globalAlpha = this.style.opacity;
+			Game.context.fillStyle = this.style.background_style;
+			Game.context.strokeStyle = this.style.border_color;
+			Game.context.textBaseline = "top";
+			
+			Game.context.fillRect(pos.x, pos.y, size.x, size.y);
+			Game.context.strokeRect(pos.x, pos.y, size.x, size.y);
+		
+			Game.context.font = this.style.font;
+			Game.context.strokeText(this.text, pos.x, pos.y);
+			Game.context.fillText(this.text, pos.x, pos.y);
 		}
 	}
 }

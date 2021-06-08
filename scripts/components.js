@@ -22,7 +22,7 @@ class TransformComponent extends ComponentBase
 {	
 	position = new Vector2(0, 0);
 	velocity = new Vector2(0, 0);
-	size = new Vector2(1, 1);
+	size = null;
 	axis = new Vector2(0.5, 0.5);
 	angle = 0.0;
 	
@@ -37,9 +37,9 @@ class TransformComponent extends ComponentBase
 		this.position = new Vector2(x, y);
 	}
 	
-	setSize(x, y)
+	setSize(vector)
 	{
-		this.size = new Vector2(x, y);
+		this.size = vector;
 	}
 	
 	setAngle(a)
@@ -93,13 +93,13 @@ class TransformComponent extends ComponentBase
 		}
 	}
 	
-	move_around(x, y, angle)
+	move_around(axis, angle)
 	{	
-		let point = new Vector2()
 		angle = Math.PI / 180 * angle;
 		
-		point.x = (this.position.x - x) * Math.cos(angle) - (this.position.y - y) * Math.sin(angle) + x;
-		point.y = (this.position.x - x) * Math.sin(angle) + (this.position.y - y) * Math.cos(angle) + y;
+		let point = new Vector2()
+		point.x = (this.position.x - axis.x) * Math.cos(angle) - (this.position.y - axis.y) * Math.sin(angle) + axis.x;
+		point.y = (this.position.x - axis.x) * Math.sin(angle) + (this.position.y - axis.y) * Math.cos(angle) + axis.y;
 		
 		this.move(point.sub(this.position))
 	}
@@ -161,7 +161,12 @@ class ImageComponent extends DrawableComponent
 	
 	init()
 	{	
-		this.join("TransformComponent")
+		let transform = this.join("TransformComponent")
+		if(!transform.size) 
+		{
+			let image = Resources.getTexture(this.texture)
+			transform.setSize(new Vector2(image.width, image.height))
+		}
 	}
 	
 	update()
@@ -172,13 +177,14 @@ class ImageComponent extends DrawableComponent
 			let transform_component = this.joined["TransformComponent"]
 			let position = transform_component.getPosition()
 			let size = transform_component.getSize()
+			let image = Resources.getTexture(this.texture)
 			
 			/* Settings */
 			this.applyStyles();
 			this.applyTransformation()
 			
 			/* Draw */
-			Game.context.drawImage(Resources.getTexture(this.texture), position.x, position.y, size.x, size.y);
+			Game.context.drawImage(image, position.x, position.y, size.x, size.y);
 			if(this.line_width > 0.0) Game.context.strokeRect(position.x, position.y, size.x, size.y);
 			
 			/* Reset*/
@@ -196,7 +202,13 @@ class TextComponent extends DrawableComponent
 	
 	init()
 	{	
-		this.join("TransformComponent")
+		let transform = this.join("TransformComponent")
+		if(!transform.size) 
+		{
+			this.applyStyles();
+			let metrics = Game.context.measureText(this.text);
+			transform.setSize(new Vector2(metrics.width, metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent))
+		}
 	}
 	
 	update()
@@ -229,10 +241,13 @@ class PathMovingComponent extends ComponentBase
 	path = [];
 	speed = 50;
 	current_point = 0;
+	waiting = 0.0
+	timer = 0.0
 	
 	init()
 	{
 		this.join("TransformComponent")
+		this.timer = this.waiting
 	}
 	
 	update()
@@ -245,7 +260,15 @@ class PathMovingComponent extends ComponentBase
 			
 			transform_component.move_to(point, this.speed * Time.delta_time)
 			
-			if(point.equals(pos)) this.current_point++;
+			if(point.equals(pos)) 
+			{
+				this.timer -= Time.delta_time;
+				if(this.timer <= 0)
+				{
+					this.timer = this.waiting
+					this.current_point++;
+				}
+			}
 			if(this.current_point >= this.path.length) this.current_point = 0;
 		}
 	}
@@ -317,7 +340,7 @@ class RoundMovingComponent extends ComponentBase
 	update()
 	{
 		let transform_component = this.joined["TransformComponent"]	
-		transform_component.move_around(this.axis.x, this.axis.y, this.speed * Time.delta_time)
+		transform_component.move_around(this.axis, this.speed * Time.delta_time)
 	}
 }
 
@@ -438,8 +461,8 @@ class RectColiderComponent extends ColiderComponent
 	
 	isContained(point)
 	{
-		let rect = this.getRect
-		return rect.isContained(point)
+		let rect = this.getRect()
+		return rect.isConteined(point)
 	}
 }
 

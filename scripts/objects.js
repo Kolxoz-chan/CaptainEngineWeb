@@ -87,6 +87,28 @@ class Container
 	enabled = true;
 	container = null;
 	entities = []
+	components = {}
+	
+	addComponent(value, data={})
+	{
+		let name = value.constructor.name
+		if(value.name.length > 0) name = value.name;
+		
+		this.components[name] = value;
+		value.setOwner(this);
+		value.setData(data);
+	}
+	
+	hasComponent(name)
+	{
+		return this.components.hasOwnProperty(name);
+	}
+	
+	getComponent(name)
+	{
+		if(!this.hasComponent(name)) console.log("WARNING. Container '" + this.name + "' has not '" + name + "' component!")
+		return this.components[name];
+	}
 }
 
 /* Layer of objects*/
@@ -125,6 +147,11 @@ class ObjectsLayer extends Container
 	
 	update()
 	{
+		for(var key in this.components)
+		{
+			if(this.components[key].isEnabled()) this.components[key].update();
+		}
+		
 		for(let i in this.delete_queue)
 		{
 			let index = this.entities.indexOf(this.delete_queue[i])
@@ -349,6 +376,39 @@ class Color
 	toString()
 	{
 		return "rgba(" + this.r + "," + this.g + "," + this.b + "," + this.a + ")";
+	}
+}
+
+class Gradient
+{	
+	spectrum = {}
+
+	static create(begin = new Vector2(0, 0), end = new Vector2(0, 1))
+	{
+		return new Gradient(begin, end)
+	}
+
+	constructor(begin = new Vector2(0, 0), end = new Vector2(0, 1))
+	{
+		this.begin = begin
+		this.end = end
+	}
+	
+	add(coef, color)
+	{
+		this.spectrum[coef] = color
+		return this;
+	}
+	
+	get(size = new Vector2(1, 1))
+	{
+		let grd = Game.context.createLinearGradient(size.x * this.begin.x, size.y * this.begin.y, size.x * this.end.x, size.y * this.end.y);
+		for(let i in this.spectrum)
+		{
+			grd.addColorStop(i, this.spectrum[i]);
+		}
+		
+		return grd;
 	}
 }
 

@@ -4,6 +4,7 @@ class Game
 	/* Public fields */
 	static current_level = null;
 	static widgets = [];
+	static widgets_named = {};
 	static names = {};
 	static started = false;
 	static resizable = false;
@@ -98,6 +99,7 @@ class Game
 	static addWidget(widget)
 	{
 		this.widgets.push(widget)
+		this.widgets_named[widget.name] = widget
 	}
 	
 	static setFPS(value)
@@ -208,6 +210,8 @@ class Camera
 /* Resources class */
 class Resources
 {
+	static onLoad = null
+	
 	static textures = {}
 	static prefabs = {}
 	static sounds = {}
@@ -218,15 +222,46 @@ class Resources
 	
 	static isLoaded()
 	{
-		return Resources.loading_counter == 0;
+		return Resources.loading_counter <= 0;
+	}
+	
+	static loadAll()
+	{
+		Resources.loadResource(Resources.textures, (src) => 
+		{
+			let img = new Image()
+			img.src = src;
+			return img;
+		})
+	}
+	
+	static loadResource(arr, func)
+	{
+		for(let i in arr)
+		{
+			let obj = func(arr[i]);
+			obj.src = arr[i]
+			arr[i] = obj
+			
+			arr[i].onload = () => 
+			{
+				Resources.loading_counter--;
+				if(Resources.isLoaded() && Resources.onLoad) Resources.onLoad()
+			}
+			
+			arr[i].onerror = () => 
+			{
+				Resources.loading_counter--;
+				console.log("ERROR. " + obj.constructor.name + " '" + i + "' is not loaded!")
+				if(Resources.loading_counter <= 0 && Resources.onLoad) Resources.onLoad()
+			}
+		}
 	}
 	
 	static loadTexture(name, src)
 	{
 		Resources.loading_counter++;
-		
-		Resources.textures[name] = new Image();
-		Resources.textures[name].src = Resources.textures_dir + src;
+		Resources.textures[name] = Resources.textures_dir + src;
 	}
 	
 	static loadAudio(name, src)
