@@ -59,7 +59,6 @@ class Widget
 	name = null;
 	enabled = true;
 	parent = undefined;
-	layout = new FreeLayout(this);
 	style = {}
 	
 	size = new Vector2(0, 0)
@@ -104,11 +103,6 @@ class Widget
 	setSize(size)
 	{
 		this.size = size
-	}
-	
-	setLayout(layout)
-	{
-		this.layout = layout;
 	}
 	
 	setPositionType(x, y)
@@ -156,8 +150,19 @@ class Widget
 	}
 }
 
+/* Container widget */
+class ContainerWidget extends Widget
+{
+	layout = new FreeLayout(this);
+	
+	setLayout(layout)
+	{
+		this.layout = layout;
+	}
+}
+
 /* Form widget */
-class Form extends Widget
+class Form extends ContainerWidget
 {	
 	enabled = false;
 
@@ -309,20 +314,11 @@ class Picture extends Widget
 }
 
 /* Button widget */
-class Button extends Label
+class Button extends ContainerWidget
 {
-	constructor(text = "", name = null)
+	constructor(name = null)
 	{
 		super(name)
-		this.text = text;
-		this.style = {
-			"font" : null,
-			"opacity" : 1.0,
-			"border_width" : 2,
-			"border_color" : new Color(0, 0, 0),
-			"background_style" : new Color(255, 255, 255),
-			"icon_size" : new Vector2(32, 32)
-		}
 	}
 	
 	update()
@@ -342,10 +338,6 @@ class Button extends Label
 			
 			Game.context.fillRect(pos.x, pos.y, size.x, size.y);
 			Game.context.strokeRect(pos.x, pos.y, size.x, size.y);
-		
-			Game.context.font = this.style.font;
-			Game.context.strokeText(this.text, pos.x, pos.y);
-			Game.context.fillText(this.text, pos.x, pos.y);
 		}
 	}
 }
