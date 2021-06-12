@@ -235,6 +235,48 @@ class TextComponent extends DrawableComponent
 	}
 }
 
+/* Polygon component */
+class PolygonComponent extends DrawableComponent
+{
+	points = []
+	closed = false
+	
+	init()
+	{	
+		let transform = this.join("TransformComponent")
+	}
+	
+	update()
+	{		
+		if(this.opacity > 0 && this.points.length > 0)
+		{	
+			/* Get data */
+/*			let transform_component = this.joined["TransformComponent"]
+			let position = transform_component.getPosition()
+			let size = transform_component.getSize()
+			*/
+			
+			/* Settings */
+			this.applyStyles();
+			this.applyTransformation()
+			
+			/* Draw */
+			Game.context.beginPath();
+			Game.context.moveTo(this.points[0].x, this.points[0].y);
+			for(let i=1; i<this.points.length; i++)
+			{
+				Game.context.lineTo(this.points[i].x, this.points[i].y);
+			}
+			Game.context.closePath();
+			Game.context.stroke();
+			Game.context.fill();
+			
+			/* Reset*/
+			Game.context.resetTransform();
+		}
+	}
+}
+
 /* Path Moving Component */
 class PathMovingComponent extends ComponentBase
 {
