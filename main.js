@@ -7,7 +7,8 @@ Game.setSize(new Vector2(1280, 720))
 
 let player = new Entity("player")
 player.addComponent("TransformComponent", {"position" : new Vector2(100, 100), "size" : new Vector2(64, 64)})
-player.addComponent("RectShapeComponent", {})
+player.addComponent("CircleShapeComponent", {})
+player.addComponent("BrownianMovingComponent", {})
 Game.addEntity(player)
 
 Game.start();

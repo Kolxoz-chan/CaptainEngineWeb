@@ -1,7 +1,7 @@
 /* Transform component*/
 class TransformComponent extends ComponentBase
 {
-	default_properties = 
+	default_properties =
 	{
 		"angle" : 0,
 		"position" : new Vector2(0, 0),
@@ -9,7 +9,7 @@ class TransformComponent extends ComponentBase
 		"size" : new Vector2(0, 0),
 		"axis" : new Vector2(0.5, 0.5),
 	}
-	
+
 
 	update()
 	{
@@ -50,7 +50,7 @@ class TransformComponent extends ComponentBase
 
 	getVelocity()
 	{
-		return this.getProperty("velosity")
+		return this.getProperty("velocity")
 	}
 
 	getRealPosition()
@@ -134,19 +134,20 @@ class TransformComponent extends ComponentBase
 
 	scale(vec)
 	{
-		this.size.x *= vec.x;
-		this.size.y *= vec.y;
+		let size = this.getSize()
+		this.setSize(size.mulVec(vec))
 	}
 
 	grow(vec)
 	{
-		this.size.x += vec.x;
-		this.size.y += vec.y;
+		let size = this.getSize()
+		this.setSize(size.addVec(vec))
 	}
 
 	rotate(a)
 	{
-		this.angle += a;
+		let angle = this.getAngle();
+		this.setAngle(angle + a);
 	}
 
 	rotate_at(point)
@@ -160,11 +161,14 @@ class TransformComponent extends ComponentBase
 /* Path Moving Component */
 class PathMovingComponent extends ComponentBase
 {
-	path = [];
-	speed = 50;
-	current_point = 0;
-	waiting = 0.0
-	timer = 0.0
+	default_properties =
+	{
+		"path" : [],
+		"speed" : 50,
+		"current_point" : 0,
+		"waiting" : 0.0,
+		"timer" : 0.0
+	}
 
 	init()
 	{
@@ -172,26 +176,87 @@ class PathMovingComponent extends ComponentBase
 		this.timer = this.waiting
 	}
 
+	getCounter()
+	{
+		return this.getProperty("current_point")
+	}
+
+	getPath()
+	{
+		return this.getProperty("path")
+	}
+
+	getPathSize()
+	{
+		return this.getPath().length
+	}
+
+	getSpeed()
+	{
+		return this.getProperty("speed")
+	}
+
+	getTimer()
+	{
+		return this.getProperty("timer")
+	}
+
+	getCurentPoint()
+	{
+		let path = this.getPath()
+		let index = this.getCounter();
+		return path[index]
+	}
+
+	setTimer(value)
+	{
+		this.setProperty("timer", value)
+	}
+
+	setCounter(value)
+	{
+		this.setProperty("current_point", value)
+	}
+
+	updateTimer()
+	{
+		this.setTimer(this.getTimer() - Time.delta_time)
+		if(this.getTimer() <= 0)
+		{
+			this.resetTimer()
+			this.switchPoint()
+		}
+	}
+
+	switchPoint()
+	{
+		let counter = this.getCounter() + 1
+		let size = this.getPathSize()
+
+		this.setCounter(counter)
+		if(counter >= size) this.setCounter(0);
+	}
+
+	resetTimer()
+	{
+		let waiting = this.getProperty("waiting")
+		this.setTimer(waiting)
+	}
+
 	update()
 	{
 		let transform_component = this.joined["TransformComponent"]
-		if(this.path.length)
+		if(this.getPathSize())
 		{
 			let pos = transform_component.getPosition();
-			let point = this.path[this.current_point];
+			let point = this.getCurentPoint();
 
-			transform_component.move_to(point, this.speed * Time.delta_time)
+			transform_component.move_to(point, this.getSpeed() * Time.delta_time)
 
 			if(point.equals(pos))
 			{
-				this.timer -= Time.delta_time;
-				if(this.timer <= 0)
-				{
-					this.timer = this.waiting
-					this.current_point++;
-				}
+				this.updateTimer();
 			}
-			if(this.current_point >= this.path.length) this.current_point = 0;
 		}
 	}
 }
@@ -199,25 +264,41 @@ class PathMovingComponent extends ComponentBase
 /* Path Moving Component */
 class BrownianMovingComponent extends ComponentBase
 {
-	speed = 50;
+	default_properties =
+	{
+		"speed" : 50
+	}
 
 	init()
 	{
 		this.join("TransformComponent")
+	}
+
+	getSpeed()
+	{
+		return this.getProperty("speed")
 	}
 
 	update()
 	{
 		let transform_component = this.joined["TransformComponent"]
 		let vec = Vector2.random();
-		transform_component.move(vec.mul(Time.delta_time * this.speed))
+		transform_component.move(vec.mul(Time.delta_time * this.getSpeed()))
 	}
 }
 
 /* Watcher Component */
 class WatcherComponent extends ComponentBase
 {
-	target = null;
+	default_properties =
+	{
+		"target" : null
+	}
+
+	getTarget()
+	{
+		return this.getProperty("target")
+	}
 
 	init()
 	{
@@ -226,9 +307,9 @@ class WatcherComponent extends ComponentBase
 
 	update()
 	{
-		if(this.target)
+		if(this.getTarget())
 		{
-			let obj = Game.getObject(this.target)
+			let obj = Game.getObject(this.getTarget())
 			let self_component = this.joined["TransformComponent"]
 			let target_component = obj.getComponent("TransformComponent")
 			self_component.rotate_at(target_component.getCenter())

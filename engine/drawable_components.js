@@ -2,51 +2,70 @@
 class DrawableComponent extends ComponentBase
 {
 	name = "DrawableComponent"
-	fill_color = new Color(255, 255, 255)
-	stroke_color = new Color(0, 0, 0)
-	line_width = 1.0;
-	opacity = 1.0;
-	autodraw = true;
-	is_drawn = false;
+
+	default_properties =
+	{
+		"fill_color" : new Color(255, 255, 255),
+		"stroke_color" : new Color(0, 0, 0),
+		"line_width" : 1.0,
+		"opacity" : 1.0,
+		"autodraw" : true,
+		"is_drawn" : false
+	}
 
 	getOpacity()
 	{
-		return this.opacity
+		return this.getProperty("opacity")
+	}
+
+	getFillColor()
+	{
+		return this.getProperty("fill_color")
+	}
+
+	getStrokeColor()
+	{
+		return this.getProperty("stroke_color")
+	}
+
+	getLineWidth()
+	{
+		return this.getProperty("line_width")
 	}
 
 	setFillColor(color)
 	{
-		this.fill_color = color;
+		this.setProperty("fill_color", color)
 	}
 
 	setStrokeColor(color)
 	{
-		this.stroke_color = color;
+		this.setProperty("stroke_color", color)
 	}
 
 	setLineWidth(value)
 	{
-		this.line_width = value
+		this.setProperty("line_width", value)
 	}
 
 	setOpacity(value)
 	{
-		this.opacity = value
+		this.setProperty("opacity", value)
 	}
 
 	isVisible()
 	{
-		return this.opacity > 0.0;
+		return this.getOpacity() > 0.0;
 	}
 
-	redraw()
+	setDrawn(value)
 	{
-		this.is_drawn = true;
+		this.setProperty("is_drawn", value)
 	}
 
 	update()
 	{
-		if(this.isVisible() && (this.autodraw || this.is_drawn))
+		if(this.isVisible() && (this.getProperty("autodraw") || this.getProperty("is_drawn")))
 		{
 			/* Get data */
 			let transform_component = this.joined["TransformComponent"]
@@ -61,16 +80,16 @@ class DrawableComponent extends ComponentBase
 
 			/* Reset*/
 			Game.context.resetTransform();
-			this.is_drawn = false;
+			this.setDrawn(false);
 		}
 	}
 
 	applyStyles()
 	{
-		Game.context.globalAlpha = this.opacity;
-		Game.context.fillStyle = this.fill_color;
-		Game.context.strokeStyle = this.stroke_color;
-		Game.context.lineWidth = this.line_width;
+		Game.context.globalAlpha = this.getOpacity();
+		Game.context.fillStyle = this.getFillColor();
+		Game.context.strokeStyle = this.getStrokeColor();
+		Game.context.lineWidth = this.getLineWidth();
 	}
 
 	applyTransformation()
@@ -100,7 +119,7 @@ class RectShapeComponent extends DrawableComponent
 	draw(position, size)
 	{
 		Game.context.fillRect(position.x, position.y, size.x, size.y);
-		if(this.line_width > 0.0) Game.context.strokeRect(position.x, position.y, size.x, size.y);
+		if(this.getLineWidth() > 0.0) Game.context.strokeRect(position.x, position.y, size.x, size.y);
 	}
 }
 
@@ -130,11 +149,8 @@ class ImageComponent extends DrawableComponent
 	init()
 	{
 		let transform = this.join("TransformComponent")
-		if(!transform.size)
-		{
-			let image = Resources.getTexture(this.texture)
-			transform.setSize(new Vector2(image.width, image.height))
-		}
+		let image = Resources.getTexture(this.texture)
+		transform.setSize(new Vector2(image.width, image.height))
 	}
 
 	isVisible()
@@ -182,7 +198,7 @@ class TextComponent extends DrawableComponent
 		if(this.outline) Game.context.strokeText(this.text, position.x, position.y + size.y);
 		Game.context.fillText(this.text, position.x, position.y + size.y);
 	}
-}   
+}
 
 /* Polygon component */
 class PolygonComponent extends DrawableComponent
@@ -351,7 +367,7 @@ class SplineComponent extends PolygonComponent
 	}
 }
 
-/* BackgroundColorComponent 
+/* BackgroundColorComponent
 class BackgroundColorComponent extends ComponentBase
 {
 	background = null
