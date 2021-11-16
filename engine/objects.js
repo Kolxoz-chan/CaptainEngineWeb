@@ -136,8 +136,8 @@ class Entity
 		}
 		this.childs.push(obj)
 		obj.parent = this;
+		obj.init({});
 		obj.reset();
-		obj.init();
 	}
 
 	deleteChild(obj)

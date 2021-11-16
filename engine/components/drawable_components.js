@@ -143,24 +143,34 @@ class CircleShapeComponent extends DrawableComponent
 /* Image component */
 class ImageComponent extends DrawableComponent
 {
-	texture = null;
-	line_width = 0.0;
+	default_properties = 
+	{
+		"texture" : "",
+		"line_width" : 0.0
+	}
+
+	getTexture()
+	{
+		let texture = this.getProperty("texture")
+		return Resources.bitmaps[texture] ? Resources.bitmaps[texture]  : Resources.getTexture(texture)
+	}
+	
 
 	init()
 	{
 		let transform = this.join("TransformComponent")
-		let image = Resources.getTexture(this.texture)
+		let image = Resources.getTexture(this.getTexture())
 		transform.setSize(new Vector2(image.width, image.height))
 	}
 
 	isVisible()
 	{
-		return this.texture && this.opacity > 0.0
+		return this.getTexture() && this.getOpacity() > 0.0
 	}
 
 	draw(position, size)
 	{
-		let image = Resources.bitmaps[this.texture] ? Resources.bitmaps[this.texture]  : Resources.getTexture(this.texture)
+		let image = this.getTexture()
 		if(image)
 		{
 			Game.context.drawImage(image, position.x, position.y);
@@ -172,9 +182,12 @@ class ImageComponent extends DrawableComponent
 /* Text component */
 class TextComponent extends DrawableComponent
 {
-	text = "";
-	font = "14px Arial"
-	outline = true;
+	default_properties = 
+	{
+		"text" : "",
+		"font" : "14px Arial",
+		"outline" : true
+	}
 
 	init()
 	{
@@ -187,16 +200,31 @@ class TextComponent extends DrawableComponent
 		//transform.setPosition(transform.getPosition().add(new Vector2(0, size.y)))
 	}
 
+	getText()
+	{
+		return this.getProperty("text")
+	}
+
+	getFont()
+	{
+		return this.getProperty("font")
+	}
+
+	isOutline()
+	{
+		return this.getProperty("outline")
+	}
+
 	isVisible()
 	{
-		return this.text.length && this.opacity > 0.0 && this.font;
+		return this.getText() && this.getOpacity() > 0.0 && this.getFont();
 	}
 
 	draw(position, size)
-	{
-		Game.context.font = this.font;
-		if(this.outline) Game.context.strokeText(this.text, position.x, position.y + size.y);
-		Game.context.fillText(this.text, position.x, position.y + size.y);
+	{	let text = getText()
+		Game.context.font = this.getFont();
+		if(this.isOutline()) Game.context.strokeText(text, position.x, position.y + size.y);
+		Game.context.fillText(text, position.x, position.y + size.y);
 	}
 }
 

@@ -1,35 +1,29 @@
 /* Timer component*/
 class TimerComponent extends ComponentBase
 {
-	default_properties = 
-	{
-		"enabled" : true,
-		"time" : 60.0,
-		"action" : null,
-		"tic" : null
-	}
+	// action = null,
+	// tic = null
 
-	getTime()
+	init()
 	{
-		return this.time;
+		this.addIntefaces(new ITimer())
 	}
 
 	update()
 	{
-		if(this.time <= 0.0)
+		if(this.updateTimer())
+		{
+			if(this.tic) this.tic(this.getTimer());
+		}
+		else
 		{
 			this.enabled = false;
 			if(this.action) this.action()
 		}
-		else
-		{
-			this.time -= Time.delta_time;
-			if(this.tic) this.tic();
-		}
 	}
 }
 
-/* Attribute Change Event */
+/* Attribute Change Event 
 class AttributeEventComponent extends ComponentBase
 {
 	default_properties = 
@@ -51,9 +45,9 @@ class AttributeEventComponent extends ComponentBase
 		if(this.value != new_value && this.action) this.action(this.value, new_value)
 		this.value = new_value;
 	}
-}
+}*/
 
-/* Radius Scanner */
+/* Radius Scanner
 class RadiusScannerComponent extends ComponentBase
 {
 	 
@@ -78,12 +72,13 @@ class RadiusScannerComponent extends ComponentBase
 			}
 		}
 	}
-}
+} */
 
 class TriggerComponent extends ComponentBase
 {
-	name = "TriggerComponent"
-	//hint = null
-	auto = true;
+	// hint = null
 	// action = null
+
+	name = "TriggerComponent"
+	auto = true;
 }

@@ -10,7 +10,6 @@ class TransformComponent extends ComponentBase
 		"axis" : new Vector2(0.5, 0.5),
 	}
 
-
 	update()
 	{
 		this.setVelocity(new Vector2(0, 0));
@@ -164,16 +163,13 @@ class PathMovingComponent extends ComponentBase
 	default_properties =
 	{
 		"path" : [],
-		"speed" : 50,
 		"current_point" : 0,
-		"waiting" : 0.0,
-		"timer" : 0.0
 	}
 
 	init()
 	{
 		this.join("TransformComponent")
-		this.timer = this.waiting
+		this.addIntefaces(new ISpeed(), new ITimer())
 	}
 
 	getCounter()
@@ -191,16 +187,6 @@ class PathMovingComponent extends ComponentBase
 		return this.getPath().length
 	}
 
-	getSpeed()
-	{
-		return this.getProperty("speed")
-	}
-
-	getTimer()
-	{
-		return this.getProperty("timer")
-	}
-
 	getCurentPoint()
 	{
 		let path = this.getPath()
@@ -208,24 +194,9 @@ class PathMovingComponent extends ComponentBase
 		return path[index]
 	}
 
-	setTimer(value)
-	{
-		this.setProperty("timer", value)
-	}
-
 	setCounter(value)
 	{
 		this.setProperty("current_point", value)
-	}
-
-	updateTimer()
-	{
-		this.setTimer(this.getTimer() - Time.delta_time)
-		if(this.getTimer() <= 0)
-		{
-			this.resetTimer()
-			this.switchPoint()
-		}
 	}
 
 	switchPoint()
@@ -235,12 +206,6 @@ class PathMovingComponent extends ComponentBase
 
 		this.setCounter(counter)
 		if(counter >= size) this.setCounter(0);
-	}
-
-	resetTimer()
-	{
-		let waiting = this.getProperty("waiting")
-		this.setTimer(waiting)
 	}
 
 	update()
@@ -255,7 +220,10 @@ class PathMovingComponent extends ComponentBase
 
 			if(point.equals(pos))
 			{
-				this.updateTimer();
+				if(!this.updateTimer())
+				{
+					this.switchPoint()
+				}
 			}
 		}
 	}
@@ -264,19 +232,10 @@ class PathMovingComponent extends ComponentBase
 /* Path Moving Component */
 class BrownianMovingComponent extends ComponentBase
 {
-	default_properties =
-	{
-		"speed" : 50
-	}
-
 	init()
 	{
 		this.join("TransformComponent")
-	}
-
-	getSpeed()
-	{
-		return this.getProperty("speed")
+		this.addIntefaces(new ISpeed())
 	}
 
 	update()
@@ -290,26 +249,17 @@ class BrownianMovingComponent extends ComponentBase
 /* Watcher Component */
 class WatcherComponent extends ComponentBase
 {
-	default_properties =
-	{
-		"target" : null
-	}
-
-	getTarget()
-	{
-		return this.getProperty("target")
-	}
-
 	init()
 	{
 		this.join("TransformComponent")
+		this.addIntefaces(new ITarget())
 	}
 
 	update()
 	{
-		if(this.getTarget())
+		let target = this.getTarget()
+		if(target)
 		{
-			let obj = Game.getObject(this.getTarget())
 			let self_component = this.joined["TransformComponent"]
 			let target_component = obj.getComponent("TransformComponent")
 			self_component.rotate_at(target_component.getCenter())
@@ -317,59 +267,82 @@ class WatcherComponent extends ComponentBase
 	}
 }
 
-
 /* Round Moving Component */
 class RoundMovingComponent extends ComponentBase
 {
-	speed = 50;
-	axis = new Vector2(0, 0);
+	default_properties =
+	{
+		"axis" : new Vector2(0, 0)
+	}
 
 	init()
 	{
 		this.join("TransformComponent")
+		this.addIntefaces(new ISpeed())
+
+	}
+
+	getAxis()
+	{
+		return this.getProperty("axis")
 	}
 
 	update()
 	{
 		let transform_component = this.joined["TransformComponent"]
-		transform_component.move_around(this.axis, this.speed * Time.delta_time)
+		transform_component.move_around(this.getAxis(), this.getSpeed() * Time.delta_time)
 	}
 }
 
 class PursuerComponent extends ComponentBase
 {
-	speed = 50;
-	target = null;
-	min_radius = 0;
-	middle_radius = 0;
-	max_radius = 100;
+	default_properties =
+	{
+		"min_radius" : 0,
+		"middle_radius" : 0,
+		"max_radius" : 100
+	}
 
 	init()
 	{
 		this.join("TransformComponent")
+		this.addIntefaces(new ISpeed(), new ITarget())
+	}
+
+	getMinRadius()
+	{
+		return this.getProperty("min_radius")
+	}
+
+	getMiddleRadius()
+	{
+		return this.getProperty("middle_radius")
+	}
+
+	getMaxRadius()
+	{
+		return this.getProperty("max_radius")
 	}
 
 	update()
 	{
-		if(this.target)
+
+		let obj = this.getTarget()
+
+		if(obj)
 		{
-			let obj = Game.getObject(this.target)
 			let target_transform = obj.getComponent("TransformComponent")
+			let transform_component = this.joined["TransformComponent"];
 
-			if(target_transform)
-			{
-				let transform_component = this.joined["TransformComponent"];
+			let self_pos = transform_component.getPosition();
+			let target_pos = target_transform.getPosition();
 
-				let self_pos = transform_component.getPosition();
-				let target_pos = target_transform.getPosition();
+			let speed = Time.delta_time * this.getSpeed();
+			let distance = self_pos.getDistance(target_pos)
 
-				let speed = Time.delta_time * this.speed;
-				let distance = self_pos.getDistance(target_pos)
-
-				if(distance < this.min_radius) transform_component.move_to(target_pos, -speed)
-				else if(distance < this.middle_radius) return;
-				else if(distance < this.max_radius) transform_component.move_to(target_pos, speed)
-			}
+			if(distance < this.getMinRadius()) transform_component.move_to(target_pos, -speed)
+			else if(distance < this.getMiddleRadius()) return;
+			else if(distance < this.getMaxRadius()) transform_component.move_to(target_pos, speed)
 		}
 	}
 }
@@ -392,7 +365,15 @@ class CameraComponent extends ComponentBase
 /* Gravity component */
 class GravityComponent extends ComponentBase
 {
-	vector = new Vector2(0, 0)
+	default_properties =
+	{
+		"vector" : new Vector2(0, 0)
+	}
+	
+	getVector()
+	{
+		return this.getProperty("vector")
+	}
 
 	init()
 	{
@@ -401,6 +382,7 @@ class GravityComponent extends ComponentBase
 
 	update()
 	{
-		this.joined["TransformComponent"].move(this.vector.mul(Time.delta_time))
+		let vec = this.getVector();
+		this.joined["TransformComponent"].move(vec.mul(Time.delta_time))
 	}
 }

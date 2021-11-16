@@ -1,48 +1,6 @@
-class PlayerComponent extends ComponentBase
-{
-	default_properties =
-	{
-		"controls" : {},
-	}
-
-	init()
-	{
-		this.join("TransformComponent")
-
-		this.addControl("GoAhead", ["KeyW", "ArrowUp"]);
-		this.addControl("GoBack", ["KeyS", "ArrowDown"]);
-		this.addControl("GoLeft", ["KeyA", "ArrowLeft"]);
-		this.addControl("GoRight", ["KeyD", "ArrowRight"]);
-	}
-
-	addControl(action, buttons)
-	{
-		this.getProperty("controls")[action] = buttons;
-	}
-
-	getControls(name)
-	{
-		return this.getProperty("controls")[name]
-	}
-
-	update()
-	{
-		let transform_component = this.joined["TransformComponent"]
-		let speed = Time.delta_time * 120;
-
-		/* Moving */
-		if(Input.isKeysPressed(this.getControls("GoAhead"))) transform_component.move(new Vector2(0, -speed));
-		if(Input.isKeysPressed(this.getControls("GoBack"))) transform_component.move(new Vector2(0, speed));
-		if(Input.isKeysPressed(this.getControls("GoLeft"))) transform_component.move(new Vector2(-speed, 0));
-		if(Input.isKeysPressed(this.getControls("GoRight"))) transform_component.move(new Vector2(speed, 0));
-	}
-}
-
 /* Temporary component */
 class LifeTimeComponent extends TimerComponent
 {
-	time = 5.0
-
 	action()
 	{
 		this.owner.parent.deleteChild(this.owner)
@@ -52,33 +10,27 @@ class LifeTimeComponent extends TimerComponent
 /* Hiding after death component */
 class DissolveComponent extends TimerComponent
 {
-	max_time = undefined;
-
 	init()
 	{
-		this.max_time = this.time
 		this.join("DrawableComponent")
 	}
 
-	tic()
+	tic(time)
 	{
-		this.joined["DrawableComponent"].setOpacity(this.time / this.max_time)
+		this.joined["DrawableComponent"].setOpacity(time / this.max_time)
 	}
 }
 
 /* Hiding after death component */
 class SpawnerComponent extends TimerComponent
 {
-	time = 1.0
 	settings = {}
-	max_time = undefined;
 	container = undefined;
 	prefab = undefined;
 
 	init()
 	{
 		this.join("TransformComponent");
-		if(this.max_time == undefined) this.max_time = this.time
 	}
 
 	action()
@@ -96,7 +48,7 @@ class SpawnerComponent extends TimerComponent
 }
 
 /* Solid Component */
-class SolidComponent extends ComponentBase
+class ObstacleComponent extends ComponentBase
 {
 	offset = new Rect(0, 0, 0, 0)
 
@@ -117,10 +69,10 @@ class SolidComponent extends ComponentBase
 		for(let i in objects)
 		{
 			let obj = objects[i]
-			if(!obj.hasComponent("SolidComponent")) continue;
+			if(!obj.hasComponent("ObstacleComponent")) continue;
 
 			let rect_a = this.getRect()
-			let rect_b = obj.getComponent("SolidComponent").getRect()
+			let rect_b = obj.getComponent("ObstacleComponent").getRect()
 			let rect_c = rect_a.getCommon(rect_b)
 
 			if(!rect_c.isNullSize())

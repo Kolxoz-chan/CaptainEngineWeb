@@ -7,9 +7,9 @@ class ComponentBase
 	default_properties = {};
 	properties = {};
 
-	init()
+	init(props)
 	{
-		/* Abstract method */
+		this.default_properties = props
 	}
 
 	update()
@@ -19,13 +19,34 @@ class ComponentBase
 
 	reset()
 	{
-		this.properties = Object.copy(this.default_properties)
+		if(super.reset) super.reset()
+		this.properties = Object.assign(this.properties, this.default_properties)
 	}
 
 	join(name)
 	{
 		this.joined[name] = this.owner.getComponent(name)
 		return this.joined[name];
+	}
+
+	addIntefaces()
+	{
+		for(let i in arguments)
+		{
+			let obj = arguments[i]
+			for(let key in obj)
+			{
+				let value = obj[key]
+				if(typeof(value) == "function")
+				{
+					this[key] = value;
+				}
+				else
+				{
+					this.default_properties[key] = value;
+				}
+			}
+		}
 	}
 
 	setProperty(name, value)

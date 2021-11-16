@@ -2,8 +2,28 @@
 class ColiderComponent extends ComponentBase
 {
 	name = "ColiderComponent"
-	objects = []
-	coliding = false;
+
+	default_properties =
+	{
+		"offset" : null,
+		"objects" : [],
+		"coliding" : false
+	}
+
+	isColiding()
+	{
+		return this.getProperty("coliding")
+	}
+	
+	setObjects(arr)
+	{
+		this.setProperty("objects", arr)
+	}
+
+	getOffset()
+	{
+		return this.getProperty("offset")
+	}
 
 	isIntersects(colider)
 	{
@@ -27,9 +47,9 @@ class ColiderComponent extends ComponentBase
 
 	update()
 	{
-		if(this.coliding)
+		if(this.isColiding())
 		{
-			this.objects = [];
+			let objects = [];
 			let container = this.owner.parent
 			for(let i in container.childs)
 			{
@@ -40,11 +60,12 @@ class ColiderComponent extends ComponentBase
 					{
 						if(this.isIntersects(colider))
 						{
-							this.objects.push(container.childs[i])
+							objects.push(container.childs[i])
 						}
 					}
 				}
 			}
+			this.setObjects(objects)
 		}
 	}
 }
@@ -61,7 +82,7 @@ class RectColiderComponent extends ColiderComponent
 
 	getRect()
 	{
-		return this.joined["TransformComponent"].getRect().addRect(this.offset)
+		return this.joined["TransformComponent"].getRect().addRect(this.getOffset())
 	}
 
 	isContained(point)
@@ -76,7 +97,6 @@ class RectColiderComponent extends ColiderComponent
 class CircleColiderComponent extends ColiderComponent
 {
 	radius = undefined
-	offset = new Vector2(0, 0)
 
 	init()
 	{
@@ -87,16 +107,13 @@ class CircleColiderComponent extends ColiderComponent
 	getRect()
 	{
 		let transform_component = this.joined["TransformComponent"];
-		let center = transform_component.getCenter();
-
-		let diameter = this.radius * 2;
-		return new Rect(center.x - this.radius, center.y - this.radius, diameter, diameter);
+		return transform_component.getRect()
 	}
 
 	isContained(point)
 	{
-		let transform_component = this.joined["TransformComponent"];
+		let rect = this.getRect()
 		let center = transform_component.getCenter();
-		return point.getDistance(center) <= this.radius;
+		return point.getDistance(center) <= rect.w / 2;
 	}
 }
