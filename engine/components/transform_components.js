@@ -1,13 +1,15 @@
 /* Transform component*/
 class TransformComponent extends ComponentBase
 {
-	default_properties =
+	init(props)
 	{
-		"angle" : 0,
-		"position" : new Vector2(0, 0),
-		"velocity" :new Vector2(0, 0),
-		"size" : new Vector2(0, 0),
-		"axis" : new Vector2(0.5, 0.5),
+		props.angle = 0;
+		props.position = new Vector2(0, 0);
+		props.velocity = new Vector2(0, 0);
+		props.size = new Vector2(0, 0);
+		props.axis = new Vector2(0.5, 0.5);
+
+		super.init(props)
 	}
 
 	update()
@@ -121,7 +123,7 @@ class TransformComponent extends ComponentBase
 
 	move_around(axis, angle)
 	{
-		let position = this.getPosition();
+		let position = this.getCenter();
 		angle = Math.PI / 180 * angle;
 
 		let point = new Vector2()
@@ -160,14 +162,12 @@ class TransformComponent extends ComponentBase
 /* Path Moving Component */
 class PathMovingComponent extends ComponentBase
 {
-	default_properties =
+	init(props)
 	{
-		"path" : [],
-		"current_point" : 0,
-	}
+		props.path = []
+		props.current_point = 0
 
-	init()
-	{
+		super.init(props)
 		this.join("TransformComponent")
 		this.addIntefaces(new ISpeed(), new ITimer())
 	}
@@ -232,8 +232,9 @@ class PathMovingComponent extends ComponentBase
 /* Path Moving Component */
 class BrownianMovingComponent extends ComponentBase
 {
-	init()
+	init(props)
 	{
+		super.init(props)
 		this.join("TransformComponent")
 		this.addIntefaces(new ISpeed())
 	}
@@ -249,8 +250,9 @@ class BrownianMovingComponent extends ComponentBase
 /* Watcher Component */
 class WatcherComponent extends ComponentBase
 {
-	init()
+	init(props)
 	{
+		super.init(props)
 		this.join("TransformComponent")
 		this.addIntefaces(new ITarget())
 	}
@@ -270,21 +272,27 @@ class WatcherComponent extends ComponentBase
 /* Round Moving Component */
 class RoundMovingComponent extends ComponentBase
 {
-	default_properties =
+	init(props)
 	{
-		"axis" : new Vector2(0, 0)
-	}
+		props.axis = new Vector2(0, 0);
 
-	init()
-	{
+		super.init(props)
 		this.join("TransformComponent")
-		this.addIntefaces(new ISpeed())
+		this.addIntefaces(new ISpeed(), new ITarget())
 
 	}
 
 	getAxis()
 	{
-		return this.getProperty("axis")
+		let target = this.getTarget();
+		if(target)
+		{
+			if(target.hasComponent("TransformComponent"))
+			{
+				return target.getComponent("TransformComponent").getCenter()
+			}
+		}
+		return this.getProperty("axis") 
 	}
 
 	update()
@@ -296,15 +304,13 @@ class RoundMovingComponent extends ComponentBase
 
 class PursuerComponent extends ComponentBase
 {
-	default_properties =
+	init(props)
 	{
-		"min_radius" : 0,
-		"middle_radius" : 0,
-		"max_radius" : 100
-	}
+		props.min_radius = 0
+		props.middle_radius = 0
+		props.max_radius = 100
 
-	init()
-	{
+		super.init(props)
 		this.join("TransformComponent")
 		this.addIntefaces(new ISpeed(), new ITarget())
 	}
@@ -334,8 +340,8 @@ class PursuerComponent extends ComponentBase
 			let target_transform = obj.getComponent("TransformComponent")
 			let transform_component = this.joined["TransformComponent"];
 
-			let self_pos = transform_component.getPosition();
-			let target_pos = target_transform.getPosition();
+			let self_pos = transform_component.getCenter();
+			let target_pos = target_transform.getCenter();
 
 			let speed = Time.delta_time * this.getSpeed();
 			let distance = self_pos.getDistance(target_pos)
@@ -350,8 +356,9 @@ class PursuerComponent extends ComponentBase
 /* Camera component */
 class CameraComponent extends ComponentBase
 {
-	init()
+	init(props)
 	{
+		super.init(props)
 		this.join("TransformComponent")
 	}
 
@@ -365,19 +372,17 @@ class CameraComponent extends ComponentBase
 /* Gravity component */
 class GravityComponent extends ComponentBase
 {
-	default_properties =
+	init(props)
 	{
-		"vector" : new Vector2(0, 0)
+		props.vector = new Vector2(0, 0)
+
+		super.init(props)
+		this.join("TransformComponent")
 	}
-	
+
 	getVector()
 	{
 		return this.getProperty("vector")
-	}
-
-	init()
-	{
-		this.join("TransformComponent")
 	}
 
 	update()

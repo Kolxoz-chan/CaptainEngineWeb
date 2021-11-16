@@ -3,14 +3,18 @@ class DrawableComponent extends ComponentBase
 {
 	name = "DrawableComponent"
 
-	default_properties =
+	init(props)
 	{
-		"fill_color" : new Color(255, 255, 255),
-		"stroke_color" : new Color(0, 0, 0),
-		"line_width" : 1.0,
-		"opacity" : 1.0,
-		"autodraw" : true,
-		"is_drawn" : false
+		props.fill_color =  new Color(255, 255, 255)
+		props.stroke_color = new Color(0, 0, 0)
+		props.line_width = 1.0
+		props.opacity = 1.0
+		props.autodraw = true
+		props.is_drawn = false
+
+		this.join("TransformComponent")
+
+		super.init(props)
 	}
 
 	getOpacity()
@@ -111,9 +115,9 @@ class DrawableComponent extends ComponentBase
 /* Rect shape */
 class RectShapeComponent extends DrawableComponent
 {
-	init()
+	init(props)
 	{
-		this.join("TransformComponent")
+		super.props(props)
 	}
 
 	draw(position, size)
@@ -126,15 +130,18 @@ class RectShapeComponent extends DrawableComponent
 /* Circle shape */
 class CircleShapeComponent extends DrawableComponent
 {
-	init()
+	init(props)
 	{
-		this.join("TransformComponent")
+		super.init(props)
 	}
 
 	draw(position, size)
 	{
+		let radiuses = new Vector2(size.x/2, size.y/2)
+		let center = position.add(radiuses)
+
 		Game.context.beginPath();
-		Game.context.ellipse(position.x, position.y, size.x/2, size.y/2, Math.PI, 0, Math.PI * 2, true);
+		Game.context.ellipse(center.x, center.y, radiuses.x, radiuses.y, Math.PI, 0, Math.PI * 2, true);
 		Game.context.fill();
 		Game.context.stroke();
 	}
@@ -143,10 +150,12 @@ class CircleShapeComponent extends DrawableComponent
 /* Image component */
 class ImageComponent extends DrawableComponent
 {
-	default_properties = 
+	init(props)
 	{
-		"texture" : "",
-		"line_width" : 0.0
+		props.texture = ""
+		props.line_width = 0.0
+
+		super.init(props)
 	}
 
 	getTexture()
@@ -155,13 +164,6 @@ class ImageComponent extends DrawableComponent
 		return Resources.bitmaps[texture] ? Resources.bitmaps[texture]  : Resources.getTexture(texture)
 	}
 	
-
-	init()
-	{
-		let transform = this.join("TransformComponent")
-		let image = Resources.getTexture(this.getTexture())
-		transform.setSize(new Vector2(image.width, image.height))
-	}
 
 	isVisible()
 	{
@@ -182,22 +184,13 @@ class ImageComponent extends DrawableComponent
 /* Text component */
 class TextComponent extends DrawableComponent
 {
-	default_properties = 
+	init(props)
 	{
-		"text" : "",
-		"font" : "14px Arial",
-		"outline" : true
-	}
+		props.text = ""
+		props.font = "14px Arial"
+		props.outline = true
 
-	init()
-	{
-		let transform = this.join("TransformComponent")
-		this.applyStyles();
-
-		Game.context.font = this.font;
-		let metrics = Game.context.measureText(this.text);
-		transform.setSize(new Vector2(metrics.width, metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent))
-		//transform.setPosition(transform.getPosition().add(new Vector2(0, size.y)))
+		super.init(props)
 	}
 
 	getText()
@@ -231,13 +224,13 @@ class TextComponent extends DrawableComponent
 /* Polygon component */
 class PolygonComponent extends DrawableComponent
 {
-	points = []
-	closed = false
-	line_width = 1.0
-
-	init()
+	init(props)
 	{
-		let transform = this.join("TransformComponent")
+		props.points = []
+		props.closed = false
+		props.line_width = 1.0
+
+		super.init(props)
 	}
 
 	addPoint(point)
@@ -279,9 +272,9 @@ class PolygonComponent extends DrawableComponent
 /* Spline component */
 class SplineComponent extends PolygonComponent
 {
-	init()
+	init(props)
 	{
-		let transform = this.join("TransformComponent")
+		super.init(props)
 	}
 
 	generateSpline()

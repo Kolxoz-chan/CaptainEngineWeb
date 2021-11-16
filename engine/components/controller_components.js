@@ -4,7 +4,7 @@ class ControllerComponent extends ComponentBase
 	{
 		props.is_combined = true;
 
-		this.init(props)
+		super.init(props)
 	}
 
 	getDefaultProperties()
@@ -22,12 +22,12 @@ class MovingControllerComponent extends ControllerComponent
 {
 	init(props)
 	{
-		props.left = []
-		props.right = []
-		props.up = []
-		props.down = []
+		props.left = ["KeyA", "ArrowLeft"]
+		props.right = ["KeyD", "ArrowRight"]
+		props.up = ["KeyW", "ArrowUp"]
+		props.down = ["KeyS", "ArrowDown"]
 
-		this,init(props)
+		super.init(props)
 		this.join("TransformComponent")
 		this.addIntefaces(new ISpeed())
 	}
@@ -44,20 +44,19 @@ class MovingControllerComponent extends ControllerComponent
 			if(!this.isCombined()) return
 		}
 
-		if(Input.isKeysPressed(this.getProperty("down"))) 
+		if(Input.isKeysPressed(this.getProperty("down")))
 		{
 			transform_component.move(new Vector2(0, speed));
 			if(!this.isCombined()) return
 		}
 
-		if(Input.isKeysPressed(this.getProperty("left"))) 
+		if(Input.isKeysPressed(this.getProperty("left")))
 		{
 			transform_component.move(new Vector2(-speed, 0));
-			console.log(super.getDefaultProperties())
-			//if(!this.isCombined()) return
+			if(!this.isCombined()) return
 		}
 
-		if(Input.isKeysPressed(this.getProperty("right"))) 
+		if(Input.isKeysPressed(this.getProperty("right")))
 		{
 			transform_component.move(new Vector2(speed, 0));
 			if(!this.isCombined()) return

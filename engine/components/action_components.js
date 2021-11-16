@@ -73,12 +73,3 @@ class RadiusScannerComponent extends ComponentBase
 		}
 	}
 } */
-
-class TriggerComponent extends ComponentBase
-{
-	// hint = null
-	// action = null
-
-	name = "TriggerComponent"
-	auto = true;
-}

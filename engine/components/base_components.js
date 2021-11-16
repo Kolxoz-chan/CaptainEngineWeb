@@ -7,9 +7,9 @@ class ComponentBase
 	default_properties = {};
 	properties = {};
 
-	init(props)
+	init(props = {})
 	{
-		this.default_properties = props
+		this.default_properties = Object.assign(props, this.default_properties)
 	}
 
 	update()

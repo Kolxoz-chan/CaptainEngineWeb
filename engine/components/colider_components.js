@@ -3,11 +3,15 @@ class ColiderComponent extends ComponentBase
 {
 	name = "ColiderComponent"
 
-	default_properties =
+	init(props)
 	{
-		"offset" : null,
-		"objects" : [],
-		"coliding" : false
+		props.offset = null
+		props.objects = []
+		props.coliding = false
+
+		this.join("TransformComponent")
+
+		super.init(props)
 	}
 
 	isColiding()
@@ -75,9 +79,9 @@ class RectColiderComponent extends ColiderComponent
 {
 	offset = new Rect(0, 0, 0, 0)
 
-	init()
+	init(props)
 	{
-		this.join("TransformComponent")
+		super.init(props)
 	}
 
 	getRect()
@@ -96,12 +100,9 @@ class RectColiderComponent extends ColiderComponent
 /* Circle colider component*/
 class CircleColiderComponent extends ColiderComponent
 {
-	radius = undefined
-
-	init()
+	init(props)
 	{
-		let size = this.join("TransformComponent").getSize()
-		if(!this.radius) this.radius = Math.max(size.x, size.y) / 2;
+		super.init(props)
 	}
 
 	getRect()

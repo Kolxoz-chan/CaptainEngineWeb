@@ -45,7 +45,7 @@ class Entity
 
 	init()
 	{
-		for(var key in this.components) this.components[key].init();
+		for(var key in this.components) this.components[key].init({});
 	}
 
 	reset()
@@ -136,7 +136,7 @@ class Entity
 		}
 		this.childs.push(obj)
 		obj.parent = this;
-		obj.init({});
+		obj.init();
 		obj.reset();
 	}
 
@@ -632,6 +632,27 @@ class Color
 	{
 		return "rgba(" + this.r + "," + this.g + "," + this.b + "," + this.a + ")";
 	}
+
+	static red()
+	{
+		return new Color(255, 0, 0)
+	}
+
+	static green()
+	{
+		return new Color(0, 255, 0)
+	}
+
+	static blue()
+	{
+		return new Color(0, 0, 255)
+	}
+
+	static random()
+	{
+		return new Color(Math.random() * 255, Math.random() * 255, Math.random() * 255)
+	}
+
 }
 
 class Gradient
