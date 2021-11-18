@@ -75,3 +75,20 @@ function ITimer()
     return true
   }
 }
+
+/* ----------------- TargetElement ---------------------- */
+function IPrefab()
+{
+  this.prefab = ""
+
+  this.getPrefab = function()
+  {
+    let prefab = this.getProperty("prefab")
+    return Resources.getPrefab(prefab)
+  }
+
+  this.setPrefab = function(value)
+  {
+    this.setProperty("prefab", value)
+  }
+}

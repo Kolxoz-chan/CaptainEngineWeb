@@ -1,24 +1,29 @@
 /* Properties Component */
 class PropertiesComponent extends ComponentBase
 {
-	properties = {}
+	init(props)
+	{
+		props.properties = {}
+		super.init(props)
+	}
 
 	setValue(name, value)
 	{
-		this.properties[name] = value;
+		let properties = this.getProperty("properties")
+		properties[name] = value;
+		this.setProperty("properties", properties)
 	}
 
 	getValue(name)
 	{
-		return this.properties[name];
+		let properties = this.getProperty("properties")
+		return properties[name];
 	}
 }
 
-/* Number Properties component*/
+/* Number Properties component
 class NumberPropertiesComponent extends PropertiesComponent
 {
-	properties = {}
-
 	addValue(value)
 	{
 		this.setValue(this.properties[name].value + value);
@@ -77,9 +82,9 @@ class NumberPropertiesComponent extends PropertiesComponent
 	{
 		this.setValue(this.properties[name].min)
 	}
-}
+}*/
 
-/* Properties Component */
+/* Properties Component
 class ArrayPropertiesComponent extends PropertiesComponent
 {
 	add(name, value)
@@ -125,4 +130,4 @@ class ArrayPropertiesComponent extends PropertiesComponent
 	{
 		return this.index(value) >= 0;
 	}
-}
+}*/

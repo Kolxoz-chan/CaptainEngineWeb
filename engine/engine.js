@@ -1,4 +1,8 @@
 /* Game class */
+const NULL = 0
+const GAME_START = 1
+const GAME_STOP = 2
+
 class Game
 {
 	/* Arrays */
@@ -35,7 +39,7 @@ class Game
 	/* Public methods */
 	static init(id)
 	{
-		window.onerror = function(message, url, line, col) 
+		window.onerror = function(message, url, line, col)
 		{
 		  alert(`${message}\n${url}, ${line}:${col}`);
 		};

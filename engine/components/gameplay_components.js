@@ -1,6 +1,11 @@
 /* Temporary component */
 class LifeTimeComponent extends TimerComponent
 {
+	init(props)
+	{
+		super.init(props)
+	}
+
 	action()
 	{
 		this.owner.parent.deleteChild(this.owner)
@@ -10,9 +15,10 @@ class LifeTimeComponent extends TimerComponent
 /* Hiding after death component */
 class DissolveComponent extends TimerComponent
 {
-	init()
+	init(props)
 	{
 		this.join("DrawableComponent")
+		super.init(props)
 	}
 
 	tic(time)
@@ -28,20 +34,33 @@ class SpawnerComponent extends TimerComponent
 	container = undefined;
 	prefab = undefined;
 
-	init()
+	init(props)
 	{
-		this.join("TransformComponent");
+		props.settings = {}
+
+		this.addIntefaces(new IPrefab(), new ITarget())
+		this.join("TransformComponent")
+		super.init(props)
+	}
+
+	getSettings()
+	{
+		return this.getProperty("settings")
 	}
 
 	action()
 	{
-		this.enabled = true;
-		this.time = this.max_time;
-		let layer = Game.getObject(this.container)
-		let prefab = Resources.getPrefab(this.prefab)
+		this.resetTimer()
+
+		let settings = this.getSettings()
+		let layer = this.getTarget()
+		let prefab = this.getPrefab()
+
+		if(!layer) layer = this.owner.parent;
+
 		layer.addChild(prefab.getEntity(
 		{
-			...this.settings,
+			...settings,
 			"TransformComponent" : {"position" : this.joined["TransformComponent"].getPosition()},
 		}))
 	}
