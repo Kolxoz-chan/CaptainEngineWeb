@@ -7,11 +7,9 @@ class Game
 {
 	/* Arrays */
 	static entities = [];
-	static widgets = [];
 	static tasks = [];
 
 	/* Dicts */
-	static widgets_named = {};
 	static entities_named = {};
 	static memory = {};
 
@@ -21,7 +19,6 @@ class Game
 	static context = null;
 	static canvas = null;
 	static block = null;
-	static gui = null
 
 	/* Game state */
 	static state = NULL;
@@ -47,17 +44,12 @@ class Game
 		/* Init canvas*/
 		Game.canvas = document.createElement("canvas");
 		Game.context = Game.canvas.getContext("2d");
-		Game.gui = document.createElement("div");
 
 		Game.canvas.offscreen = document.createElement("canvas");
 		Game.offscreen = Game.canvas.offscreen.getContext("2d");
-		Game.gui.style.position = "absolute";
-		Game.gui.style.width = "100%"
-		Game.gui.style.height = "100%"
 
 		Game.block = document.getElementById(id);
 		Game.block.oncontextmenu = function(){return false}
-		Game.block.appendChild(Game.gui);
 		Game.block.appendChild(Game.canvas);
 	}
 
@@ -142,13 +134,6 @@ class Game
 	static getMaxSize()
 	{
 		return new Vector2(window.screen.width, window.screen.height)
-	}
-
-	static addWidget(widget)
-	{
-		this.widgets.push(widget)
-		this.widgets_named[widget.name] = widget
-		Game.gui.appendChild(widget.getWidget())
 	}
 
 	static start()

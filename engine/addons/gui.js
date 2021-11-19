@@ -1,24 +1,29 @@
 
-class WindowsSection
+class GUI
 {
-	static windows = {}
-	static actions = {}
+	static block = null
+	static widgets = []
 
-	static addAction(name, action)
+	static init(id)
 	{
-		this.actions[name] = action;
+		let div = document.getElementById(id);
+		GUI.block = document.createElement("div");
+
+		GUI.block.style.zIndex = 100;
+		GUI.block.style.position = "absolute";
+		GUI.block.style.width = "100%"
+		GUI.block.style.height = "100%"
+		GUI.block.style.top = "0px"
+		GUI.block.style.left = "0px"
+		GUI.block.style.backgroundColor = new Color(255, 0, 0, 0.5)
+
+		div.appendChild(GUI.block)
 	}
 
-	static addWindow(name, win)
+	static addWidget(widget)
 	{
-		this.windows[name] = win
-		return win
-	}
-
-	static call(name, params = {})
-	{
-		if(this.windows[name]) this.windows[name].show();
-		if(this.actions[name]) this.actions[name](params);
+		GUI.widget.push(widget)
+		GUI.block.appendChild()
 	}
 }
 

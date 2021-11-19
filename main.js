@@ -5,6 +5,10 @@ Game.resetSettings()
 Game.setEventHandlers(['keydown', 'keyup'])
 Game.setSize(new Vector2(1280, 720))
 
+/* --- Init GUI -------------------------------------------------------  */
+GUI.init("game-block")
+
+/* --- Init entities -------------------------------------------------------  */
 let obj = new Entity()
 obj.addComponent("TransformComponent", {"position" : new Vector2(200, 300), "size" : new Vector2(32, 32)})
 obj.addComponent("CircleShapeComponent", {"fill_color" : Color.random()})
