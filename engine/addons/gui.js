@@ -15,7 +15,6 @@ class GUI
 		GUI.block.style.height = "100%"
 		GUI.block.style.top = "0px"
 		GUI.block.style.left = "0px"
-		GUI.block.style.backgroundColor = new Color(255, 0, 0, 0.5)
 
 		div.appendChild(GUI.block)
 	}
