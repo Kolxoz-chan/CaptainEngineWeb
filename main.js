@@ -1,5 +1,5 @@
 /* --- Init game -------------------------------------------------------  */
-Game.init();
+Game.init("game-block");
 
 /* --- Init systems -------------------------------------------------------  */
 Game.addSystem("time_system.js",  		"TimeSystem")
@@ -9,7 +9,7 @@ Game.addSystem("entities_system.js", 	"EntitiesSystem")
 Game.addSystem("window_system.js", 		"WindowSystem")
 Game.addSystem("input_system.js", 		"InputSystem")
 Game.addSystem("resources_system.js", 	"ResourcesSystem")
-
+Game.addSystem("textcanvas_system.js", 	"TextCanvasSystem")
 
 
 /* --- Start game -------------------------------------------------------  */

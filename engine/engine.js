@@ -1,16 +1,17 @@
 class Game
 {
-	static is_started = false;
+	static widget = null;
 	static systems = {};
+	static is_started = false;
 
-
-	static init()
+	static init(id)
 	{
 		window.onerror = function(message, url, line, col)
 		{
 		  alert(`${message}\n${url}, ${line}:${col}`);  
 		}
 
+		Game.widget = document.getElementById(id)
 		Game.include("engine/objects.js")
 		Game.include("engine/interfaces.js")
 	}
@@ -51,6 +52,11 @@ class Game
 		{ 
 			Game.systems[system] = eval("() => { return "+ system +"; }")() 
 		})
+	}
+
+	static getWidget()
+	{
+		return Game.widget
 	}
 
 	static include(src, func = null)
