@@ -1,12 +1,17 @@
 /* CameraSystem class */
 class CameraSystem
 {
-	static size = new Vector2(0, 0);
-	static position = new Vector2(0, 0);
+	//static size = new Vector2(0, 0);
+	//static position = new Vector2(0, 0);
 	static angle = 0;
 	static zoom = 1.0;
 	static updated = false;
 	static data = {}
+
+	static init()
+	{
+		
+	}
 
 	static update()
 	{

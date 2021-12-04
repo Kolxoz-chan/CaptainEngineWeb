@@ -4,6 +4,11 @@ class TimeSystem
 	static date = new Date();
 	static delta_time = 0;
 
+	static init()
+	{
+		
+	}
+
 	static getDate()
 	{
 		return TimeSystem.date

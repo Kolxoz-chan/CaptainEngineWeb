@@ -1,11 +1,16 @@
 /* this handler class */
 class InputSystem
 {
-	static mouse_pos = new Vector2(0, 0);
+	//static mouse_pos = new Vector2(0, 0);
 	static mouse_pressed = {};
 	static keyboard_pressed = {};
 	static mouse_clicked_cur = {};
 	static keyboard_clicked_cur = {};
+
+	static init()
+	{
+		
+	}
 
 	static update()
 	{

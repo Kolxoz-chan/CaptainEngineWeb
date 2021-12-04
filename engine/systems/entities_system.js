@@ -3,9 +3,14 @@ class EntitiesSystem
 	static entities = [];
 	static entities_named = {};
 
-  	static addEntity(obj)
+	static init()
 	{
-		if(obj.name) 
+		
+	}
+
+  static addEntity(obj)
+	{
+		if(obj.name)
 		{
 			EntitiesSystem.entities_named[obj.name] = obj;
 		}
@@ -18,11 +23,11 @@ class EntitiesSystem
 
 	static getEntity(name)
 	{
-		if(EntitiesSystem.entities_named[name]) 
+		if(EntitiesSystem.entities_named[name])
 		{
 			return EntitiesSystem.entities_named[name];
 		}
-		else 
+		else
 		{
 			console.log("WARNING. There is not object named '" + name + "'")
 		}

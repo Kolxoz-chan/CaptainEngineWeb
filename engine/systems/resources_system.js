@@ -15,6 +15,11 @@ class ResourcesSystem
 	static fonts_dir = ""
 	static game_dir = ""
 
+	static init()
+	{
+		
+	}
+
 	static isLoaded()
 	{
 		return Resources.loading_counter <= 0;
