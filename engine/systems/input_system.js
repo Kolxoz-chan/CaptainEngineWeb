@@ -2,6 +2,7 @@
 class InputSystem
 {
 	//static mouse_pos = new Vector2(0, 0);
+	static events = []
 	static mouse_pressed = {};
 	static keyboard_pressed = {};
 	static mouse_clicked_cur = {};
@@ -33,28 +34,28 @@ class InputSystem
 		//console.log(event.type)
 		if(event.type == "mousemove")
 		{
-			this.mouse_pos = new Vector2(event.clientX-Game.canvas.offsetLeft,event.clientY-Game.canvas.offsetTop);
+			InputSystem.mouse_pos = new Vector2(event.clientX-Game.canvas.offsetLeft,event.clientY-Game.canvas.offsetTop);
 		}
 		else if(event.type == "keydown")
 		{
-			this.keyboard_pressed[event.code] = true;
+			InputSystem.keyboard_pressed[event.code] = true;
 		}
 		else if(event.type == "keyup")
 		{
-			this.keyboard_pressed[event.code] = false;
+			InputSystem.keyboard_pressed[event.code] = false;
 		}
 		else if(event.type == "mousedown")
 		{
-			this.mouse_pressed[event.button] = true;
+			InputSystem.mouse_pressed[event.button] = true;
 		}
 		else if(event.type == "mouseup")
 		{
-			this.mouse_pressed[event.button] = false;
+			InputSystem.mouse_pressed[event.button] = false;
 		}
 		//console.log(this.mouse_pressed)
 	}
 
-	static setEventHandlers(arr)
+	static setEvents(arr)
 	{
 		for(var i in arr)
 		{

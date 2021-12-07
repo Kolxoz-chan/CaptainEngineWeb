@@ -12,8 +12,16 @@ class Game
 		}
 
 		Game.widget = document.getElementById(id)
+		Game.widget.style.cursor = "default"
+		Game.widget.style.userSelect = "none"
+		Game.widget.onselectstart = function() 
+		{
+		    return false;
+		};
+
 		Game.include("engine/objects.js")
 		Game.include("engine/interfaces.js")
+		Game.include("engine/components/base_components.js")
 	}
 
 	static start()

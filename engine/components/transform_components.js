@@ -216,7 +216,7 @@ class PathMovingComponent extends ComponentBase
 			let pos = transform_component.getPosition();
 			let point = this.getCurentPoint();
 
-			transform_component.move_to(point, this.getSpeed() * Time.delta_time)
+			transform_component.move_to(point, this.getSpeed() * TimeSystem.getDeltaTime())
 
 			if(point.equals(pos))
 			{
@@ -243,7 +243,7 @@ class BrownianMovingComponent extends ComponentBase
 	{
 		let transform_component = this.joined["TransformComponent"]
 		let vec = Vector2.random();
-		transform_component.move(vec.mul(Time.delta_time * this.getSpeed()))
+		transform_component.move(vec.mul(TimeSystem.getDeltaTime() * this.getSpeed()))
 	}
 }
 
@@ -292,13 +292,13 @@ class RoundMovingComponent extends ComponentBase
 				return target.getComponent("TransformComponent").getCenter()
 			}
 		}
-		return this.getProperty("axis") 
+		return this.getProperty("axis")
 	}
 
 	update()
 	{
 		let transform_component = this.joined["TransformComponent"]
-		transform_component.move_around(this.getAxis(), this.getSpeed() * Time.delta_time)
+		transform_component.move_around(this.getAxis(), this.getSpeed() * TimeSystem.getDeltaTime())
 	}
 }
 
@@ -343,7 +343,7 @@ class PursuerComponent extends ComponentBase
 			let self_pos = transform_component.getCenter();
 			let target_pos = target_transform.getCenter();
 
-			let speed = Time.delta_time * this.getSpeed();
+			let speed = TimeSystem.getDeltaTime() * this.getSpeed();
 			let distance = self_pos.getDistance(target_pos)
 
 			if(distance < this.getMinRadius()) transform_component.move_to(target_pos, -speed)
@@ -388,6 +388,6 @@ class GravityComponent extends ComponentBase
 	update()
 	{
 		let vec = this.getVector();
-		this.joined["TransformComponent"].move(vec.mul(Time.delta_time))
+		this.joined["TransformComponent"].move(vec.mul(TimeSystem.getDeltaTime()))
 	}
 }

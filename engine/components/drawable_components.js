@@ -77,13 +77,13 @@ class DrawableComponent extends ComponentBase
 			let size = transform_component.getSize()
 
 			/* Settings */
-			this.applyStyles();
-			this.applyTransformation()
+			//this.applyStyles();
+			//this.applyTransformation()
 
 			this.draw(position, size);
 
 			/* Reset*/
-			Game.context.resetTransform();
+			//Game.context.resetTransform();
 			this.setDrawn(false);
 		}
 	}
@@ -147,6 +147,28 @@ class CircleShapeComponent extends DrawableComponent
 	}
 }
 
+/* Circle shape */
+class TextSpriteComponent extends DrawableComponent
+{
+	init(props)
+	{
+		props.sprite = []
+		super.init(props)
+
+		this.text_canvas = Game.getSystem("TextCanvasSystem")
+	}
+
+	getSprite()
+	{
+		return this.getProperty("sprite")
+	}
+
+	draw(position, size)
+	{
+		this.text_canvas.draw(position, this.getSprite())
+	}
+}
+
 /* Image component */
 class ImageComponent extends DrawableComponent
 {
@@ -163,7 +185,7 @@ class ImageComponent extends DrawableComponent
 		let texture = this.getProperty("texture")
 		return Resources.bitmaps[texture] ? Resources.bitmaps[texture]  : Resources.getTexture(texture)
 	}
-	
+
 
 	isVisible()
 	{
@@ -388,45 +410,54 @@ class SplineComponent extends PolygonComponent
 	}
 }
 
-/* BackgroundColorComponent
-class BackgroundColorComponent extends ComponentBase
+class AnimatedComponent extends ComponentBase
 {
-	background = null
+	init(props)
+	{
+		props.clip = []
+		props.current_frame = 0
+		this.addIntefaces(new ITimer())
+
+		super.init(props)
+		this.join("DrawableComponent")
+	}
+
+	getCilp()
+	{
+		return this.getProperty("clip")
+	}
+
+	getCurrentFrame()
+	{
+		return this.getProperty("current_frame")
+	}
+
+	setCurrentFrame(value)
+	{
+		this.setProperty("current_frame", value)
+	}
+
+	nextFrame()
+	{
+		let clip = this.getCilp()
+		let frame_id = this.getCurrentFrame()
+
+		frame_id++
+		if(clip.length <= frame_id) frame_id = 0;
+		this.setCurrentFrame(frame_id)
+
+		return clip[frame_id]
+	}
 
 	update()
 	{
-		if(this.background)
+		//console.log(this.getTimer())
+		if(!this.updateTimer())
 		{
-			let size = Camera.getSize();
 
-			if(this.background.constructor.name == "Gradient") Game.context.fillStyle = this.background.get(Camera.getSize());
-			else Game.context.fillStyle = this.background;
-			Game.context.fillRect(0, 0, size.x, size.y);
+			this.resetTimer()
+			let data = this.nextFrame();
+			this.joined["DrawableComponent"].setData(data);
 		}
 	}
 }
-
-class ParalaxComponent extends ComponentBase
-{
-	static AXIS_X = 1 << 0;
-	static AXIS_Y = 1 << 1;
-
-	position = new Vector2(0.0, 0.0)
-	coef = new Vector2(1.0, 1.0)
-	repeating = 0
-	image = null
-
-	update()
-	{
-		if(this.image)
-		{
-			let pos = Camera.getPosition();
-			let size = Camera.getSize();
-			let img = Resources.getTexture(this.image)
-			pos = new Vector2((size.x - img.width) * this.position.x - pos.x * this.coef.x, (size.y - img.height) * this.position.y - pos.y * this.coef.y)
-
-			Game.context.drawImage(img, pos.x, pos.y, img.width, img.height);
-		}
-	}
-}
-*/

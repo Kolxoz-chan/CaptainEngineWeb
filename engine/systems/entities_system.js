@@ -5,16 +5,16 @@ class EntitiesSystem
 
 	static init()
 	{
-		
+
 	}
 
   static addEntity(obj)
 	{
 		if(obj.name)
 		{
-			EntitiesSystem.entities_named[obj.name] = obj;
+			this.entities_named[obj.name] = obj;
 		}
-		EntitiesSystem.entities.push(obj);
+		this.entities.push(obj);
 		obj.reset();
 		obj.init();
 
@@ -23,9 +23,9 @@ class EntitiesSystem
 
 	static getEntity(name)
 	{
-		if(EntitiesSystem.entities_named[name])
+		if(this.entities_named[name])
 		{
-			return EntitiesSystem.entities_named[name];
+			return this.entities_named[name];
 		}
 		else
 		{
@@ -35,7 +35,7 @@ class EntitiesSystem
 
 	static update()
 	{
-		let arr = EntitiesSystem.entities;
+		let arr = this.entities;
 		for(let i in arr)
 		{
 			let obj = arr[i]

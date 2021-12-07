@@ -1,11 +1,9 @@
 /* Timer component*/
 class TimerComponent extends ComponentBase
 {
-	// action = null,
-	// tic = null
-
-	init()
+	init(props)
 	{
+		super.init(props)
 		this.addIntefaces(new ITimer())
 	}
 
@@ -13,13 +11,26 @@ class TimerComponent extends ComponentBase
 	{
 		if(this.updateTimer())
 		{
+
 			if(this.tic) this.tic(this.getTimer());
 		}
 		else
 		{
-			this.enabled = false;
 			if(this.action) this.action()
 		}
+	}
+}
+
+class ResetTimerComponent extends TimerComponent
+{
+	init(props)
+	{
+		super.init(props)
+	}
+
+	action()
+	{
+		this.owner.reset();
 	}
 }
 

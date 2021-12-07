@@ -10,6 +10,7 @@ class TextCanvasSystem
 		let widget = Game.getWidget()
 		this.canvas = document.createElement("pre");
 		this.canvas.style.color = "white"
+		this.canvas.style.fontFamily = "Consolas, monaco, monospace"
 		widget.appendChild(this.canvas)
 
 		// Clear canvas
@@ -23,7 +24,7 @@ class TextCanvasSystem
 			this.array[i] = []
 			for(let j=0; j<this.size.x; j++)
 			{
-				this.setValue(j, i, char)
+				this.array[i][j] = char
 			}
 		}
 	}
@@ -35,41 +36,48 @@ class TextCanvasSystem
 
 	static setValue(x, y, value)
 	{
-		this.array[y][x] = value
+		x = Math.floor(x)
+		y = Math.floor(y)
+
+		if(this.array[y])
+		{
+			if(this.array[y][x])
+			{
+				this.array[y][x] = value
+			}
+		}
 	}
 
 	static draw(vec, sprite)
 	{
 		for(let y in sprite)
 		{
+			let may_draw = false
 			for(let x in sprite[y])
 			{
 				let pos_x = parseInt(x) + vec.x
 				let pos_y = parseInt(y) + vec.y
+				let ch = sprite[y][x]
 
-				this.setValue(pos_x, pos_y, sprite[y][x])
+				if(ch != " ") may_draw = true
+
+				if(may_draw)
+				{
+					this.setValue(pos_x, pos_y, ch)
+				}
 			}
 		}
 	}
 
 	static update()
 	{
-		this.draw(new Vector2(15,6),
-	  	[
-	  		",   ,",
-		    "|\\_/|",
-		    "(O_O)",
-		    ">(~)<",
-		    "/-V-\\",
-		    "U' 'U"
-	  	])
-
 		let str = ""
 		for(let i in this.array)
 		{
 			str += this.array[i].join("") + "\n"
 		}
-		this.canvas.innerHTML = str
+		this.canvas.textContent = str
+		this.clear()
 	}
 
 

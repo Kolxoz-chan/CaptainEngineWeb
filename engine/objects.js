@@ -112,7 +112,7 @@ class Entity
 
 		this.components[name] = component;
 		component.setOwner(this);
-		component.setData(data);
+		component.setDefaultData(data);
 		return component;
 	}
 

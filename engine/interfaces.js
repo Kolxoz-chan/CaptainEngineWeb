@@ -65,7 +65,7 @@ function ITimer()
 
   this.updateTimer = function()
   {
-    this.setTimer(this.getTimer() - Time.delta_time)
+    this.setTimer(this.getTimer() - TimeSystem.getDeltaTime())
     if(this.getTimer() <= 0)
     {
       this.resetTimer()

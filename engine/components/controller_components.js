@@ -35,28 +35,28 @@ class MovingControllerComponent extends ControllerComponent
 	update()
 	{
 		let transform_component = this.joined["TransformComponent"]
-		let speed = Time.delta_time * this.getSpeed();
+		let speed = this.getSpeed() * TimeSystem.getDeltaTime() ;
 
 		/* Moving */
-		if(Input.isKeysPressed(this.getProperty("up")))
+		if(InputSystem.isKeysPressed(this.getProperty("up")))
 		{
 			transform_component.move(new Vector2(0, -speed));
 			if(!this.isCombined()) return
 		}
 
-		if(Input.isKeysPressed(this.getProperty("down")))
+		if(InputSystem.isKeysPressed(this.getProperty("down")))
 		{
 			transform_component.move(new Vector2(0, speed));
 			if(!this.isCombined()) return
 		}
 
-		if(Input.isKeysPressed(this.getProperty("left")))
+		if(InputSystem.isKeysPressed(this.getProperty("left")))
 		{
 			transform_component.move(new Vector2(-speed, 0));
 			if(!this.isCombined()) return
 		}
 
-		if(Input.isKeysPressed(this.getProperty("right")))
+		if(InputSystem.isKeysPressed(this.getProperty("right")))
 		{
 			transform_component.move(new Vector2(speed, 0));
 			if(!this.isCombined()) return

@@ -19,7 +19,7 @@ class ComponentBase
 
 	reset()
 	{
-		if(super.reset) super.reset()
+		//if(super.reset) super.reset()
 		this.properties = Object.assign(this.properties, this.default_properties)
 	}
 
@@ -43,7 +43,10 @@ class ComponentBase
 				}
 				else
 				{
-					this.default_properties[key] = value;
+					if(!this.default_properties[key])
+					{
+						this.default_properties[key] = value;
+					}
 				}
 			}
 		}
@@ -103,11 +106,19 @@ class ComponentBase
 		return this.enabled
 	}
 
-	setData(data)
+	setDefaultData(data)
 	{
 		for(var name in data)
 		{
 			this.default_properties[name] = data[name]
+		}
+	}
+
+	setData(data)
+	{
+		for(var name in data)
+		{
+			this.properties[name] = data[name]
 		}
 	}
 }
