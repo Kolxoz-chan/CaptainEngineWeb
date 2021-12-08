@@ -18,9 +18,10 @@ setTimeout(() =>
   Game.include("engine/components/drawable_components.js")
   Game.include("engine/components/controller_components.js")
   Game.include("engine/components/action_components.js")
+  Game.include("engine/components/trigger_components.js")
 }, 1000)
 
-let animation =
+let anim_01 =
 [
     {
         "sprite" :
@@ -37,7 +38,7 @@ let animation =
             "/*_________\\",
             "     ||",
             "   \\====/",
-            "    \\__/"   
+            "    \\__/"
         ]
     },
     {
@@ -55,7 +56,7 @@ let animation =
             "/__*_______\\",
             "     ||",
             "   \\====/",
-            "    \\__/"   
+            "    \\__/"
         ]
     },
     {
@@ -73,7 +74,7 @@ let animation =
             "/_____*____\\",
             "     ||",
             "   \\====/",
-            "    \\__/"   
+            "    \\__/"
         ]
     },
     {
@@ -91,7 +92,7 @@ let animation =
             "/_________*\\",
             "     ||",
             "   \\====/",
-            "    \\__/"   
+            "    \\__/"
         ]
     },
     {
@@ -109,9 +110,40 @@ let animation =
             "/__________\\",
             "     ||",
             "   \\====/",
-            "    \\__/"   
+            "    \\__/"
         ]
     }
+]
+
+let anim_02 =
+[
+  {
+    "sprite":
+    [
+      "\\   /",
+      " \\o/"
+    ]
+  },
+  {
+    "sprite":
+    [
+      "/\\o/\\"
+    ]
+  },
+  {
+    "sprite":
+    [
+      " /o\\",
+      "/   \\"
+    ]
+  }
+]
+
+let anim_03 =
+[
+  {
+
+  }
 ]
 
 
@@ -133,36 +165,87 @@ setTimeout(() =>
     let ent
 
     ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(120, 14)})
-    ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, 0)})
-    ent.addComponent("ResetTimerComponent", {"max_timer" : 5.0, "timer" : 5.0})
-    ent.addComponent("TextSpriteComponent")
-    ent.addComponent("AnimatedComponent", 
-    {
-        "timer" : 0.2,
-        "max_timer" : 0.2,
-        "clip" : animation
-    })
+    ent.addComponent("TransformComponent", {"position" : new Vector2(0, 26)})
+    ent.addComponent("ASCIISpriteComponent", {"sprite" :
+    [
+      "___________________________________________________________________________________________________________________________"
+
+    ]})
     entities.addEntity(ent)
 
     ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(160, 14)})
+    ent.addComponent("TransformComponent", {"position" : new Vector2(120, 14)})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, 0)})
-    ent.addComponent("ResetTimerComponent", {"max_timer" : 12.0, "timer" : 12.0})
-    ent.addComponent("TextSpriteComponent")
-    ent.addComponent("AnimatedComponent", 
-    {
-        "timer" : 0.2,
-        "max_timer" : 0.2,
-        "clip" : animation
-    })
+    ent.addComponent("ResetActionComponent", {"max_timer" : 5.0, "timer" : 5.0})
+    ent.addComponent("ASCIISpriteComponent")
+    ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_01})
     entities.addEntity(ent)
+
+    ent = new Entity()
+    ent.addComponent("TransformComponent", {"position" : new Vector2(180, 14)})
+    ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, 0)})
+    ent.addComponent("ResetActionComponent", {"max_timer" : 8.0, "timer" : 8.0})
+    ent.addComponent("ASCIISpriteComponent")
+    ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_01})
+    entities.addEntity(ent)
+
+    ent = new Entity()
+    ent.addComponent("TransformComponent", {"position" : new Vector2(160, 5)})
+    ent.addComponent("GravityComponent", {"vector" : new Vector2(-50, 0)})
+    ent.addComponent("ResetActionComponent", {"max_timer" : 12.0, "timer" : 12.0})
+    ent.addComponent("ASCIISpriteComponent")
+    ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_02})
+    entities.addEntity(ent)
+
+    ent = new Entity()
+    ent.addComponent("TransformComponent", {"position" : new Vector2(120, 10)})
+    ent.addComponent("GravityComponent", {"vector" : new Vector2(-50, 0)})
+    ent.addComponent("ResetActionComponent", {"max_timer" : 18.0, "timer" : 18.0})
+    ent.addComponent("ASCIISpriteComponent")
+    ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_02})
+    entities.addEntity(ent)
+
+    ent = new Entity()
+    ent.addComponent("TransformComponent", {"position" : new Vector2(200, 8)})
+    ent.addComponent("GravityComponent", {"vector" : new Vector2(-50, 0)})
+    ent.addComponent("ResetActionComponent", {"max_timer" : 15.0, "timer" : 15.0})
+    ent.addComponent("ASCIISpriteComponent")
+    ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_02})
+    entities.addEntity(ent)
+
+    ent = new Entity()
+    ent.addComponent("TransformComponent", {"position" : new Vector2(100, 24)})
+    ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, -10)})
+    ent.addComponent("ResetActionComponent", {"max_timer" : 3.0, "timer" : 3.0})
+    ent.addComponent("ASCIISpriteComponent", {"sprite" :
+    [
+    " |",
+    "/_\\",
+    "|_|",
+    "/_\\"
+    ]})
+    entities.addEntity(ent)
+
+    ent = new Entity()
+    ent.addComponent("TransformComponent", {"position" : new Vector2(140, 21)})
+    ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, 0)})
+    ent.addComponent("ResetActionComponent", {"max_timer" : 5.0, "timer" : 5.0})
+    ent.addComponent("ASCIISpriteComponent", {"sprite" :
+    [
+    "    __",
+    "  _|==|_",
+    "   ('')",
+    " <(`^^')>",
+    " (`^'^'`)",
+    "  ------"
+    ]})
+    entities.addEntity(ent)
+
 
 /*
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(1, 1)})
-    ent.addComponent("MovingControllerComponent", {"speed" : 10})
-    ent.addComponent("TextSpriteComponent", {"sprite" :
+    ent.addComponent("ASCIISpriteComponent", {"sprite" :
     [
       " [><]",
       "[_||_]",
@@ -170,11 +253,12 @@ setTimeout(() =>
     ]})
     entities.addEntity(ent)
 */
+
     ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(20, 1)})
-    ent.addComponent("MovingControllerComponent", {"speed" : 20})
+    ent.addComponent("TransformComponent", {"position" : new Vector2(0, 0)})
+    ent.addComponent("MovingControllerComponent", {"speed" : 30})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(0, 10)})
-    ent.addComponent("TextSpriteComponent", {"sprite" :
+    ent.addComponent("ASCIISpriteComponent", {"sprite" :
     [
       "     __",
       "    *|_\\",
@@ -187,7 +271,7 @@ setTimeout(() =>
     ]})
     entities.addEntity(ent)
 
-   
+
 
     Game.start();
 }, 2000)

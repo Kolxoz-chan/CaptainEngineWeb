@@ -1,36 +1,71 @@
-/* Timer component*/
-class TimerComponent extends ComponentBase
+class ResetActionComponent extends ComponentBase
 {
-	init(props)
+	action()
 	{
-		super.init(props)
-		this.addIntefaces(new ITimer())
-	}
-
-	update()
-	{
-		if(this.updateTimer())
-		{
-
-			if(this.tic) this.tic(this.getTimer());
-		}
-		else
-		{
-			if(this.action) this.action()
-		}
+		this.owner.reset();
 	}
 }
 
-class ResetTimerComponent extends TimerComponent
+/* Temporary component */
+class DestroyActionComponent extends ComponentBase
+{
+	action()
+	{
+		this.owner.parent.deleteChild(this.owner)
+	}
+}
+
+/* Hiding after death component */
+class DissolveActionComponent extends ComponentBase
 {
 	init(props)
 	{
+		this.join("DrawableComponent")
 		super.init(props)
+	}
+
+	tic(data)
+	{
+		this.joined["DrawableComponent"].setOpacity(data.time / data.max_time)
+	}
+}
+
+/* Hiding after death component */
+class SpawnerComponent extends ComponentBase
+{
+	settings = {}
+	container = undefined;
+	prefab = undefined;
+
+	init(props)
+	{
+		props.settings = {}
+
+		this.addIntefaces(new IPrefab(), new ITarget())
+		this.join("TransformComponent")
+		super.init(props)
+	}
+
+	getSettings()
+	{
+		return this.getProperty("settings")
 	}
 
 	action()
 	{
-		this.owner.reset();
+		this.resetTimer()
+
+		let settings = this.getSettings()
+		let layer = this.getTarget()
+		let prefab = this.getPrefab()
+
+		if(!layer) layer = this.owner.parent;
+
+		layer.addChild(prefab.getEntity(
+		{
+			...settings,
+			"TransformComponent" : {"position" : this.joined["TransformComponent"].getPosition()},
+		}))
 	}
 }
 

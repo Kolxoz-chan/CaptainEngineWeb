@@ -148,7 +148,7 @@ class CircleShapeComponent extends DrawableComponent
 }
 
 /* Circle shape */
-class TextSpriteComponent extends DrawableComponent
+class ASCIISpriteComponent extends DrawableComponent
 {
 	init(props)
 	{
