@@ -19,6 +19,7 @@ setTimeout(() =>
   Game.include("engine/components/controller_components.js")
   Game.include("engine/components/action_components.js")
   Game.include("engine/components/trigger_components.js")
+  Game.include("engine/components/colider_components.js")
 }, 1000)
 
 let anim_01 =
@@ -176,47 +177,59 @@ setTimeout(() =>
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(120, 14)})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, 0)})
-    ent.addComponent("ResetActionComponent", {"max_timer" : 5.0, "timer" : 5.0})
+    ent.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : ["ResetActionComponent"]})
+    ent.addComponent("ResetActionComponent")
     ent.addComponent("ASCIISpriteComponent")
+    ent.addComponent("ASCIIColiderComponent")
     ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_01})
     entities.addEntity(ent)
 
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(180, 14)})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, 0)})
-    ent.addComponent("ResetActionComponent", {"max_timer" : 8.0, "timer" : 8.0})
+    ent.addComponent("TimerTriggerComponent", {"timer" : 8.0, "actions" : ["ResetActionComponent"]})
+    ent.addComponent("ResetActionComponent")
     ent.addComponent("ASCIISpriteComponent")
+    ent.addComponent("ASCIIColiderComponent")
     ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_01})
     entities.addEntity(ent)
 
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(160, 5)})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(-50, 0)})
-    ent.addComponent("ResetActionComponent", {"max_timer" : 12.0, "timer" : 12.0})
+    ent.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : ["ResetActionComponent"]})
+    ent.addComponent("ResetActionComponent")
     ent.addComponent("ASCIISpriteComponent")
-    ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_02})
+    ent.addComponent("ASCIIColiderComponent")
+    ent.addComponent("AnimatedComponent", {"max_timer" : 0.2, "clip" : anim_02})
     entities.addEntity(ent)
 
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(120, 10)})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(-50, 0)})
-    ent.addComponent("ResetActionComponent", {"max_timer" : 18.0, "timer" : 18.0})
+    ent.addComponent("TimerTriggerComponent", {"timer" : 7.0, "actions" : ["ResetActionComponent"]})
+    ent.addComponent("ResetActionComponent")
     ent.addComponent("ASCIISpriteComponent")
-    ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_02})
+    ent.addComponent("ASCIIColiderComponent")
+    ent.addComponent("AnimatedComponent", {"max_timer" : 0.2, "clip" : anim_02})
     entities.addEntity(ent)
 
     ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(200, 8)})
+    ent.addComponent("TransformComponent", {"position" : new Vector2(200, 15)})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(-50, 0)})
-    ent.addComponent("ResetActionComponent", {"max_timer" : 15.0, "timer" : 15.0})
+    ent.addComponent("TimerTriggerComponent", {"timer" : 6.0, "actions" : ["ResetActionComponent"]})
+    ent.addComponent("ResetActionComponent")
     ent.addComponent("ASCIISpriteComponent")
-    ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_02})
+    ent.addComponent("ASCIIColiderComponent")
+    ent.addComponent("AnimatedComponent", {"max_timer" : 0.2, "clip" : anim_02})
     entities.addEntity(ent)
 
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(100, 24)})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, -10)})
-    ent.addComponent("ResetActionComponent", {"max_timer" : 3.0, "timer" : 3.0})
+    ent.addComponent("TimerTriggerComponent", {"timer" : 3.0, "actions" : ["ResetActionComponent"]})
+    ent.addComponent("ResetActionComponent")
+    ent.addComponent("ASCIIColiderComponent")
     ent.addComponent("ASCIISpriteComponent", {"sprite" :
     [
     " |",
@@ -229,7 +242,9 @@ setTimeout(() =>
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(140, 21)})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, 0)})
-    ent.addComponent("ResetActionComponent", {"max_timer" : 5.0, "timer" : 5.0})
+    ent.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : ["ResetActionComponent"]})
+    ent.addComponent("ResetActionComponent")
+    ent.addComponent("ASCIIColiderComponent")
     ent.addComponent("ASCIISpriteComponent", {"sprite" :
     [
     "    __",
@@ -258,6 +273,9 @@ setTimeout(() =>
     ent.addComponent("TransformComponent", {"position" : new Vector2(0, 0)})
     ent.addComponent("MovingControllerComponent", {"speed" : 30})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(0, 10)})
+    ent.addComponent("ASCIIColiderComponent", {"coliding" : true})
+    ent.addComponent("DestroyActionComponent")
+    ent.addComponent("ColideTriggerComponent", {"actions" : ["DestroyActionComponent"]})
     ent.addComponent("ASCIISpriteComponent", {"sprite" :
     [
       "     __",

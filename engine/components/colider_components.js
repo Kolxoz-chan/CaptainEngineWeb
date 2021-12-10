@@ -29,6 +29,11 @@ class ColiderComponent extends ComponentBase
 		return this.getProperty("offset")
 	}
 
+	getObjects()
+	{
+		return this.getProperty("objects")
+	}
+
 	isIntersects(colider)
 	{
 		let A = this.getRect()
@@ -54,17 +59,20 @@ class ColiderComponent extends ComponentBase
 		if(this.isColiding())
 		{
 			let objects = [];
-			let container = this.owner.parent
-			for(let i in container.childs)
+			let container = this.owner.parent ? this.owner.parent : EntitiesSystem.entities
+			for(let i in container)
 			{
-				if(container.childs[i].hasComponent("ColiderComponent") && this.owner !== container.childs[i])
+				let obj = container[i]
+				if(obj.hasComponent("ColiderComponent") && this.owner !== obj)
 				{
-					let colider = container.childs[i].getComponent("ColiderComponent")
+					
+					let colider = obj.getComponent("ColiderComponent")
 					if(colider.isEnabled())
 					{
+						console.log(this.getRect(), colider.getRect())
 						if(this.isIntersects(colider))
 						{
-							objects.push(container.childs[i])
+							objects.push(obj)
 						}
 					}
 				}
@@ -77,10 +85,9 @@ class ColiderComponent extends ComponentBase
 /* Rect colider component*/
 class RectColiderComponent extends ColiderComponent
 {
-	offset = new Rect(0, 0, 0, 0)
-
 	init(props)
 	{
+		props.offset = new Rect(0, 0, 0, 0)
 		super.init(props)
 	}
 
@@ -116,5 +123,47 @@ class CircleColiderComponent extends ColiderComponent
 		let rect = this.getRect()
 		let center = transform_component.getCenter();
 		return point.getDistance(center) <= rect.w / 2;
+	}
+}
+
+class ASCIIColiderComponent extends ColiderComponent
+{
+	init(props)
+	{
+		super.init(props)
+		this.join("TransformComponent")
+		this.join("DrawableComponent")
+	}
+
+	getRect()
+	{
+		let pos = this.joined["TransformComponent"].getPosition();
+		let sprite = this.joined["DrawableComponent"].getSprite();
+		let width = 0;
+
+		for(let i in sprite)
+		{
+			let row = sprite[i]
+			if(width < row.length) width = row.length
+		}
+		return new Rect(pos.x, pos.y, width, sprite.length)
+	}
+
+	isContained(point)
+	{
+		let pos = this.joined["TransformComponent"].getPosition();
+		let sprite = this.joined["DrawableComponent"].getSprite();
+		let row = sprite[point.y - pos.y]
+
+		if(row)
+		{
+			
+			let value = row[point.x - pos.x]
+			if(value)
+			{
+				return value != " ";
+			}
+		}
+		return false
 	}
 }
