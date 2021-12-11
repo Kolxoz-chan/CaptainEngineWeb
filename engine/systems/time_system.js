@@ -6,7 +6,7 @@ class TimeSystem
 
 	static init()
 	{
-		
+		TimeSystem.update()
 	}
 
 	static getDate()

@@ -38,8 +38,8 @@ let anim_01 =
             " /~~~~~~~~\\",
             "/*_________\\",
             "     ||",
-            "   \\====/",
-            "    \\__/"
+            "     ||",
+            "    /  \\"
         ]
     },
     {
@@ -56,8 +56,8 @@ let anim_01 =
             " /~~~~~~~~\\",
             "/__*_______\\",
             "     ||",
-            "   \\====/",
-            "    \\__/"
+            "     ||",
+            "    /  \\"
         ]
     },
     {
@@ -74,8 +74,8 @@ let anim_01 =
             " /~~~~~~~~\\",
             "/_____*____\\",
             "     ||",
-            "   \\====/",
-            "    \\__/"
+            "     ||",
+            "    /  \\"
         ]
     },
     {
@@ -92,8 +92,8 @@ let anim_01 =
             " /~~~~~~~~\\",
             "/_________*\\",
             "     ||",
-            "   \\====/",
-            "    \\__/"
+            "     ||",
+            "    /  \\"
         ]
     },
     {
@@ -110,8 +110,8 @@ let anim_01 =
             " /~~~~~~~~\\",
             "/__________\\",
             "     ||",
-            "   \\====/",
-            "    \\__/"
+            "     ||",
+            "    /  \\"
         ]
     }
 ]
@@ -140,13 +140,6 @@ let anim_02 =
   }
 ]
 
-let anim_03 =
-[
-  {
-
-  }
-]
-
 
 /* --- Start game -------------------------------------------------------  */
 setTimeout(() =>
@@ -162,17 +155,30 @@ setTimeout(() =>
     // EntitiesSystem
     let entities = Game.getSystem("EntitiesSystem")
 
-    // Init entities
-    let ent
+    // ResourcesSystem
+  /*  let prefab = ResourcesSystem.addPrefab(new Prefab())
+    prefab.addComponent("GravityComponent", {"vector" : new Vector2(-30, 0)})
+    prefab.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : ["ResetActionComponent"]})
+    prefab.addComponent("ResetActionComponent")
+    prefab.addComponent("ASCIISpriteComponent")
+    prefab.addComponent("ASCIIColiderComponent")
+    prefab.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_01})
+    */
 
-    ent = new Entity()
+    // Init entities
+    let objects = new Entity("objects")
+    entities.addEntity(objects)
+
+    let ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(0, 26)})
+    ent.addComponent("TimerTriggerComponent", {"timer" : 6.0, "actions" : ["ResetActionComponent"]})
+    ent.addComponent("ResetActionComponent")
+    ent.addComponent("ASCIIColiderComponent")
     ent.addComponent("ASCIISpriteComponent", {"sprite" :
     [
       "___________________________________________________________________________________________________________________________"
-
     ]})
-    entities.addEntity(ent)
+    objects.addChild(ent)
 
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(120, 14)})
@@ -182,7 +188,7 @@ setTimeout(() =>
     ent.addComponent("ASCIISpriteComponent")
     ent.addComponent("ASCIIColiderComponent")
     ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_01})
-    entities.addEntity(ent)
+    objects.addChild(ent)
 
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(180, 14)})
@@ -192,7 +198,7 @@ setTimeout(() =>
     ent.addComponent("ASCIISpriteComponent")
     ent.addComponent("ASCIIColiderComponent")
     ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_01})
-    entities.addEntity(ent)
+    objects.addChild(ent)
 
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(160, 5)})
@@ -202,7 +208,7 @@ setTimeout(() =>
     ent.addComponent("ASCIISpriteComponent")
     ent.addComponent("ASCIIColiderComponent")
     ent.addComponent("AnimatedComponent", {"max_timer" : 0.2, "clip" : anim_02})
-    entities.addEntity(ent)
+    objects.addChild(ent)
 
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(120, 10)})
@@ -212,7 +218,7 @@ setTimeout(() =>
     ent.addComponent("ASCIISpriteComponent")
     ent.addComponent("ASCIIColiderComponent")
     ent.addComponent("AnimatedComponent", {"max_timer" : 0.2, "clip" : anim_02})
-    entities.addEntity(ent)
+    objects.addChild(ent)
 
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(200, 15)})
@@ -222,7 +228,7 @@ setTimeout(() =>
     ent.addComponent("ASCIISpriteComponent")
     ent.addComponent("ASCIIColiderComponent")
     ent.addComponent("AnimatedComponent", {"max_timer" : 0.2, "clip" : anim_02})
-    entities.addEntity(ent)
+    objects.addChild(ent)
 
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(100, 24)})
@@ -234,10 +240,10 @@ setTimeout(() =>
     [
     " |",
     "/_\\",
-    "|_|",
+    "|F|",
     "/_\\"
     ]})
-    entities.addEntity(ent)
+    objects.addChild(ent)
 
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(140, 21)})
@@ -254,7 +260,7 @@ setTimeout(() =>
     " (`^'^'`)",
     "  ------"
     ]})
-    entities.addEntity(ent)
+    objects.addChild(ent)
 
 
 /*
@@ -266,7 +272,7 @@ setTimeout(() =>
       "[_||_]",
       "|____|"
     ]})
-    entities.addEntity(ent)
+    entities.addChild(ent)
 */
 
     ent = new Entity()
@@ -287,7 +293,7 @@ setTimeout(() =>
       "========='='"
 
     ]})
-    entities.addEntity(ent)
+    objects.addChild(ent)
 
 
 

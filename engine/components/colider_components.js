@@ -18,7 +18,7 @@ class ColiderComponent extends ComponentBase
 	{
 		return this.getProperty("coliding")
 	}
-	
+
 	setObjects(arr)
 	{
 		this.setProperty("objects", arr)
@@ -47,6 +47,7 @@ class ColiderComponent extends ComponentBase
 				for(let x = C.x; x < C.x + C.w; x++)
 				{
 					let point = new Vector2(x, y)
+					//console.log(this.isContained(point), colider.isContained(point))
 					if(this.isContained(point) && colider.isContained(point)) return true;
 				}
 			}
@@ -59,20 +60,21 @@ class ColiderComponent extends ComponentBase
 		if(this.isColiding())
 		{
 			let objects = [];
-			let container = this.owner.parent ? this.owner.parent : EntitiesSystem.entities
+			let container = this.owner.parent.childs
 			for(let i in container)
 			{
 				let obj = container[i]
-				if(obj.hasComponent("ColiderComponent") && this.owner !== obj)
+				if(obj)
 				{
-					
-					let colider = obj.getComponent("ColiderComponent")
-					if(colider.isEnabled())
+					if(obj.hasComponent("ColiderComponent") && this.owner !== obj)
 					{
-						console.log(this.getRect(), colider.getRect())
-						if(this.isIntersects(colider))
+						let colider = obj.getComponent("ColiderComponent")
+						if(colider.isEnabled())
 						{
-							objects.push(obj)
+							if(this.isIntersects(colider))
+							{
+								objects.push(obj)
+							}
 						}
 					}
 				}
@@ -153,12 +155,14 @@ class ASCIIColiderComponent extends ColiderComponent
 	{
 		let pos = this.joined["TransformComponent"].getPosition();
 		let sprite = this.joined["DrawableComponent"].getSprite();
-		let row = sprite[point.y - pos.y]
 
+		let x = Math.floor(point.x - pos.x)
+		let y = Math.floor(point.y - pos.y)
+
+		let row = sprite[y]
 		if(row)
 		{
-			
-			let value = row[point.x - pos.x]
+			let value = row[x]
 			if(value)
 			{
 				return value != " ";

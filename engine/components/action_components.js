@@ -31,12 +31,8 @@ class DissolveActionComponent extends ComponentBase
 }
 
 /* Hiding after death component */
-class SpawnerComponent extends ComponentBase
+class SpawnActionComponent extends ComponentBase
 {
-	settings = {}
-	container = undefined;
-	prefab = undefined;
-
 	init(props)
 	{
 		props.settings = {}
@@ -69,10 +65,10 @@ class SpawnerComponent extends ComponentBase
 	}
 }
 
-/* Attribute Change Event 
+/* Attribute Change Event
 class AttributeEventComponent extends ComponentBase
 {
-	default_properties = 
+	default_properties =
 	{
 		"attribute" : null,
 		"action" : null,
@@ -84,7 +80,7 @@ class AttributeEventComponent extends ComponentBase
 		if(this.attribute) this.value = this.join(this.attribute).getValue()
 	}
 
-	update()
+	update()ResetActionComponent
 	{
 		let attribute = this.joined[this.attribute]
 		let new_value = attribute.getValue();
@@ -96,7 +92,7 @@ class AttributeEventComponent extends ComponentBase
 /* Radius Scanner
 class RadiusScannerComponent extends ComponentBase
 {
-	 
+
 	init()
 	{
 		this.join("TransformComponent")

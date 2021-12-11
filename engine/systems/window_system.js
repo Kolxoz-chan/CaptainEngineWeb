@@ -15,7 +15,6 @@ class WindowSystem
 		this.offscreen = this.canvas.offscreen.getContext("2d");
 
 		this.block = document.getElementById(id);
-		this.block.oncontextmenu = function(){return false}
 		this.block.appendChild(this.canvas);
 	}
 
@@ -51,6 +50,6 @@ class WindowSystem
 
 	static update()
 	{
-		
+
 	}
 }
