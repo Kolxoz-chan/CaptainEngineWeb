@@ -24,6 +24,31 @@ class DisableActionComponent extends ComponentBase
 	}
 }
 
+/* Temporary component */
+class GUIActionComponent extends ComponentBase
+{
+	init(props)
+	{
+		props.forms = []
+		super.init(props)
+	}
+
+	getForms()
+	{
+		return this.getProperty("forms")
+	}
+
+	action()
+	{
+		let forms = this.getForms()
+		for(let i in forms)
+		{
+			let name = forms[i];
+			GUISystem.getWidget(name).show()
+		}
+	}
+}
+
 /* Hiding after death component */
 class DissolveActionComponent extends ComponentBase
 {

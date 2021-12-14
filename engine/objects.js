@@ -29,8 +29,11 @@ Object.copy = function(obj, target = null)
 class Entity
 {
 	name = ""
+
 	enabled = true;
 	parent = null;
+	is_native = true;
+
 	components = {};
 	childs = []
 	delete_queue = []
@@ -51,6 +54,11 @@ class Entity
 	reset()
 	{
 		for(var key in this.components) this.components[key].reset();
+		for(var key in this.childs) this.childs[key].reset();
+		if(!this.isNative())
+		{
+			this.delete()
+		}
 	}
 
 	swap(a, b)
@@ -77,6 +85,7 @@ class Entity
 		// Deleting childs
 		if(this.delete_queue.length)
 		{
+			console.log(this.delete_queue)
 			for(let i in this.delete_queue)
 			{
 				let index = this.childs.indexOf(this.delete_queue[i])
@@ -129,16 +138,23 @@ class Entity
 
 	addChild(obj)
 	{
-		/*
+		
 		if(obj.name)
 		{
-			Game.entities_named[obj.name] = obj;
-			this.addNamed(obj)
-		}*/
+			EntitiesSystem.entities_named[obj.name] = obj;
+		}
+		if(Game.is_started)
+		{
+			obj.is_native = false;
+		}
 		this.childs.push(obj)
 		obj.parent = this;
 		obj.init();
-		obj.reset();
+	}
+
+	delete()
+	{
+		this.parent.deleteChild(this)
 	}
 
 	deleteChild(obj)
@@ -189,6 +205,11 @@ class Entity
 	isEnabled()
 	{
 		return this.enabled
+	}
+
+	isNative()
+	{
+		return this.is_native
 	}
 }
 
@@ -637,7 +658,7 @@ class Prefab
 	getEntity(props = {})
 	{
 		let comps = Object.copy(this.components);
-		
+
 		for(let i in props)
 		{
 			comps[i] = props[i]

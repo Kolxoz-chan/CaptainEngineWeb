@@ -20,7 +20,6 @@ class EntitiesSystem
 			this.entities_named[obj.name] = obj;
 		}
 		this.entities.push(obj);
-		obj.reset();
 		obj.init();
 
 		return obj;
@@ -38,11 +37,11 @@ class EntitiesSystem
 		}
 	}
 
-	static resetAllEntities()
+	static resetAll()
 	{
-		for(let i in this.entities)
+		for(let i in EntitiesSystem.entities)
 		{
-			this.entities[i].reset()
+			EntitiesSystem.entities[i].reset()
 		}
 	}
 
@@ -52,7 +51,7 @@ class EntitiesSystem
 		for(let i in arr)
 		{
 			let obj = arr[i]
-			if(obj.update)
+			if(obj.update && obj.isEnabled())
 			{
 				obj.update()
 			}

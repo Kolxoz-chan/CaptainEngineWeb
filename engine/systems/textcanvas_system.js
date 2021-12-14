@@ -81,8 +81,4 @@ class TextCanvasSystem
 		this.canvas.textContent = str
 		this.clear()
 	}
-
-
-
-
 }

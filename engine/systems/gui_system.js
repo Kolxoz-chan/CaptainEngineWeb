@@ -2,7 +2,7 @@
 class GUISystem
 {
 	static block = null
-	static widgets = []
+	static widgets = {}
 
 	static init(id)
 	{
@@ -24,9 +24,14 @@ class GUISystem
 		}
 	}
 
-	static addWidget(widget)
+	static getWidget(name)
 	{
-		GUISystem.widgets.push(widget)
+		return GUISystem.widgets[name];
+	}
+
+	static addWidget(name, widget)
+	{
+		GUISystem.widgets[name] = widget
 		return widget
 	}
 }
@@ -80,15 +85,18 @@ class Widget
 
 	setVisible(value)
 	{
-		if(value)
-		{
-			this.widget.style.display = "block"
-		}
-		else
-		{
-			this.widget.style.display = "none"
-		}
-		
+		if(value) this.show()
+		else this.hide()
+	}
+
+	show()
+	{
+		this.widget.style.display = "block"
+	}
+
+	hide()
+	{
+		this.widget.style.display = "none"
 	}
 
 	addEvent(type, func)
