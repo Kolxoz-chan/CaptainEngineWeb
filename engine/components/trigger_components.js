@@ -38,6 +38,37 @@ class TimerTriggerComponent extends TriggerComponent
 }
 
 /* Timer component*/
+class KeyboardTriggerComponent extends TriggerComponent
+{
+	init(props)
+	{
+		props.actions = []	// {"key" : "KeyA", "type" : "click", "components" : [SomeActionComponent]}
+		super.init(props)
+	}
+
+	update()
+	{
+		let props = this.getProperty("actions")
+		for(let i in props)
+		{
+			let value = false
+			let action = props[i]
+			switch(action.type)
+			{
+				case "clicked":  value = InputSystem.isKeyClicked(action.key); break;
+				case "pressed":  value = InputSystem.isKeyPressed(action.key); break;
+				case "released": value = InputSystem.isKeyReleased(action.key); break;
+			}
+
+			if(value)
+			{
+				this.activate(action.components)
+			}
+		}
+	}
+}
+
+/* Timer component*/
 class ColideTriggerComponent extends TriggerComponent
 {
 	init(props)

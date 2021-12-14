@@ -129,11 +129,12 @@ class Entity
 
 	addChild(obj)
 	{
+		/*
 		if(obj.name)
 		{
 			Game.entities_named[obj.name] = obj;
 			this.addNamed(obj)
-		}
+		}*/
 		this.childs.push(obj)
 		obj.parent = this;
 		obj.init();
@@ -188,117 +189,6 @@ class Entity
 	isEnabled()
 	{
 		return this.enabled
-	}
-}
-
-/* --------------------------------- Matrix entity  -------------------------------------- */
-class MatrixEntity extends Entity
-{
-	matrix = {}
-	size = new Vector2(32, 32)
-	rect = new Rect(Number.MAX_VALUE, Number.MAX_VALUE, 0, 0)
-
-	constructor(name = null, size = new Vector2(32, 32))
-	{
-		super(name);
-		this.size = size;
-	}
-
-	setEntity(obj, vec)
-	{
-		if(obj.name) Game.entities_named[obj.name] = obj;
-		if(!this.matrix[vec.x]) this.matrix[vec.x] = {};
-		if(obj.hasComponent("TransformComponent"))
-		{
-			let transform = obj.getComponent("TransformComponent")
-			transform.setPosition(vec.mulVec(this.size))
-			transform.setSize(this.size)
-		}
-		else
-		{
-			obj.addComponent("TransformComponent", {"position" : vec.mulVec(this.size), "size" : this.size})
-		}
-
-		this.matrix[vec.x][vec.y] = obj
-		obj.parent = this;
-		obj.reset();
-		obj.init();
-	}
-
-	getEntity(vec)
-	{
-		if(this.matrix[vec.x])
-		{
-			return this.matrix[vec.x][vec.y]
-		}
-		return null
-	}
-
-	update()
-	{
-		// Deleting childs
-		if(this.delete_queue.length)
-		{
-			for(let i in this.delete_queue)
-			{
-				let index = this.childs.indexOf(this.delete_queue[i])
-				this.childs.splice(index, 1)
-			}
-			this.delete_queue = []
-		}
-
-		// Update components
-		for(var key in this.components)
-		{
-			if(this.components[key].isEnabled())
-			{
-				if(this.components[key].onUpdate) this.components[key].onUpdate();
-				this.components[key].update();
-			}
-		}
-
-		// Update matrix
-		let rect = Camera.getRect().divVec(this.size)
-
-		rect.x = Math.ceil(rect.x)
-		rect.y = Math.ceil(rect.y)
-		rect.w = Math.ceil(rect.x + rect.w);
-		rect.h = Math.ceil(rect.y + rect.h);
-
-		//alert(rect.x + " " + rect.y + " " + rect.w + " " + rect.h)
-		for(let x=rect.x - 1; x<rect.w; x++)
-		{
-			if(this.matrix[x])
-			{
-				for(let y=rect.y - 1; y<rect.h; y++)
-				{
-					if(this.matrix[x][y])
-					{
-						if(this.matrix[x][y].isEnabled())
-						{
-							this.matrix[x][y].update();
-						}
-					}
-				}
-			}
-		}
-
-		/*for(let x in this.matrix)
-		{
-			for(let y in this.matrix[x])
-			{
-				if(this.matrix[x][y].isEnabled())
-				{
-					this.matrix[x][y].update();
-				}
-			}
-		}*/
-
-		// Update childs
-		for(let i in this.childs)
-		{
-			if(this.childs[i].isEnabled()) this.childs[i].update();
-		}
 	}
 }
 
@@ -747,19 +637,16 @@ class Prefab
 	getEntity(props = {})
 	{
 		let comps = Object.copy(this.components);
-
+		
 		for(let i in props)
 		{
-			for(let x in props[i])
-			{
-				comps[i][x] = props[i][x]
-			}
+			comps[i] = props[i]
 		}
 
 		let obj = new Entity()
 		for(let i in comps)
 		{
-			obj.addComponent(eval("new " + i + "()"), comps[i])
+			obj.addComponent(i, comps[i])
 		}
 
 		return obj;

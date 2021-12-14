@@ -8,7 +8,12 @@ class EntitiesSystem
 
 	}
 
-  static addEntity(obj)
+	static getNamedEntity(name)
+	{
+		return EntitiesSystem.entities_named[name]
+	}
+
+  	static addEntity(obj)
 	{
 		if(obj.name)
 		{
@@ -30,6 +35,14 @@ class EntitiesSystem
 		else
 		{
 			console.log("WARNING. There is not object named '" + name + "'")
+		}
+	}
+
+	static resetAllEntities()
+	{
+		for(let i in this.entities)
+		{
+			this.entities[i].reset()
 		}
 	}
 

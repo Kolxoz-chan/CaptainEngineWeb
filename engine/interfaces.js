@@ -22,12 +22,29 @@ function ITarget()
   this.getTarget = function()
   {
     let target = this.getProperty("target")
-    return Game.getObject(target)
+    return EntitiesSystem.getNamedEntity(target)
   }
 
   this.setTarget = function(value)
   {
     this.setProperty("target", value)
+  }
+}
+
+/* ----------------- TargetElement ---------------------- */
+function IPrefab()
+{
+  this.prefab = ""
+
+  this.getPrefab = function()
+  {
+    let prefab = this.getProperty("prefab")
+    return ResourcesSystem.getPrefab(prefab)
+  }
+
+  this.setPrefab = function(value)
+  {
+    this.setProperty("prefab", value)
   }
 }
 
@@ -73,22 +90,5 @@ function ITimer()
     }
 
     return true
-  }
-}
-
-/* ----------------- TargetElement ---------------------- */
-function IPrefab()
-{
-  this.prefab = ""
-
-  this.getPrefab = function()
-  {
-    let prefab = this.getProperty("prefab")
-    return Resources.getPrefab(prefab)
-  }
-
-  this.setPrefab = function(value)
-  {
-    this.setProperty("prefab", value)
   }
 }

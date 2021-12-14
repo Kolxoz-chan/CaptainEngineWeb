@@ -10,6 +10,7 @@ Game.addSystem("entities_system.js", 	"EntitiesSystem")
 Game.addSystem("input_system.js", 		"InputSystem")
 Game.addSystem("resources_system.js", 	"ResourcesSystem")
 Game.addSystem("textcanvas_system.js", 	"TextCanvasSystem")
+Game.addSystem("gui_system.js",  "GUISystem")
 
 /* --- Init components -------------------------------------------------------  */
 setTimeout(() =>
@@ -146,92 +147,109 @@ setTimeout(() =>
 {
     // TextCanvasSystem
     let text_canvas = Game.getSystem("TextCanvasSystem")
-    text_canvas.setSize(new Vector2(100, 30))
+    text_canvas.setSize(new Vector2(140, 35))
 
     // InputSystem
     let input = Game.getSystem("InputSystem")
     input.setEvents(["keydown", "keyup"])
 
-    // EntitiesSystem
-    let entities = Game.getSystem("EntitiesSystem")
+    // GUISystem ----------------------------------------------------------------------------------------------- //
+    let gui = Game.getSystem("GUISystem")
 
-    // ResourcesSystem
-  /*  let prefab = ResourcesSystem.addPrefab(new Prefab())
+    // Start menu
+    let start_menu = gui.addWidget(new Frame())
+    start_menu.setPosition(50, 50, "%")
+
+    let button_style = "background-color: black; color: white; border: 2px solid white; width: 70%; margin: auto; margin-top: 10px;"
+    start_menu.addWidget(new Label("&#10052; Дед Мороз &#10052;", "font-size: 48pt; color: white;"))
+    start_menu.addWidget(new Separator("margin: 10px"))
+    start_menu.addWidget(new Button("Начать", button_style, () =>
+    {
+        EntitiesSystem.resetAllEntities()
+        start_menu.setVisible(false)
+    }))
+    start_menu.addWidget(new Button("Разработчик", button_style, () => 
+    {
+        window.open("https://github.com/Kolxoz-chan");
+    }))
+    start_menu.addWidget(new Button("Выйти", button_style, () => 
+    {
+        window.close();
+    }))
+
+
+    // ResourcesSystem ----------------------------------------------------------------------------------------- //
+    let prefab = ResourcesSystem.addPrefab(new Prefab("tree_01"))
     prefab.addComponent("GravityComponent", {"vector" : new Vector2(-30, 0)})
     prefab.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : ["ResetActionComponent"]})
     prefab.addComponent("ResetActionComponent")
     prefab.addComponent("ASCIISpriteComponent")
     prefab.addComponent("ASCIIColiderComponent")
     prefab.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_01})
-    */
 
-    // Init entities
+    prefab = ResourcesSystem.addPrefab(new Prefab("bird_01"))
+    prefab.addComponent("GravityComponent", {"vector" : new Vector2(-50, 0)})
+    prefab.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : ["ResetActionComponent"]})
+    prefab.addComponent("ResetActionComponent")
+    prefab.addComponent("ASCIISpriteComponent")
+    prefab.addComponent("ASCIIColiderComponent")
+    prefab.addComponent("AnimatedComponent", {"max_timer" : 0.2, "clip" : anim_02})
+
+    prefab = ResourcesSystem.addPrefab(new Prefab("price_01"))
+    prefab.addComponent("GravityComponent", {"vector" : new Vector2(-30, 26)})
+    prefab.addComponent("ASCIISpriteComponent", {"sprite" :
+    [
+      " [><]",
+      "[_||_]",
+      "|____|"
+    ]})
+
+
+    // EntitiesSystem -------------------------------------------------------------------------------------------- // 
+    let entities = Game.getSystem("EntitiesSystem")
+
     let objects = new Entity("objects")
     entities.addEntity(objects)
 
     let ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(0, 26)})
+    ent.addComponent("TransformComponent", {"position" : new Vector2(0, 34)})
     ent.addComponent("TimerTriggerComponent", {"timer" : 6.0, "actions" : ["ResetActionComponent"]})
     ent.addComponent("ResetActionComponent")
     ent.addComponent("ASCIIColiderComponent")
-    ent.addComponent("ASCIISpriteComponent", {"sprite" :
-    [
-      "___________________________________________________________________________________________________________________________"
-    ]})
+    ent.addComponent("ASCIISpriteComponent", {"sprite" : ["_".repeat(140)]})
     objects.addChild(ent)
 
-    ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(120, 14)})
-    ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, 0)})
-    ent.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : ["ResetActionComponent"]})
-    ent.addComponent("ResetActionComponent")
-    ent.addComponent("ASCIISpriteComponent")
-    ent.addComponent("ASCIIColiderComponent")
-    ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_01})
-    objects.addChild(ent)
+    objects.addChild(ResourcesSystem.createEntity("tree_01",
+    {
+        "TransformComponent" : {"position" : new Vector2(120, 22)}
+    }))
+
+    objects.addChild(ResourcesSystem.createEntity("tree_01",
+    {
+        "TransformComponent" : {"position" : new Vector2(140, 22)},
+        "TimerTriggerComponent" : {"timer" : 7.0, "actions" : ["ResetActionComponent"]}
+    }))
+
+    objects.addChild(ResourcesSystem.createEntity("bird_01",
+    {
+        "TransformComponent" : {"position" : new Vector2(160, 5)},
+        "TimerTriggerComponent" : {"timer" : 4.0, "actions" : ["ResetActionComponent"]}
+    }))
+
+    objects.addChild(ResourcesSystem.createEntity("bird_01",
+    {
+        "TransformComponent" : {"position" : new Vector2(120, 10)},
+        "TimerTriggerComponent" : {"timer" : 6.0, "actions" : ["ResetActionComponent"]}
+    }))
+
+    objects.addChild(ResourcesSystem.createEntity("bird_01",
+    {
+        "TransformComponent" : {"position" : new Vector2(200, 15)},
+        "TimerTriggerComponent" : {"timer" : 8.0, "actions" : ["ResetActionComponent"]}
+    }))
 
     ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(180, 14)})
-    ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, 0)})
-    ent.addComponent("TimerTriggerComponent", {"timer" : 8.0, "actions" : ["ResetActionComponent"]})
-    ent.addComponent("ResetActionComponent")
-    ent.addComponent("ASCIISpriteComponent")
-    ent.addComponent("ASCIIColiderComponent")
-    ent.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_01})
-    objects.addChild(ent)
-
-    ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(160, 5)})
-    ent.addComponent("GravityComponent", {"vector" : new Vector2(-50, 0)})
-    ent.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : ["ResetActionComponent"]})
-    ent.addComponent("ResetActionComponent")
-    ent.addComponent("ASCIISpriteComponent")
-    ent.addComponent("ASCIIColiderComponent")
-    ent.addComponent("AnimatedComponent", {"max_timer" : 0.2, "clip" : anim_02})
-    objects.addChild(ent)
-
-    ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(120, 10)})
-    ent.addComponent("GravityComponent", {"vector" : new Vector2(-50, 0)})
-    ent.addComponent("TimerTriggerComponent", {"timer" : 7.0, "actions" : ["ResetActionComponent"]})
-    ent.addComponent("ResetActionComponent")
-    ent.addComponent("ASCIISpriteComponent")
-    ent.addComponent("ASCIIColiderComponent")
-    ent.addComponent("AnimatedComponent", {"max_timer" : 0.2, "clip" : anim_02})
-    objects.addChild(ent)
-
-    ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(200, 15)})
-    ent.addComponent("GravityComponent", {"vector" : new Vector2(-50, 0)})
-    ent.addComponent("TimerTriggerComponent", {"timer" : 6.0, "actions" : ["ResetActionComponent"]})
-    ent.addComponent("ResetActionComponent")
-    ent.addComponent("ASCIISpriteComponent")
-    ent.addComponent("ASCIIColiderComponent")
-    ent.addComponent("AnimatedComponent", {"max_timer" : 0.2, "clip" : anim_02})
-    objects.addChild(ent)
-
-    ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(100, 24)})
+    ent.addComponent("TransformComponent", {"position" : new Vector2(100, 33)})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, -10)})
     ent.addComponent("TimerTriggerComponent", {"timer" : 3.0, "actions" : ["ResetActionComponent"]})
     ent.addComponent("ResetActionComponent")
@@ -246,7 +264,7 @@ setTimeout(() =>
     objects.addChild(ent)
 
     ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(140, 21)})
+    ent.addComponent("TransformComponent", {"position" : new Vector2(140, 29)})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(-30, 0)})
     ent.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : ["ResetActionComponent"]})
     ent.addComponent("ResetActionComponent")
@@ -260,28 +278,21 @@ setTimeout(() =>
     " (`^'^'`)",
     "  ------"
     ]})
-    objects.addChild(ent)
+    objects.addChild(ent) 
 
-
-/*
-    ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(1, 1)})
-    ent.addComponent("ASCIISpriteComponent", {"sprite" :
-    [
-      " [><]",
-      "[_||_]",
-      "|____|"
-    ]})
-    entities.addChild(ent)
-*/
 
     ent = new Entity()
     ent.addComponent("TransformComponent", {"position" : new Vector2(0, 0)})
     ent.addComponent("MovingControllerComponent", {"speed" : 30})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(0, 10)})
     ent.addComponent("ASCIIColiderComponent", {"coliding" : true})
-    ent.addComponent("DestroyActionComponent")
-    ent.addComponent("ColideTriggerComponent", {"actions" : ["DestroyActionComponent"]})
+    ent.addComponent("DisableActionComponent")
+    ent.addComponent("SpawnActionComponent", {"prefab" : "price_01"})
+    ent.addComponent("ColideTriggerComponent", {"actions" : ["DisableActionComponent"]})
+    ent.addComponent("KeyboardTriggerComponent", {"actions" : 
+    [
+        {"key" : "KeyE", "type" : "clicked", "components" : ["SpawnActionComponent"]}
+    ]})
     ent.addComponent("ASCIISpriteComponent", {"sprite" :
     [
       "     __",

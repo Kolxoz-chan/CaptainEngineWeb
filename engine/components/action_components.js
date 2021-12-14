@@ -15,6 +15,15 @@ class DestroyActionComponent extends ComponentBase
 	}
 }
 
+/* Temporary component */
+class DisableActionComponent extends ComponentBase
+{
+	action()
+	{
+		this.owner.setEnabled(false)
+	}
+}
+
 /* Hiding after death component */
 class DissolveActionComponent extends ComponentBase
 {
@@ -49,8 +58,6 @@ class SpawnActionComponent extends ComponentBase
 
 	action()
 	{
-		this.resetTimer()
-
 		let settings = this.getSettings()
 		let layer = this.getTarget()
 		let prefab = this.getPrefab()

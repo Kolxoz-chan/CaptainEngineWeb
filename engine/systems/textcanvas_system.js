@@ -11,6 +11,7 @@ class TextCanvasSystem
 		this.canvas = document.createElement("pre");
 		this.canvas.style.color = "white"
 		this.canvas.style.fontFamily = "Consolas, monaco, monospace"
+		this.canvas.style.fontSize = "14px"
 		this.canvas.style.textAlign = "center"
 		widget.appendChild(this.canvas)
 
