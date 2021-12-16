@@ -34,12 +34,12 @@ class Entity
 	parent = null;
 	is_native = true;
 
+	tags = []
 	components = {};
 	childs = []
 	delete_queue = []
 	swap_queue = []
 	entities_named = []
-	// onUpdate = null;
 
 	constructor(name = null)
 	{
@@ -122,6 +122,9 @@ class Entity
 		this.components[name] = component;
 		component.setOwner(this);
 		component.setDefaultData(data);
+
+		EntitiesSystem.addEntityByComponent(name, this)
+
 		return component;
 	}
 
@@ -131,6 +134,15 @@ class Entity
 		if(this.parent) this.parent.addNamed(obj)
 	}
 
+	addTags()
+	{
+		this.tags = Array.from(arguments)
+		for(let i in this.tags)
+		{
+			EntitiesSystem.addEntityByTag(this.tags[i], this)
+		}
+	}
+
 	getNamed(name)
 	{
 		return this.entities_named[name];
@@ -138,7 +150,7 @@ class Entity
 
 	addChild(obj)
 	{
-		
+
 		if(obj.name)
 		{
 			EntitiesSystem.entities_named[obj.name] = obj;

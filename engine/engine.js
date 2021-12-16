@@ -66,6 +66,14 @@ class Game
 		})
 	}
 
+	static addSystems(data)
+	{
+		for(let name in data)
+		{
+			Game.addSystem(name, data[name])
+		}
+	}
+
 	static getWidget()
 	{
 		return Game.widget

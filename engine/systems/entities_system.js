@@ -2,6 +2,8 @@ class EntitiesSystem
 {
 	static entities = [];
 	static entities_named = {};
+	static entities_taged = {};
+	static entities_componented = {};
 
 	static init()
 	{
@@ -11,18 +13,6 @@ class EntitiesSystem
 	static getNamedEntity(name)
 	{
 		return EntitiesSystem.entities_named[name]
-	}
-
-  	static addEntity(obj)
-	{
-		if(obj.name)
-		{
-			this.entities_named[obj.name] = obj;
-		}
-		this.entities.push(obj);
-		obj.init();
-
-		return obj;
 	}
 
 	static getEntity(name)
@@ -35,6 +25,31 @@ class EntitiesSystem
 		{
 			console.log("WARNING. There is not object named '" + name + "'")
 		}
+	}
+
+	static addEntity(obj)
+	{
+		if(obj.name)
+		{
+			this.entities_named[obj.name] = obj;
+		}
+		this.entities.push(obj);
+		obj.init();
+
+		return obj;
+	}
+
+	static addEntityByTag(name, obj)
+	{
+		if(!this.entities_taged[name]) this.entities_taged[name] = []
+		this.entities_taged[name].push(obj)
+	}
+
+	static addEntityByComponent(name, obj)
+	{
+		/*
+		if(!this.entities_componented[name]) this.entities_componented[name] = []
+		this.entities_componented[name].push(obj)*/
 	}
 
 	static resetAll()

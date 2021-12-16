@@ -2,16 +2,19 @@
 Game.init("game-block");
 
 /* --- Init systems -------------------------------------------------------  */
-Game.addSystem("time_system.js",  		"TimeSystem")
-Game.addSystem("tasks_system.js", 		"TasksSystem")
-Game.addSystem("camera_system.js", 		"CameraSystem")
-Game.addSystem("entities_system.js", 	"EntitiesSystem")
-//Game.addSystem("window_system.js", 	"WindowSystem")
-Game.addSystem("input_system.js", 		"InputSystem")
-Game.addSystem("resources_system.js", 	"ResourcesSystem")
-Game.addSystem("textcanvas_system.js", 	"TextCanvasSystem")
-Game.addSystem("gui_system.js",         "GUISystem")
-Game.addSystem("audio_system.js",       "AudioSystem")
+Game.addSystems(
+{
+    "time_system.js"        :   "TimeSystem",
+    "tasks_system.js"       :   "TasksSystem",
+    "camera_system.js"      :   "CameraSystem",
+    "entities_system.js"    :   "EntitiesSystem",
+    //"window_system.js"      :   "WindowSystem",
+    "input_system.js"       :   "InputSystem",
+    "resources_system.js"   :   "ResourcesSystem",
+    "textcanvas_system.js"  :   "TextCanvasSystem",
+    "gui_system.js"         :   "GUISystem",
+    "audio_system.js"       :   "AudioSystem"
+})
 
 /* --- Init components -------------------------------------------------------  */
 setTimeout(() =>
@@ -157,18 +160,19 @@ setTimeout(() =>
     // GUISystem ----------------------------------------------------------------------------------------------- //
     let gui = Game.getSystem("GUISystem")
 
+    // Styles
+    let button_style = "background-color: black; color: white; border: 2px solid white; width: 70%; margin: auto; margin-top: 10px;"
+
     // Start menu
     let start_menu = gui.addWidget("main_menu", new Frame())
     start_menu.setPosition(50, 40, "%")
-
-    let button_style = "background-color: black; color: white; border: 2px solid white; width: 70%; margin: auto; margin-top: 10px;"
     start_menu.addWidget(new Label("&#10052; Дед Мороз &#10052;", "font-size: 48pt; color: white;"))
     start_menu.addWidget(new Separator("margin: 10px"))
     start_menu.addWidget(new Button("Начать", button_style, () =>
     {
         EntitiesSystem.getNamedEntity("actor").setEnabled(true)
         EntitiesSystem.resetAll()
-        AudioSystem.play("bg_01")
+        //AudioSystem.play("bg_01")
         start_menu.setVisible(false)
 
     }))
@@ -181,6 +185,45 @@ setTimeout(() =>
         window.close();
     }))
 
+    // Fail main
+    let fail_menu = gui.addWidget("fail_menu", new Frame())
+    fail_menu.hide()
+    fail_menu.setPosition(50, 40, "%")
+    fail_menu.addWidget(new Label("&#10052; Игра окончена &#10052;", "font-size: 48pt; color: white;"))
+    fail_menu.addWidget(new Separator("margin: 10px"))
+    fail_menu.addWidget(new Button("Занова", button_style, () =>
+    {
+        EntitiesSystem.getNamedEntity("actor").setEnabled(true)
+        EntitiesSystem.resetAll()
+        //AudioSystem.play("bg_01")
+        fail_menu.setVisible(false)
+
+    }))
+    fail_menu.addWidget(new Button("В меню", button_style, () =>
+    {
+        fail_menu.setVisible(false)
+        start_menu.setVisible(true)
+    }))
+
+    // Win main
+    let win_menu = gui.addWidget("win_menu", new Frame())
+    win_menu.hide()
+    win_menu.setPosition(50, 40, "%")
+    win_menu.addWidget(new Label("&#10052; Победа &#10052;", "font-size: 48pt; color: white;"))
+    win_menu.addWidget(new Separator("margin: 10px"))
+    win_menu.addWidget(new Button("Продолжить", button_style, () =>
+    {
+        EntitiesSystem.getNamedEntity("actor").setEnabled(true)
+        EntitiesSystem.resetAll()
+        //AudioSystem.play("bg_01")
+        fail_menu.setVisible(false)
+
+    }))
+    win_menu.addWidget(new Button("В меню", button_style, () =>
+    {
+        fail_menu.setVisible(false)
+        start_menu.setVisible(true)
+    }))
 
     // ResourcesSystem ----------------------------------------------------------------------------------------- //
 
@@ -220,6 +263,8 @@ setTimeout(() =>
     let entities = Game.getSystem("EntitiesSystem")
 
     let objects = new Entity("objects")
+    objects.addComponent("TimerTriggerComponent", {"timer" : 10.0, "actions" : ["GUIActionComponent"]})
+    objects.addComponent("GUIActionComponent", {"forms" : ["win_menu"]})
     entities.addEntity(objects)
 
     let ent = new Entity()
@@ -275,6 +320,7 @@ setTimeout(() =>
     objects.addChild(ent)
 
     ent = new Entity()
+    ent.addTags("child", "border")
     ent.addComponent("TransformComponent", {"position" : new Vector2(140, 29)})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(-40, 0)})
     ent.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : ["ResetActionComponent"]})
@@ -300,7 +346,7 @@ setTimeout(() =>
     ent.addComponent("ASCIIColiderComponent", {"coliding" : true})
 
     ent.addComponent("DisableActionComponent")
-    ent.addComponent("GUIActionComponent", {"forms" : ["main_menu"]})
+    ent.addComponent("GUIActionComponent", {"forms" : ["fail_menu"]})
     ent.addComponent("SpawnActionComponent", {"prefab" : "price_01"})
 
     ent.addComponent("ColideTriggerComponent", {"actions" : ["DisableActionComponent", "GUIActionComponent"]})
