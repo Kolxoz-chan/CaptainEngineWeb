@@ -1,12 +1,11 @@
 class TriggerComponent extends ComponentBase
 {
-	activate(arr = [], data = {})
+	activate(arr = {})
 	{
-		for(let i in arr)
+		for(let name in arr)
 		{
-			let name = arr[i]
 			let component = this.owner.getComponent(name)
-			component.action(data)
+			component.action(arr[name])
 		}
 	}
 }

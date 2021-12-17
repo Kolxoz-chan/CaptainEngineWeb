@@ -27,24 +27,32 @@ class DisableActionComponent extends ComponentBase
 /* Temporary component */
 class GUIActionComponent extends ComponentBase
 {
-	init(props)
+	action(data)
 	{
-		props.forms = []
-		super.init(props)
-	}
-
-	getForms()
-	{
-		return this.getProperty("forms")
-	}
-
-	action()
-	{
-		let forms = this.getForms()
-		for(let i in forms)
+		if(data.show)
 		{
-			let name = forms[i];
-			GUISystem.getWidget(name).show()
+			for(let i in data.show)
+			{
+				let name = data.show[i];
+				let widget = GUISystem.getWidget(name)
+				if(widget)
+				{
+					widget.show()
+				}
+			}
+		}
+
+		if(data.hide)
+		{
+			for(let i in data.show)
+			{
+				let name = data.show[i];
+				let widget = GUISystem.getWidget(name)
+				if(widget)
+				{
+					widget.hide()
+				}
+			}
 		}
 	}
 }
