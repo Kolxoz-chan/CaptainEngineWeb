@@ -11,28 +11,70 @@ class TriggerComponent extends ComponentBase
 }
 
 /* Timer component*/
-class TimerTriggerComponent extends TriggerComponent
+class TimersTriggerComponent extends TriggerComponent
 {
 	init(props)
 	{
-		props.tic = []
-		props.actions = []
+		props.timers = []
 		super.init(props)
-		this.addIntefaces(new ITimer())
+	}
+
+	resetTimer(i)
+	{
+		let timers = this.getProperty("timers")
+		timers[i].value = 0;
+	}
+
+	updateTimer(i)
+	{
+		let timers = this.getProperty("timers")
+		timers[i].value += TimeSystem.getDeltaTime()
 	}
 
 	update()
 	{
-		if(this.updateTimer())
+		let timers = this.getProperty("timers")
+		for(let i in timers)
 		{
-			let tic = this.getProperty("tic")
-			this.activate(tic)
+			let timer = timers[i]
+			if(!timer.disabled)
+			{
+				if(!timer.value)
+				{
+					this.resetTimer(i)
+				}
+				this.updateTimer(i)
+
+				if(timer.tik)
+				{
+					this.activate(timer.tik)
+				}
+				if(timer.value >= timer.time && timer.actions)
+				{
+					this.activate(timer.actions)
+					if(timer.loop)
+					{
+						this.resetTimer(i)
+					}
+					else
+					{
+						timer.disabled = true;
+					}
+				}
+			}
 		}
-		else
-		{
-			let actions = this.getProperty("actions")
-			this.activate(actions)
-		}
+	}
+}
+
+class RandomTimersTriggerComponent extends TimersTriggerComponent
+{
+	resetTimer(i)
+	{
+		let timers = this.getProperty("timers")
+		let timer = timers[i]
+		
+		timer.time = Math.random() * (timer.time_max - timer.time_min) + timer.time_min;
+		timer.value = 0;
 	}
 }
 
@@ -88,6 +130,6 @@ class ColideTriggerComponent extends TriggerComponent
 			this.activate(actions, {"object" : obj})
 		}
 
-		
+
 	}
 }

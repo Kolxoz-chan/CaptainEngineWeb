@@ -12,15 +12,9 @@ class ComponentBase
 		this.default_properties = Object.assign(props, this.default_properties)
 	}
 
-	update()
-	{
-		/* Abstract method */
-	}
-
 	reset()
 	{
-		//if(super.reset) super.reset()
-		this.properties = Object.assign(this.properties, this.default_properties)
+		this.properties = Object.copy(this.default_properties)
 	}
 
 	join(name)

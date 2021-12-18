@@ -77,31 +77,30 @@ class SpawnActionComponent extends ComponentBase
 {
 	init(props)
 	{
-		props.settings = {}
-
-		this.addIntefaces(new IPrefab(), new ITarget())
 		this.join("TransformComponent")
 		super.init(props)
 	}
 
-	getSettings()
+	action(data)
 	{
-		return this.getProperty("settings")
-	}
-
-	action()
-	{
-		let settings = this.getSettings()
-		let layer = this.getTarget()
-		let prefab = this.getPrefab()
-
-		if(!layer) layer = this.owner.parent;
-
-		layer.addChild(prefab.getEntity(
+		if(data.prefab)
 		{
-			...settings,
-			"TransformComponent" : {"position" : this.joined["TransformComponent"].getPosition()},
-		}))
+			let prefab = ResourcesSystem.getPrefab(data.prefab)
+			let settings = data.settings ? data.settings : {}
+			let layer = data.layer ? data.layer : this.owner.parent
+			let position = this.joined["TransformComponent"].getPosition()
+			
+			if(data.offset)
+			{
+				position = position.addVec(data.offset)
+			}
+
+			layer.addChild(prefab.getEntity(
+			{
+				...settings,
+				"TransformComponent" : {"position" : position},
+			}))
+		}
 	}
 }
 

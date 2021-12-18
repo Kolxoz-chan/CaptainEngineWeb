@@ -232,11 +232,6 @@ setTimeout(() =>
 
     // Prefabs
     let prefab = ResourcesSystem.addPrefab(new Prefab("tree_01"))
-    prefab.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : 
-    {
-        "ResetActionComponent" : {}
-    }})
-
     prefab.addComponent("ResetActionComponent")
 
     prefab.addComponent("GravityComponent", {"vector" : new Vector2(-40, 0)})
@@ -246,11 +241,6 @@ setTimeout(() =>
 
     // ------------------------------------------------------------------------------- //
     prefab = ResourcesSystem.addPrefab(new Prefab("bird_01"))
-    prefab.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : 
-    {
-        "ResetActionComponent" : {}
-    }})
-
     prefab.addComponent("ResetActionComponent")
 
     prefab.addComponent("GravityComponent", {"vector" : new Vector2(-60, 0)})
@@ -262,11 +252,6 @@ setTimeout(() =>
     prefab = ResourcesSystem.addPrefab(new Prefab("price_01"))
     prefab.addComponent("DestroyActionComponent")
 
-    prefab.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : 
-    {
-        "DestroyActionComponent" : {}
-    }})
-
     prefab.addComponent("GravityComponent", {"vector" : new Vector2(-30, 26)})
     prefab.addComponent("ASCIISpriteComponent", {"sprite" :
     [
@@ -275,100 +260,39 @@ setTimeout(() =>
       "|____|"
     ]})
 
-
-    // EntitiesSystem -------------------------------------------------------------------------------------------- //
-    let entities = Game.getSystem("EntitiesSystem")
-
-    let objects = new Entity("objects")
-    objects.addComponent("GUIActionComponent", {"forms" : ["win_menu"]})
-    entities.addEntity(objects)
-
-    let ent = new Entity()
-    ent.addComponent("TimerTriggerComponent", {"timer" : 6.0, "actions" : 
+    // ------------------------------------------------------------------------------- //
+    prefab = ResourcesSystem.addPrefab(new Prefab("rocket_01"))
+    prefab.addComponent("TimerTriggerComponent", {"timer" : 3.0, "actions" :
     {
         "ResetActionComponent" : {}
     }})
 
-    ent.addComponent("ResetActionComponent")
+    prefab.addComponent("ResetActionComponent")
 
-    ent.addComponent("TransformComponent", {"position" : new Vector2(0, 34)})
-    ent.addComponent("ASCIIColiderComponent")
-    ent.addComponent("ASCIISpriteComponent", {"sprite" : ["_".repeat(140)]})
-    objects.addChild(ent)
-
-    objects.addChild(ResourcesSystem.createEntity("tree_01",
-    {
-        "TransformComponent" : {"position" : new Vector2(120, 22)}
-    }))
-
-    objects.addChild(ResourcesSystem.createEntity("tree_01",
-    {
-        "TransformComponent" : {"position" : new Vector2(140, 22)},
-        "TimerTriggerComponent" : {"timer" : 7.0, "actions" : 
-        {
-            "ResetActionComponent" : {}
-        }}
-    }))
-
-    objects.addChild(ResourcesSystem.createEntity("bird_01",
-    {
-        "TransformComponent" : {"position" : new Vector2(160, 5)},
-        "TimerTriggerComponent" : {"timer" : 4.0, "actions" : 
-        {
-            "ResetActionComponent" : {}
-        }}
-    }))
-
-    objects.addChild(ResourcesSystem.createEntity("bird_01",
-    {
-        "TransformComponent" : {"position" : new Vector2(120, 10)},
-        "TimerTriggerComponent" : {"timer" : 6.0, "actions" : 
-        {
-            "ResetActionComponent" : {}
-        }}
-    }))
-
-    objects.addChild(ResourcesSystem.createEntity("bird_01",
-    {
-        "TransformComponent" : {"position" : new Vector2(200, 15)},
-        "TimerTriggerComponent" : {"timer" : 8.0, "actions" : 
-        {
-            "ResetActionComponent" : {}
-        }}
-    }))
-
-    ent = new Entity()
-    ent.addComponent("TimerTriggerComponent", {"timer" : 3.0, "actions" : 
-    {
-        "ResetActionComponent" : {}
-    }})
-    
-    ent.addComponent("ResetActionComponent")
-
-    ent.addComponent("TransformComponent", {"position" : new Vector2(100, 33)})
-    ent.addComponent("GravityComponent", {"vector" : new Vector2(-40, -20)})
-    ent.addComponent("ASCIIColiderComponent")
-    ent.addComponent("ASCIISpriteComponent", {"sprite" :
+    prefab.addComponent("TransformComponent", {"position" : new Vector2(100, 33)})
+    prefab.addComponent("GravityComponent", {"vector" : new Vector2(-40, -20)})
+    prefab.addComponent("ASCIIColiderComponent")
+    prefab.addComponent("ASCIISpriteComponent", {"sprite" :
     [
     " |",
     "/_\\",
     "|F|",
     "/_\\"
     ]})
-    objects.addChild(ent)
 
-    ent = new Entity()
-    ent.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" : 
+    // ------------------------------------------------------------------------------- //
+    prefab = ResourcesSystem.addPrefab(new Prefab("snowman_01"))
+    prefab.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" :
     {
         "ResetActionComponent" : {}
     }})
 
-    ent.addComponent("ResetActionComponent")
+    prefab.addComponent("ResetActionComponent")
 
-    ent.addComponent("TransformComponent", {"position" : new Vector2(140, 29)})
-    ent.addComponent("GravityComponent", {"vector" : new Vector2(-40, 0)})
-    ent.addComponent("ASCIIColiderComponent")
-    ent.addComponent("ASCIISpriteComponent", {"sprite" :
+    prefab.addComponent("TransformComponent", {"position" : new Vector2(140, 29)})
+    prefab.addComponent("GravityComponent", {"vector" : new Vector2(-40, 0)})
+    prefab.addComponent("ASCIIColiderComponent")
+    prefab.addComponent("ASCIISpriteComponent", {"sprite" :
     [
     "    __",
     "  _|==|_",
@@ -377,37 +301,120 @@ setTimeout(() =>
     " (`^'^'`)",
     "  ------"
     ]})
+
+
+    // EntitiesSystem -------------------------------------------------------------------------------------------- //
+    let entities = Game.getSystem("EntitiesSystem")
+
+    // ------------------------------------------------------------------------------- //
+    let objects = new Entity("objects")
+    entities.addEntity(objects)
+
+    // ------------------------------------------------------------------------------- //
+    let ent = new Entity()
+
+    ent.addComponent("ResetActionComponent")
+    ent.addComponent("SpawnActionComponent")
+    ent.addComponent("TransformComponent", {"position" : new Vector2(150, 22)})
+    ent.addComponent("RandomTimersTriggerComponent", {"timers" :
+    [
+      {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
+      {
+          "SpawnActionComponent" : {"prefab" : "tree_01"},
+      }}
+    ]})
     objects.addChild(ent)
 
 
+    // ------------------------------------------------------------------------------- //
+    ent = new Entity()
+
+    ent.addComponent("ResetActionComponent")
+    ent.addComponent("SpawnActionComponent")
+    ent.addComponent("TransformComponent", {"position" : new Vector2(150, 25)})
+    ent.addComponent("RandomTimersTriggerComponent", {"timers" :
+    [
+      {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
+      {
+          "SpawnActionComponent" : {"prefab" : "bird_01"},
+      }}
+    ]})
+    objects.addChild(ent)
+
+    // ------------------------------------------------------------------------------- //
+    ent = new Entity()
+
+    ent.addComponent("ResetActionComponent")
+    ent.addComponent("SpawnActionComponent")
+    ent.addComponent("TransformComponent", {"position" : new Vector2(150, 15)})
+    ent.addComponent("RandomTimersTriggerComponent", {"timers" :
+    [
+      {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
+      {
+          "SpawnActionComponent" : {"prefab" : "bird_01"},
+      }}
+    ]})
+    objects.addChild(ent)
+
+    // ------------------------------------------------------------------------------- //
+    ent = new Entity()
+
+    ent.addComponent("ResetActionComponent")
+    ent.addComponent("SpawnActionComponent")
+    ent.addComponent("TransformComponent", {"position" : new Vector2(150, 5)})
+    ent.addComponent("RandomTimersTriggerComponent", {"timers" :
+    [
+      {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
+      {
+          "SpawnActionComponent" : {"prefab" : "bird_01"},
+      }}
+    ]})
+    objects.addChild(ent)
+
+
+    // ------------------------------------------------------------------------------- //
+    ent = new Entity()
+    ent.addComponent("TransformComponent", {"position" : new Vector2(0, 34)})
+    ent.addComponent("ASCIIColiderComponent")
+    ent.addComponent("ASCIISpriteComponent", {"sprite" : ["_".repeat(140)]})
+    objects.addChild(ent)
+
+
+    // ------------------------------------------------------------------------------- //
     ent = new Entity("actor")
     ent.setEnabled(false)
+
     ent.addComponent("DisableActionComponent")
     ent.addComponent("GUIActionComponent")
-    ent.addComponent("SpawnActionComponent", {"prefab" : "price_01"})
-
-    ent.addComponent("TimerTriggerComponent", {"timer" : 60.0, "actions" : 
-    {
-        "GUIActionComponent" : {"show" : ["win_menu"]}, 
-        "DisableActionComponent" : {}
-    }})
-    ent.addComponent("ColideTriggerComponent", {"actions" : 
-    {
-        "GUIActionComponent" : {"show" : ["fail_menu"]},
-        "DisableActionComponent" : {}
-    }})
-    ent.addComponent("KeyboardTriggerComponent", {"actions" :
-    [
-        {"key" : "KeyE", "type" : "clicked", "components" : 
-        {
-            "SpawnActionComponent" : {}
-        }}
-    ]})
-
+    ent.addComponent("SpawnActionComponent")
     ent.addComponent("TransformComponent", {"position" : new Vector2(0, 0)})
     ent.addComponent("MovingControllerComponent", {"speed" : 30})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(0, 10)})
     ent.addComponent("ASCIIColiderComponent", {"coliding" : true})
+
+    ent.addComponent("TimersTriggerComponent", {"timers" :
+    [
+      {"time" : 60.0, "actions" :
+      {
+        "GUIActionComponent" : {"show" : ["win_menu"]},
+        "DisableActionComponent" : {}
+      }}
+    ]})
+
+    ent.addComponent("ColideTriggerComponent", {"actions" :
+    {
+        "GUIActionComponent" : {"show" : ["fail_menu"]},
+        "DisableActionComponent" : {}
+    }})
+
+    ent.addComponent("KeyboardTriggerComponent", {"actions" :
+    [
+        {"key" : "KeyE", "type" : "clicked", "components" :
+        {
+            "SpawnActionComponent" : {"prefab" : "price_01"}
+        }}
+    ]})
+
     ent.addComponent("ASCIISpriteComponent", {"sprite" :
     [
       "     __",

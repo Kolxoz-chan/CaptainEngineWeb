@@ -97,10 +97,10 @@ class Entity
 		// Update components
 		for(var key in this.components)
 		{
-			if(this.components[key].isEnabled())
+			let comp = this.components[key]
+			if(comp.isEnabled() && comp.update)
 			{
-				if(this.components[key].onUpdate) this.components[key].onUpdate();
-				this.components[key].update();
+				comp.update();
 			}
 		}
 
@@ -109,7 +109,11 @@ class Entity
 		{
 			for(let i in this.childs)
 			{
-				if(this.childs[i].isEnabled()) this.childs[i].update();
+				let child = this.childs[i]
+				if(child.isEnabled() && child.update) 
+				{
+					child.update();
+				}
 			}
 		}
 	}
