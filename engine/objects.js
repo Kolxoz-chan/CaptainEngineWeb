@@ -85,7 +85,6 @@ class Entity
 		// Deleting childs
 		if(this.delete_queue.length)
 		{
-			console.log(this.delete_queue)
 			for(let i in this.delete_queue)
 			{
 				let index = this.childs.indexOf(this.delete_queue[i])

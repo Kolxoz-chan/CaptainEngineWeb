@@ -451,13 +451,45 @@ class AnimatedComponent extends ComponentBase
 
 	update()
 	{
-		//console.log(this.getTimer())
 		if(!this.updateTimer())
 		{
 
 			this.resetTimer()
 			let data = this.nextFrame();
 			this.joined["DrawableComponent"].setData(data);
+		}
+	}
+}
+
+class ParticlesComponent extends ComponentBase
+{
+	init(props)
+	{
+		props.particles = []
+		props.max_count = 10
+		props.templates = [] 
+		/* 
+		{
+			"shape" : {"type" : "character", "color" : new Color(255, 0, 0)}, 
+			"position" : new Rect(0.0, 0.0, 1.0, 1.0), 
+			"func" : (data) => {}
+		}
+		*/
+		super.init(props)
+	}
+
+	getParticles()
+	{
+		return this.getProperty("particles")
+	}
+
+	update()
+	{
+		let particles = this.getParticles()
+
+		for(let i in particles)
+		{
+			let particle = particles[i]
 		}
 	}
 }

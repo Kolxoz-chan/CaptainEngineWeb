@@ -232,25 +232,41 @@ setTimeout(() =>
 
     // Prefabs
     let prefab = ResourcesSystem.addPrefab(new Prefab("tree_01"))
-    prefab.addComponent("ResetActionComponent")
-
     prefab.addComponent("GravityComponent", {"vector" : new Vector2(-40, 0)})
     prefab.addComponent("ASCIISpriteComponent")
     prefab.addComponent("ASCIIColiderComponent")
     prefab.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_01})
 
-    // ------------------------------------------------------------------------------- //
-    prefab = ResourcesSystem.addPrefab(new Prefab("bird_01"))
     prefab.addComponent("ResetActionComponent")
 
+    prefab.addComponent("TimersTriggerComponent", {"timers" : 
+    [
+        {"time" : 4.0, "actions" :
+        {
+            "ResetActionComponent" : {}
+        }}
+    ]})
+
+    // ------------------------------------------------------------------------------- //
+    prefab = ResourcesSystem.addPrefab(new Prefab("bird_01"))
     prefab.addComponent("GravityComponent", {"vector" : new Vector2(-60, 0)})
     prefab.addComponent("ASCIISpriteComponent")
     prefab.addComponent("ASCIIColiderComponent")
     prefab.addComponent("AnimatedComponent", {"max_timer" : 0.2, "clip" : anim_02})
 
+    prefab.addComponent("ResetActionComponent")
+
+    prefab.addComponent("TimersTriggerComponent", {"timers" : 
+    [
+        {"time" : 4.0, "actions" :
+        {
+            "ResetActionComponent" : {}
+        }}
+    ]})
+
     // ------------------------------------------------------------------------------- //
     prefab = ResourcesSystem.addPrefab(new Prefab("price_01"))
-    prefab.addComponent("DestroyActionComponent")
+    prefab.addComponent("ResetActionComponent")
 
     prefab.addComponent("GravityComponent", {"vector" : new Vector2(-30, 26)})
     prefab.addComponent("ASCIISpriteComponent", {"sprite" :
@@ -260,13 +276,16 @@ setTimeout(() =>
       "|____|"
     ]})
 
+    prefab.addComponent("TimersTriggerComponent", {"timers" : 
+    [
+        {"time" : 4.0, "actions" :
+        {
+            "ResetActionComponent" : {}
+        }}
+    ]})
+
     // ------------------------------------------------------------------------------- //
     prefab = ResourcesSystem.addPrefab(new Prefab("rocket_01"))
-    prefab.addComponent("TimerTriggerComponent", {"timer" : 3.0, "actions" :
-    {
-        "ResetActionComponent" : {}
-    }})
-
     prefab.addComponent("ResetActionComponent")
 
     prefab.addComponent("TransformComponent", {"position" : new Vector2(100, 33)})
@@ -282,11 +301,6 @@ setTimeout(() =>
 
     // ------------------------------------------------------------------------------- //
     prefab = ResourcesSystem.addPrefab(new Prefab("snowman_01"))
-    prefab.addComponent("TimerTriggerComponent", {"timer" : 5.0, "actions" :
-    {
-        "ResetActionComponent" : {}
-    }})
-
     prefab.addComponent("ResetActionComponent")
 
     prefab.addComponent("TransformComponent", {"position" : new Vector2(140, 29)})
@@ -331,7 +345,7 @@ setTimeout(() =>
 
     ent.addComponent("ResetActionComponent")
     ent.addComponent("SpawnActionComponent")
-    ent.addComponent("TransformComponent", {"position" : new Vector2(150, 25)})
+    ent.addComponent("TransformComponent", {"position" : new Vector2(150, 26)})
     ent.addComponent("RandomTimersTriggerComponent", {"timers" :
     [
       {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
@@ -361,7 +375,7 @@ setTimeout(() =>
 
     ent.addComponent("ResetActionComponent")
     ent.addComponent("SpawnActionComponent")
-    ent.addComponent("TransformComponent", {"position" : new Vector2(150, 5)})
+    ent.addComponent("TransformComponent", {"position" : new Vector2(150, 4)})
     ent.addComponent("RandomTimersTriggerComponent", {"timers" :
     [
       {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :

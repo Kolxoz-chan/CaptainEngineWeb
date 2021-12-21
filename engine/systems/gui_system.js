@@ -42,6 +42,7 @@ class Widget
 	widget = null;
 	parent = null;
 	childs = [];
+	events = {};
 	default_style = "margin: 0; user-select:none; display: block;"
 
 	constructor(type, style = "")
@@ -115,6 +116,11 @@ class Widget
 	getWidget()
 	{
 		return this.widget;
+	}
+
+	on(name, func)
+	{
+		this.events[name] = func
 	}
 }
 
