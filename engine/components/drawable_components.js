@@ -465,12 +465,13 @@ class ParticlesComponent extends ComponentBase
 {
 	init(props)
 	{
+		props.spawn_time = 0;
 		props.particles = []
 		props.max_count = 10
 		props.templates = [] 
 		/* 
 		{
-			"shape" : {"type" : "character", "color" : new Color(255, 0, 0)}, 
+			"shape" : {"type" : "ascii", "sprite" : "*"}, 
 			"position" : new Rect(0.0, 0.0, 1.0, 1.0), 
 			"func" : (data) => {}
 		}
@@ -483,13 +484,27 @@ class ParticlesComponent extends ComponentBase
 		return this.getProperty("particles")
 	}
 
-	update()
+	draw(position, size)
 	{
 		let particles = this.getParticles()
+		let rect = Rect.fromPosSize(position, size)
 
 		for(let i in particles)
 		{
 			let particle = particles[i]
+			if(particle.shape.type == "ascii")
+			{
+				if(particle.position)
+				{
+					let subrect = particle.position.
+					if(subrect.constructor.name == "Rect")
+					{
+						let part = rect.getPart(subrect)
+						let position = part.getRandomPoint()
+						
+					}
+				}
+			}
 		}
 	}
 }

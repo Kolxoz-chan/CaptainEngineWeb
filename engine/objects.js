@@ -536,6 +536,38 @@ class Rect
 		}
 		return result;
 	}
+
+	getPart(rect)
+	{
+		let p1 = new Vector2(this.x + this.w * rect.x, this.y + this.h * rect.y)
+		let p2 = new Vector2(this.x + this.w * rect.w, this.y + this.h * rect.h)
+
+		return Rect.fromTwoPoints(p1, p2)
+	}
+
+	getRandomPoint()
+	{
+		let x = MathSystem.random_range(this.left, this.right)
+		let y = MathSystem.random_range(this.top, this.bottom)
+
+		return new Vector2(x, y)
+	}
+
+	static fromPosSize(pos, size)
+	{
+		return new Rect(pos.x, pos.y, size.x, size.y)
+	}
+
+	static fromTwoPoints(p1, p2)
+	{
+		let result = new Rect(0, 0, 0, 0);
+		result.x = Math.min(p1.x, p2.x);
+		result.y = Math.min(p1.y, p2.y);
+        result.w = Math.max(p1.x, p2.x) - result.x;
+        result.h = Math.max(p1.y, p2.y) - result.y;
+
+        return result
+	}
 }
 
 /* Color class */

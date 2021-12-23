@@ -19,6 +19,7 @@ class Game
 
 		Game.include("engine/objects.js")
 		Game.include("engine/interfaces.js")
+		Game.include("engine/components/math_system.js")
 		Game.include("engine/components/base_components.js")
 	}
 
