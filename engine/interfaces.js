@@ -51,7 +51,7 @@ function IPrefab()
 /* ----------------- TargetElement ---------------------- */
 function ITimer()
 {
-  this.max_timer = 0.0
+  this.time = 0.0
   this.timer = 0.0
 
   this.getTimer = function()
@@ -64,26 +64,25 @@ function ITimer()
     this.setProperty("timer", value)
   }
 
-  this.setMaxTimer = function(value)
+  this.setTime = function(value)
   {
-    this.setProperty("max_timer", value)
+    this.setProperty("time", value)
   }
 
-  this.getMaxTimer = function()
+  this.getTime = function()
   {
-    return this.getProperty("max_timer")
+    return this.getProperty("time")
   }
 
   this.resetTimer = function()
   {
-    let waiting = this.getMaxTimer()
-    this.setTimer(waiting)
+    this.setTime(0)
   }
 
   this.updateTimer = function()
   {
-    this.setTimer(this.getTimer() - TimeSystem.getDeltaTime())
-    if(this.getTimer() <= 0)
+    this.setTime(this.getTime() + TimeSystem.getDeltaTime())
+    if(this.getTime() >= this.getTimer())
     {
       this.resetTimer()
       return false

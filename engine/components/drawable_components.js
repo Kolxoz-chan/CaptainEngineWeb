@@ -472,13 +472,14 @@ class ParticlesComponent extends DrawableComponent
 {
 	init(props)
 	{
-		props.time = 0;
-		props.timer = 0.5;
+		props.timer = 1.0;
 		props.particles = []
 		props.max_count = 10
-		props.templates = [] 
+		props.templates = []
 
 		super.init(props)
+
+		this.addIntefaces(new ITimer())
 	}
 
 	getParticles()
@@ -511,11 +512,11 @@ class ASCIIParticlesComponent extends ParticlesComponent
 {
 	init(props)
 	{
-		/* 
-		props.templates = 
+		/*
+		props.templates =
 		[{
-			"sprite" : "*", 
-			"position" : new Rect(0.0, 0.0, 1.0, 1.0), 
+			"sprite" : "*",
+			"position" : new Rect(0.0, 0.0, 1.0, 1.0),
 			"lifetime" : 0,
 			"func" : (data) => {}
 		}]
@@ -529,18 +530,15 @@ class ASCIIParticlesComponent extends ParticlesComponent
 		let particles = this.getParticles()
 		let rect = Rect.fromPosSize(position, size)
 		let templates = this.getTemplates()
-		let timer = this.getTimer()
-		let time = this.getTime()
-/*
-		time += TimeSystem.getDeltaTime()
-		if(timer)
-*/
 
-		if(particles.length < this.getMaxCount() && templates.length > 0)
+		if(!this.updateTimer())
 		{
-			let temp = Object.copy(MathSystem.random_choice(templates))
-			particles.push(temp)
-			temp.time = 0
+			if(particles.length < this.getMaxCount() && templates.length > 0)
+			{
+				let temp = Object.copy(MathSystem.random_choice(templates))
+				particles.push(temp)
+				temp.time = 0
+			}
 		}
 
 		for(let i in particles)

@@ -172,7 +172,7 @@ setTimeout(() =>
     {
         EntitiesSystem.getNamedEntity("actor").setEnabled(true)
         EntitiesSystem.resetAll()
-        //AudioSystem.play("bg_01")
+        AudioSystem.play("bg_01")
         start_menu.setVisible(false)
         hud.show()
 
@@ -196,9 +196,9 @@ setTimeout(() =>
     {
         EntitiesSystem.getNamedEntity("actor").setEnabled(true)
         EntitiesSystem.resetAll()
-        //AudioSystem.play("bg_01")
+        AudioSystem.play("bg_01")
         fail_menu.setVisible(false)
-
+        hud.show()
     }))
     fail_menu.addWidget(new Button("В меню", button_style, () =>
     {
@@ -216,8 +216,9 @@ setTimeout(() =>
     {
         EntitiesSystem.getNamedEntity("actor").setEnabled(true)
         EntitiesSystem.resetAll()
-        //AudioSystem.play("bg_01")
+        AudioSystem.play("bg_01")
         win_menu.setVisible(false)
+        hud.show()
 
     }))
     win_menu.addWidget(new Button("В меню", button_style, () =>
@@ -230,7 +231,7 @@ setTimeout(() =>
     let hud = gui.addWidget("hud_screen", new Frame())
     hud.setPosition(50, 10, "%")
     hud.hide()
-    let hud_time = hud.addWidget(new Label("&#10710; 01:00", "font-size: 36pt; color: white;"))
+    let hud_time = hud.addWidget(new Label("", "font-size: 36pt; color: white;"))
     hud.on("update", () =>
     {
         let actor = EntitiesSystem.getNamedEntity("actor")
@@ -238,14 +239,14 @@ setTimeout(() =>
         let timer = timers.getTimer(0)
 
         let time = timer.time - timer.value
-        let minutes = Math.floor(time / 60) 
+        let minutes = Math.floor(time / 60)
         let seconds = Math.floor(time - minutes * 60)
 
         if(minutes < 10) minutes = "0" + minutes
         if(seconds < 10) seconds = "0" + seconds
 
 
-        hud_time.setText("&#10710; " + minutes + ":" + seconds)
+        hud_time.setText("&#9885;  " + minutes + ":" + seconds)
     })
 
     // ResourcesSystem ----------------------------------------------------------------------------------------- //
@@ -258,11 +259,11 @@ setTimeout(() =>
     prefab.addComponent("GravityComponent", {"vector" : new Vector2(-40, 0)})
     prefab.addComponent("ASCIISpriteComponent")
     prefab.addComponent("ASCIIColiderComponent")
-    prefab.addComponent("AnimatedComponent", {"timer" : 0.2, "max_timer" : 0.2, "clip" : anim_01})
+    prefab.addComponent("AnimatedComponent", {"timer" : 0.2, "clip" : anim_01})
 
     prefab.addComponent("ResetActionComponent")
 
-    prefab.addComponent("TimersTriggerComponent", {"timers" : 
+    prefab.addComponent("TimersTriggerComponent", {"timers" :
     [
         {"time" : 4.0, "actions" :
         {
@@ -275,11 +276,11 @@ setTimeout(() =>
     prefab.addComponent("GravityComponent", {"vector" : new Vector2(-60, 0)})
     prefab.addComponent("ASCIISpriteComponent")
     prefab.addComponent("ASCIIColiderComponent")
-    prefab.addComponent("AnimatedComponent", {"max_timer" : 0.2, "clip" : anim_02})
+    prefab.addComponent("AnimatedComponent", {"timer" : 0.2, "clip" : anim_02})
 
     prefab.addComponent("ResetActionComponent")
 
-    prefab.addComponent("TimersTriggerComponent", {"timers" : 
+    prefab.addComponent("TimersTriggerComponent", {"timers" :
     [
         {"time" : 4.0, "actions" :
         {
@@ -299,7 +300,7 @@ setTimeout(() =>
       "|____|"
     ]})
 
-    prefab.addComponent("TimersTriggerComponent", {"timers" : 
+    prefab.addComponent("TimersTriggerComponent", {"timers" :
     [
         {"time" : 4.0, "actions" :
         {
@@ -408,6 +409,28 @@ setTimeout(() =>
     ]})
     objects.addChild(ent)
 
+    // ------------------------------------------------------------------------------- //
+    ent = new Entity()
+    ent.addComponent("TransformComponent", {"position" : new Vector2(6, 1), "size" : new Vector2(138, 33)})
+    ent.addComponent("ASCIIParticlesComponent",
+    {
+        "timer" : 0.1,
+        "max_count" : 30,
+        "templates" :
+        [
+            {
+                "sprite" : "*",
+                "lifetime" : 2.0,
+                "position" : new Rect(0.0, 0.0, 1.0, 0.1),
+                "func" : function(particle)
+                {
+                    particle.position.y += 20 * TimeSystem.getDeltaTime();
+                    particle.position.x -= 30 * TimeSystem.getDeltaTime();
+                }
+            }
+        ]
+    })
+    objects.addChild(ent)
 
     // ------------------------------------------------------------------------------- //
     ent = new Entity()
@@ -437,26 +460,6 @@ setTimeout(() =>
     ent.addComponent("ASCIISpriteComponent", {"sprite" : new Array(34).fill("|")})
     objects.addChild(ent)
 
-    // ------------------------------------------------------------------------------- //
-    ent = new Entity()
-    ent.addComponent("TransformComponent", {"position" : new Vector2(1, 1), "size" : new Vector2(138, 33)})
-    ent.addComponent("ASCIIParticlesComponent", 
-    {
-        "templates" : 
-        [
-            {
-                "sprite" : "*", 
-                "lifetime" : 3.0,
-                "position" : new Rect(0.0, 0.0, 1.0, 0.1), 
-                "func" : function(particle)
-                {
-                    particle.position.y += 0.2;
-                }
-            }
-        ]
-    })
-    objects.addChild(ent)
-
 
     // ------------------------------------------------------------------------------- //
     ent = new Entity("actor")
@@ -472,22 +475,33 @@ setTimeout(() =>
 
     ent.addComponent("TimersTriggerComponent", {"timers" :
     [
-      {"time" : 60.0, 
+      {"time" : 60.0,
       "actions" :
       {
-        "GUIActionComponent" : {"win_menu" : {"action" : "show"}},
-        "DisableActionComponent" : {}
+        "DisableActionComponent" : {},
+        "GUIActionComponent" : 
+        {
+            "win_menu" : {"action" : "show"},
+            "hud_screen" : {"action" : "hide"}
+        }
       },
-      "tik" : 
+      "tik" :
       {
-        "GUIActionComponent" : {"hud_screen" : {"action" : "update"}}
+        "GUIActionComponent" : 
+        {
+            "hud_screen" : {"action" : "update"}
+        }
       }}
     ]})
 
     ent.addComponent("ColideTriggerComponent", {"actions" :
     {
-        "GUIActionComponent" : {"fail_menu" : {"action" : "show"}},
-        "DisableActionComponent" : {}
+        "DisableActionComponent" : {},
+        "GUIActionComponent" :
+        {
+            "fail_menu" : {"action" : "show"},
+            "hud_screen" : {"action" : "hide"}
+        }
     }})
 
     ent.addComponent("KeyboardTriggerComponent", {"actions" :
