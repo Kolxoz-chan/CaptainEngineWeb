@@ -31,6 +31,12 @@ class TimersTriggerComponent extends TriggerComponent
 		timers[i].value += TimeSystem.getDeltaTime()
 	}
 
+	getTimer(i)
+	{
+		let timers = this.getProperty("timers")
+		return timers[i]
+	}
+
 	update()
 	{
 		let timers = this.getProperty("timers")

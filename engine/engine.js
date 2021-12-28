@@ -14,12 +14,13 @@ class Game
 		Game.widget = document.getElementById(id)
 		Game.widget.style.cursor = "default"
 		Game.widget.style.userSelect = "none"
+		
 		Game.widget.oncontextmenu = function() {return false}
 		Game.widget.onselectstart = function() {return false}
 
 		Game.include("engine/objects.js")
 		Game.include("engine/interfaces.js")
-		Game.include("engine/components/math_system.js")
+		Game.include("engine/systems/math_system.js")
 		Game.include("engine/components/base_components.js")
 	}
 

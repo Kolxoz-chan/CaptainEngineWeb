@@ -1,4 +1,4 @@
-class TextCanvasSystem
+class ASCIICanvasSystem
 {
 	static canvas = null;
 	static size = null;

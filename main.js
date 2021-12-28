@@ -11,7 +11,7 @@ Game.addSystems(
     //"window_system.js"      :   "WindowSystem",
     "input_system.js"       :   "InputSystem",
     "resources_system.js"   :   "ResourcesSystem",
-    "textcanvas_system.js"  :   "TextCanvasSystem",
+    "ascii_canvas_system.js":   "ASCIICanvasSystem",
     "gui_system.js"         :   "GUISystem",
     "audio_system.js"       :   "AudioSystem"
 })
@@ -150,7 +150,7 @@ let anim_02 =
 setTimeout(() =>
 {
     // TextCanvasSystem
-    let text_canvas = Game.getSystem("TextCanvasSystem")
+    let text_canvas = Game.getSystem("ASCIICanvasSystem")
     text_canvas.setSize(new Vector2(140, 35))
 
     // InputSystem
@@ -174,6 +174,7 @@ setTimeout(() =>
         EntitiesSystem.resetAll()
         //AudioSystem.play("bg_01")
         start_menu.setVisible(false)
+        hud.show()
 
     }))
     start_menu.addWidget(new Button("Разработчик", button_style, () =>
@@ -224,6 +225,28 @@ setTimeout(() =>
         win_menu.setVisible(false)
         start_menu.setVisible(true)
     }))
+
+    // HUD screen
+    let hud = gui.addWidget("hud_screen", new Frame())
+    hud.setPosition(50, 10, "%")
+    hud.hide()
+    let hud_time = hud.addWidget(new Label("&#10710; 01:00", "font-size: 36pt; color: white;"))
+    hud.on("update", () =>
+    {
+        let actor = EntitiesSystem.getNamedEntity("actor")
+        let timers = actor.getComponent("TimersTriggerComponent")
+        let timer = timers.getTimer(0)
+
+        let time = timer.time - timer.value
+        let minutes = Math.floor(time / 60) 
+        let seconds = Math.floor(time - minutes * 60)
+
+        if(minutes < 10) minutes = "0" + minutes
+        if(seconds < 10) seconds = "0" + seconds
+
+
+        hud_time.setText("&#10710; " + minutes + ":" + seconds)
+    })
 
     // ResourcesSystem ----------------------------------------------------------------------------------------- //
 
@@ -393,6 +416,47 @@ setTimeout(() =>
     ent.addComponent("ASCIISpriteComponent", {"sprite" : ["_".repeat(140)]})
     objects.addChild(ent)
 
+    // ------------------------------------------------------------------------------- //
+    ent = new Entity()
+    ent.addComponent("TransformComponent", {"position" : new Vector2(0, 0)})
+    ent.addComponent("ASCIIColiderComponent")
+    ent.addComponent("ASCIISpriteComponent", {"sprite" : ["_".repeat(140)]})
+    objects.addChild(ent)
+
+    // ------------------------------------------------------------------------------- //
+    ent = new Entity()
+    ent.addComponent("TransformComponent", {"position" : new Vector2(0, 1)})
+    ent.addComponent("ASCIIColiderComponent")
+    ent.addComponent("ASCIISpriteComponent", {"sprite" : new Array(34).fill("|")})
+    objects.addChild(ent)
+
+    // ------------------------------------------------------------------------------- //
+    ent = new Entity()
+    ent.addComponent("TransformComponent", {"position" : new Vector2(139, 1)})
+    ent.addComponent("ASCIIColiderComponent")
+    ent.addComponent("ASCIISpriteComponent", {"sprite" : new Array(34).fill("|")})
+    objects.addChild(ent)
+
+    // ------------------------------------------------------------------------------- //
+    ent = new Entity()
+    ent.addComponent("TransformComponent", {"position" : new Vector2(1, 1), "size" : new Vector2(138, 33)})
+    ent.addComponent("ASCIIParticlesComponent", 
+    {
+        "templates" : 
+        [
+            {
+                "sprite" : "*", 
+                "lifetime" : 3.0,
+                "position" : new Rect(0.0, 0.0, 1.0, 0.1), 
+                "func" : function(particle)
+                {
+                    particle.position.y += 0.2;
+                }
+            }
+        ]
+    })
+    objects.addChild(ent)
+
 
     // ------------------------------------------------------------------------------- //
     ent = new Entity("actor")
@@ -401,23 +465,28 @@ setTimeout(() =>
     ent.addComponent("DisableActionComponent")
     ent.addComponent("GUIActionComponent")
     ent.addComponent("SpawnActionComponent")
-    ent.addComponent("TransformComponent", {"position" : new Vector2(0, 0)})
+    ent.addComponent("TransformComponent", {"position" : new Vector2(5, 5)})
     ent.addComponent("MovingControllerComponent", {"speed" : 30})
     ent.addComponent("GravityComponent", {"vector" : new Vector2(0, 10)})
     ent.addComponent("ASCIIColiderComponent", {"coliding" : true})
 
     ent.addComponent("TimersTriggerComponent", {"timers" :
     [
-      {"time" : 60.0, "actions" :
+      {"time" : 60.0, 
+      "actions" :
       {
-        "GUIActionComponent" : {"show" : ["win_menu"]},
+        "GUIActionComponent" : {"win_menu" : {"action" : "show"}},
         "DisableActionComponent" : {}
+      },
+      "tik" : 
+      {
+        "GUIActionComponent" : {"hud_screen" : {"action" : "update"}}
       }}
     ]})
 
     ent.addComponent("ColideTriggerComponent", {"actions" :
     {
-        "GUIActionComponent" : {"show" : ["fail_menu"]},
+        "GUIActionComponent" : {"fail_menu" : {"action" : "show"}},
         "DisableActionComponent" : {}
     }})
 

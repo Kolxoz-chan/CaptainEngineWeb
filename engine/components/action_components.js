@@ -29,29 +29,13 @@ class GUIActionComponent extends ComponentBase
 {
 	action(data)
 	{
-		if(data.show)
+		for(let name in data)
 		{
-			for(let i in data.show)
+			let widget = GUISystem.getWidget(name)
+			if(widget)
 			{
-				let name = data.show[i];
-				let widget = GUISystem.getWidget(name)
-				if(widget)
-				{
-					widget.show()
-				}
-			}
-		}
-
-		if(data.hide)
-		{
-			for(let i in data.show)
-			{
-				let name = data.show[i];
-				let widget = GUISystem.getWidget(name)
-				if(widget)
-				{
-					widget.hide()
-				}
+				let func = widget.events[data[name].action]
+				if(func) func()
 			}
 		}
 	}

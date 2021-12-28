@@ -38,7 +38,6 @@ class GUISystem
 
 class Widget
 {
-	name = null
 	widget = null;
 	parent = null;
 	childs = [];
@@ -50,7 +49,8 @@ class Widget
 		this.widget = document.createElement(type);
 		this.widget.style.cssText += this.default_style + style
 
-		if(name) Game.widgets_named[name] = this.widget
+		this.on("show", () => {this.show()})
+		this.on("hide", () => {this.hide()})
 	}
 
 	setPosition(x, y, type="px")
@@ -138,6 +138,11 @@ class Label extends Widget
 	{
 		super("p", style)
 		this.widget.innerHTML = text
+	}
+
+	setText(value)
+	{
+		this.widget.innerHTML = value
 	}
 }
 

@@ -547,8 +547,8 @@ class Rect
 
 	getRandomPoint()
 	{
-		let x = MathSystem.random_range(this.left, this.right)
-		let y = MathSystem.random_range(this.top, this.bottom)
+		let x = MathSystem.random_range(this.left(), this.right())
+		let y = MathSystem.random_range(this.top(), this.bottom())
 
 		return new Vector2(x, y)
 	}

@@ -152,15 +152,22 @@ class ASCIISpriteComponent extends DrawableComponent
 {
 	init(props)
 	{
+		props.palette = {}
 		props.sprite = []
+		props.color = []
 		super.init(props)
 
-		this.text_canvas = Game.getSystem("TextCanvasSystem")
+		this.text_canvas = Game.getSystem("ASCIICanvasSystem")
 	}
 
 	getSprite()
 	{
 		return this.getProperty("sprite")
+	}
+
+	getColors()
+	{
+
 	}
 
 	draw(position, size)
@@ -461,21 +468,16 @@ class AnimatedComponent extends ComponentBase
 	}
 }
 
-class ParticlesComponent extends ComponentBase
+class ParticlesComponent extends DrawableComponent
 {
 	init(props)
 	{
-		props.spawn_time = 0;
+		props.time = 0;
+		props.timer = 0.5;
 		props.particles = []
 		props.max_count = 10
 		props.templates = [] 
-		/* 
-		{
-			"shape" : {"type" : "ascii", "sprite" : "*"}, 
-			"position" : new Rect(0.0, 0.0, 1.0, 1.0), 
-			"func" : (data) => {}
-		}
-		*/
+
 		super.init(props)
 	}
 
@@ -484,26 +486,90 @@ class ParticlesComponent extends ComponentBase
 		return this.getProperty("particles")
 	}
 
+	getMaxCount()
+	{
+		return this.getProperty("max_count")
+	}
+
+	getTemplates()
+	{
+		return this.getProperty("templates")
+	}
+
+	getTimer()
+	{
+		return  this.getProperty("timer")
+	}
+
+	getTime()
+	{
+		return  this.getProperty("time")
+	}
+}
+
+class ASCIIParticlesComponent extends ParticlesComponent
+{
+	init(props)
+	{
+		/* 
+		props.templates = 
+		[{
+			"sprite" : "*", 
+			"position" : new Rect(0.0, 0.0, 1.0, 1.0), 
+			"lifetime" : 0,
+			"func" : (data) => {}
+		}]
+		*/
+		super.init(props)
+		this.text_canvas = Game.getSystem("ASCIICanvasSystem")
+	}
+
 	draw(position, size)
 	{
 		let particles = this.getParticles()
 		let rect = Rect.fromPosSize(position, size)
+		let templates = this.getTemplates()
+		let timer = this.getTimer()
+		let time = this.getTime()
+/*
+		time += TimeSystem.getDeltaTime()
+		if(timer)
+*/
+
+		if(particles.length < this.getMaxCount() && templates.length > 0)
+		{
+			let temp = Object.copy(MathSystem.random_choice(templates))
+			particles.push(temp)
+			temp.time = 0
+		}
 
 		for(let i in particles)
 		{
 			let particle = particles[i]
-			if(particle.shape.type == "ascii")
+			if(particle.position)
 			{
-				if(particle.position)
+				// Get position
+				let subrect = particle.position
+				if(subrect.constructor.name == "Rect")
 				{
-					let subrect = particle.position.
-					if(subrect.constructor.name == "Rect")
+					let part = rect.getPart(subrect)
+					particle.position = part.getRandomPoint()
+				}
+
+				if(particle.lifetime)
+				{
+					particle.time += TimeSystem.getDeltaTime()
+					if(particle.time > particle.lifetime)
 					{
-						let part = rect.getPart(subrect)
-						let position = part.getRandomPoint()
-						
+						particles.splice(i, 1)
 					}
 				}
+
+				// Update particle
+				if(particle.func) particle.func(particle)
+
+				// Draw particle
+				this.text_canvas.draw(particle.position, particle.sprite)
 			}
 		}
 	}
