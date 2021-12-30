@@ -3,6 +3,7 @@ class Game
 	static widget = null;
 	static systems = {};
 	static is_started = false;
+	static load_queue = []
 
 	static init(id)
 	{
@@ -22,6 +23,15 @@ class Game
 		Game.include("engine/interfaces.js")
 		Game.include("engine/systems/math_system.js")
 		Game.include("engine/components/base_components.js")
+	}
+
+	static onCompleate(func)
+	{
+		Promise.all(Game.load_queue).then(() =>
+		{
+			Game.load_queue = []
+			func()
+		})
 	}
 
 	static start()
@@ -64,8 +74,13 @@ class Game
 	{
 		Game.include("engine/systems/" + src, () =>
 		{
-			Game.systems[system] = eval("() => { return "+ system +"; }")()
+			Game.systems[system] = Game.parse(system)
 		})
+	}
+
+	static parse(code)
+	{
+		return eval("() => { return "+ code +"; }")()
 	}
 
 	static addSystems(data)
@@ -88,11 +103,17 @@ class Game
 
 	static include(src, func = null)
 	{
-		Game.counter++
-		let script = document.createElement("script")
-		script.onload = func
-		script.src = src;
-		document.head.appendChild(script)
+		Game.load_queue.push(new Promise((resolve, reject) => 
+		{
+			let script = document.createElement("script")
+			document.head.appendChild(script)
+			script.src = src;
+			script.onload = () => 
+			{
+				if(func) func()
+				resolve()
+			}
+		}))
 	}
 
 	static update()

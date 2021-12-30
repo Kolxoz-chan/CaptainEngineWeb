@@ -431,7 +431,26 @@ class AnimatedComponent extends ComponentBase
 
 	getCilp()
 	{
-		return this.getProperty("clip")
+		let clip =  this.getProperty("clip")
+		if(typeof(clip) == "string")
+		{
+			let value = ResourcesSystem.getAnimation(clip)
+			if(value) 
+			{
+				this.setClip(value)
+			}
+			else
+			{
+				return null
+			}
+		}
+
+		return clip
+	}
+
+	setClip(value)
+	{
+		this.setProperty("clip", value)
 	}
 
 	getCurrentFrame()
@@ -457,13 +476,16 @@ class AnimatedComponent extends ComponentBase
 	}
 
 	update()
-	{
-		if(!this.updateTimer())
+	{	
+		let clip = this.getCilp()
+		if(clip)
 		{
-
-			this.resetTimer()
-			let data = this.nextFrame();
-			this.joined["DrawableComponent"].setData(data);
+			if(!this.updateTimer())
+			{
+				this.resetTimer()
+				let data = this.nextFrame();
+				this.joined["DrawableComponent"].setData(data);
+			}
 		}
 	}
 }

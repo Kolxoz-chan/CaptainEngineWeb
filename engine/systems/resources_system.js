@@ -1,69 +1,22 @@
 /* Resources class */
 class ResourcesSystem
 {
-	static onLoad = null
-
+	static animations = {}
 	static textures = {}
 	static bitmaps = {}
 	static prefabs = {}
 	static sounds = {}
-
-	static loading_counter = 0;
-	static resources_dir = ""
-	static textures_dir = "";
-	static sounds_dir = ""
-	static fonts_dir = ""
-	static game_dir = ""
 
 	static init()
 	{
 
 	}
 
-	static isLoaded()
-	{
-		return ResourcesSystem.loading_counter <= 0;
-	}
-
-	static loadAll()
-	{
-		ResourcesSystem.loadResource(ResourcesSystem.textures, (src) =>
-		{
-			let img = new Image()
-			img.src = src;
-			return img;
-		})
-	}
-
-	static loadResource(arr, func)
-	{
-		for(let i in arr)
-		{
-			let obj = func(arr[i]);
-			obj.src = arr[i]
-			arr[i] = obj
-
-			arr[i].onload = () =>
-			{
-				ResourcesSystem.loading_counter--;
-				if(ResourcesSystem.isLoaded() && ResourcesSystem.onLoad) ResourcesSystem.onLoad()
-			}
-
-			arr[i].onerror = () =>
-			{
-				ResourcesSystem.loading_counter--;
-				console.log("ERROR. " + obj.constructor.name + " '" + i + "' is not loaded!")
-				if(ResourcesSystem.loading_counter <= 0 && ResourcesSystem.onLoad) ResourcesSystem.onLoad()
-			}
-		}
-	}
 
 	static loadTexture(name, src, relative=true, func = null)
 	{
-		ResourcesSystem.loading_counter++;
 		ResourcesSystem.textures[name] = new Image()
 		ResourcesSystem.textures[name].crossOrigin="anonymous"
-		if(relative) src = ResourcesSystem.textures_dir + src;
 		ResourcesSystem.textures[name].src = src
 		if(func) ResourcesSystem.textures[name].onload = func;
 		ResourcesSystem.textures[name].onerror = function()
@@ -72,15 +25,27 @@ class ResourcesSystem
 		}
 	}
 
+	static loadAnimations(src)
+	{
+		ResourcesSystem.loadByURL(src, "text", (result) =>
+		{
+			let arr = Game.parse(result)
+			for(let name in arr)
+			{
+				ResourcesSystem.animations[name] = arr[name]
+			}
+		})
+	}
+
 	static loadAudio(name, src)
 	{
-		ResourcesSystem.sounds[name] = new Audio(ResourcesSystem.sounds_dir + src);
+		ResourcesSystem.sounds[name] = new Audio(src);
 	}
 
 	static loadFont(name, src)
 	{
 		let font = document.createElement("style")
-		font.innerHTML = "@font-face { font-family: " + name + "; src: url(" + ResourcesSystem.fonts_dir + src + ");}"
+		font.innerHTML = "@font-face { font-family: " + name + "; src: url(" + src + ");}"
 		document.head.appendChild(font)
 	}
 
@@ -124,6 +89,11 @@ class ResourcesSystem
 	static getPrefab(name)
 	{
 		return ResourcesSystem.prefabs[name];
+	}
+
+	static getAnimation(name)
+	{
+		return ResourcesSystem.animations[name]
 	}
 
 	static createEntity(name, props = {})
