@@ -1,0 +1,52 @@
+{
+    "tree_01" :
+    {
+    	"GravityComponent" : {"vector" : new Vector2(-40, 0)},
+    	"ASCIISpriteComponent" : {},
+    	"ASCIIColiderComponent" : {},
+    	"AnimatedComponent" : {"timer" : 0.2, "clip" : "anim_01"},
+		"ResetActionComponent" : {},
+		"TimersTriggerComponent" : {"timers" :
+	    [
+	        {"time" : 4.0, "actions" :
+	        {
+	            "ResetActionComponent" : {}
+	        }}
+	    ]}
+    },
+
+    "bird_01" :
+    {
+    	"GravityComponent" : {"vector" : new Vector2(-60, 0)},
+    	"ASCIISpriteComponent" : {},
+    	"ASCIIColiderComponent" : {},
+    	"ResetActionComponent" : {},
+    	"AnimatedComponent" : {"timer" : 0.2, "clip" : "anim_02"},
+    	"TimersTriggerComponent" : {"timers" :
+	    [
+	        {"time" : 4.0, "actions" :
+	        {
+	            "ResetActionComponent" : {}
+	        }}
+	    ]}
+    },
+
+    "price_01" : 
+    {
+    	"ResetActionComponent" : {},
+    	"GravityComponent" : {"vector" : new Vector2(-30, 26)},
+    	"ASCIISpriteComponent" : {"sprite" :
+	    [
+	      " [><]",
+	      "[_||_]",
+	      "|____|"
+	    ]},
+	    "TimersTriggerComponent" : {"timers" :
+	    [
+	        {"time" : 4.0, "actions" :
+	        {
+	            "ResetActionComponent" : {}
+	        }}
+	    ]}
+    }
+}

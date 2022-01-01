@@ -13,6 +13,7 @@ class ASCIICanvasSystem
 		this.canvas.style.fontFamily = "Consolas, monaco, monospace"
 		this.canvas.style.fontSize = "14px"
 		this.canvas.style.textAlign = "center"
+		this.canvas.style.verticalAlign = "middle"
 		widget.appendChild(this.canvas)
 
 		// Clear canvas

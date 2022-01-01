@@ -42,7 +42,7 @@ class Widget
 	parent = null;
 	childs = [];
 	events = {};
-	default_style = "margin: 0; user-select:none; display: block;"
+	default_style = "margin: 0; user-select: none; display: block;"
 
 	constructor(type, style = "")
 	{
@@ -148,7 +148,7 @@ class Label extends Widget
 
 class Button extends Widget
 {
-	constructor(text = "", style = "", func = null)
+	constructor(text = "", style = "")
 	{
 		style = "border: 2px solid black; background-color: white; font-size: 20pt;" + style
 		super("button", style)

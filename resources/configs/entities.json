@@ -1,0 +1,195 @@
+[
+	{
+		"name" : "objects",
+		"entities" :
+		[
+			{
+				"components" :
+				{
+					"ResetActionComponent" : {},
+					"SpawnActionComponent" : {},
+					"TransformComponent" : {"position" : new Vector2(150, 22)},
+					"RandomTimersTriggerComponent" : {"timers" :
+			        [
+			          {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
+			          {
+			              "SpawnActionComponent" : {"prefab" : "tree_01"},
+			          }}
+			        ]}
+				}
+			},
+
+			{
+				"components" :
+				{
+					"ResetActionComponent" : {},
+					"SpawnActionComponent" : {},
+					"TransformComponent" : {"position" : new Vector2(150, 26)},
+					"RandomTimersTriggerComponent" : {"timers" :
+			        [
+			          {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
+			          {
+			              "SpawnActionComponent" : {"prefab" : "bird_01"},
+			          }}
+			        ]}
+				}
+			},
+
+			{
+				"components" :
+				{
+					"ResetActionComponent" : {},
+					"SpawnActionComponent" : {},
+					"TransformComponent" : {"position" : new Vector2(150, 15)},
+					"RandomTimersTriggerComponent" : {"timers" :
+			        [
+			          {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
+			          {
+			              "SpawnActionComponent" : {"prefab" : "bird_01"},
+			          }}
+			        ]}
+				}
+			},
+
+			{
+				"components" :
+				{
+					"ResetActionComponent" : {},
+					"SpawnActionComponent" : {},
+					"TransformComponent" : {"position" : new Vector2(150, 4)},
+					"RandomTimersTriggerComponent" : {"timers" :
+			        [
+			          {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
+			          {
+			              "SpawnActionComponent" : {"prefab" : "bird_01"},
+			          }}
+			        ]}
+				}
+			},
+
+			{
+				"components" :
+				{
+					"TransformComponent" : {"position" : new Vector2(6, 1), "size" : new Vector2(138, 33)},
+					"ASCIIParticlesComponent" :
+			        {
+			            "timer" : 0.1,
+			            "max_count" : 30,
+			            "templates" :
+			            [
+			                {
+			                    "sprite" : "*",
+			                    "lifetime" : 2.0,
+			                    "position" : new Rect(0.0, 0.0, 1.0, 0.1),
+			                    "func" : function(particle)
+			                    {
+			                        particle.position.y += 20 * TimeSystem.getDeltaTime();
+			                        particle.position.x -= 30 * TimeSystem.getDeltaTime();
+			                    }
+			                }
+			            ]
+			        }
+
+				}
+			},
+
+			{
+				"components" : 
+				{
+					"TransformComponent" : {"position" : new Vector2(0, 34)},
+					"ASCIIColiderComponent" : {},
+					"ASCIISpriteComponent" : {"sprite" : ["_".repeat(140)]}
+				}
+			},
+
+			{
+				"components" : 
+				{
+					"TransformComponent" : {"position" : new Vector2(0, 0)},
+					"ASCIIColiderComponent" : {},
+					"ASCIISpriteComponent" : {"sprite" : ["_".repeat(140)]}
+				}
+			},
+
+			{
+				"components" : 
+				{
+					"TransformComponent" : {"position" : new Vector2(0, 1)},
+					"ASCIIColiderComponent" : {},
+					"ASCIISpriteComponent" : {"sprite" : new Array(34).fill("|")}
+				}
+			},
+
+			{
+				"components" : 
+				{
+					"TransformComponent" : {"position" : new Vector2(139, 1)},
+					"ASCIIColiderComponent" : {},
+					"ASCIISpriteComponent" : {"sprite" : new Array(34).fill("|")}
+				}
+			},
+
+			{
+				"name" : "actor",
+				"enabled" : false,
+				"components" :
+				{
+					"DisableActionComponent" : {},
+					"GUIActionComponent" : {},
+					"SpawnActionComponent" : {},
+					"TransformComponent" : {"position" : new Vector2(5, 5)},
+					"MovingControllerComponent" : {"speed" : 30},
+					"GravityComponent" : {"vector" : new Vector2(0, 10)},
+					"ASCIIColiderComponent" : {"coliding" : true},
+					"TimersTriggerComponent" : {"timers" :
+			        [
+			          {"time" : 60.0,
+			          "actions" :
+			          {
+			            "DisableActionComponent" : {},
+			            "GUIActionComponent" : 
+			            {
+			                "win_menu" : {"action" : "show"},
+			                "hud_screen" : {"action" : "hide"}
+			            }
+			          },
+			          "tik" :
+			          {
+			            "GUIActionComponent" : 
+			            {
+			                "hud_screen" : {"action" : "update"}
+			            }
+			          }}
+			        ]},
+			        "ColideTriggerComponent" : {"actions" :
+			        {
+			            "DisableActionComponent" : {},
+			            "GUIActionComponent" :
+			            {
+			                "fail_menu" : {"action" : "show"},
+			                "hud_screen" : {"action" : "hide"}
+			            }
+			        }},
+			        "KeyboardTriggerComponent" : {"actions" :
+			        [
+			            {"key" : "KeyE", "type" : "clicked", "components" :
+			            {
+			                "SpawnActionComponent" : {"prefab" : "price_01"}
+			            }}
+			        ]},
+			        "ASCIISpriteComponent" : {"sprite" :
+			        [
+			          "     __",
+			          "    *|_\\",
+			          "    _(_'o",
+			          "o_o/ /\\ V\\_",
+			          "|=||_|__)  )=)",
+			          "|_|___LL__/_/",
+			          "========='='"
+
+			        ]}
+				}
+			}
+		]
+	}
+]

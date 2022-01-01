@@ -6,7 +6,7 @@ Game.addSystems(
 {
     "time_system.js"        :   "TimeSystem",
     "tasks_system.js"       :   "TasksSystem",
-    "camera_system.js"      :   "CameraSystem",
+    "camera_system.js"      :   "CameraSystem", 
     "entities_system.js"    :   "EntitiesSystem",
     //"window_system.js"      :   "WindowSystem",
     "input_system.js"       :   "InputSystem",
@@ -19,6 +19,7 @@ Game.addSystems(
 // Loading componeents
 Game.onCompleate(() =>
 {
+  Game.include("engine/addons/json_loader.js")
   Game.include("engine/components/transform_components.js")
   Game.include("engine/components/drawable_components.js")
   Game.include("engine/components/controller_components.js")
@@ -32,97 +33,13 @@ Game.onCompleate(() =>
     // Audio
     ResourcesSystem.loadAudio("bg_01", "resources/sounds/bg_01.mp3")
 
-    // Animations
+    // Configs
     ResourcesSystem.loadAnimations("resources/configs/animations.json")
+    ResourcesSystem.loadPrefabs("resources/configs/prefabs.json")
+    JSONLoader.loadEntities("resources/configs/entities.json")
 
     Game.onCompleate(() => 
     {
-        // Prefabs
-        let prefab = ResourcesSystem.addPrefab(new Prefab("tree_01"))
-        prefab.addComponent("GravityComponent", {"vector" : new Vector2(-40, 0)})
-        prefab.addComponent("ASCIISpriteComponent")
-        prefab.addComponent("ASCIIColiderComponent")
-        prefab.addComponent("AnimatedComponent", {"timer" : 0.2, "clip" : "anim_01"})
-
-        prefab.addComponent("ResetActionComponent")
-
-        prefab.addComponent("TimersTriggerComponent", {"timers" :
-        [
-            {"time" : 4.0, "actions" :
-            {
-                "ResetActionComponent" : {}
-            }}
-        ]})
-
-        // ------------------------------------------------------------------------------- //
-        prefab = ResourcesSystem.addPrefab(new Prefab("bird_01"))
-        prefab.addComponent("GravityComponent", {"vector" : new Vector2(-60, 0)})
-        prefab.addComponent("ASCIISpriteComponent")
-        prefab.addComponent("ASCIIColiderComponent")
-        prefab.addComponent("AnimatedComponent", {"timer" : 0.2, "clip" : "anim_02"})
-
-        prefab.addComponent("ResetActionComponent")
-
-        prefab.addComponent("TimersTriggerComponent", {"timers" :
-        [
-            {"time" : 4.0, "actions" :
-            {
-                "ResetActionComponent" : {}
-            }}
-        ]})
-
-        // ------------------------------------------------------------------------------- //
-        prefab = ResourcesSystem.addPrefab(new Prefab("price_01"))
-        prefab.addComponent("ResetActionComponent")
-
-        prefab.addComponent("GravityComponent", {"vector" : new Vector2(-30, 26)})
-        prefab.addComponent("ASCIISpriteComponent", {"sprite" :
-        [
-          " [><]",
-          "[_||_]",
-          "|____|"
-        ]})
-
-        prefab.addComponent("TimersTriggerComponent", {"timers" :
-        [
-            {"time" : 4.0, "actions" :
-            {
-                "ResetActionComponent" : {}
-            }}
-        ]})
-
-        // ------------------------------------------------------------------------------- //
-        prefab = ResourcesSystem.addPrefab(new Prefab("rocket_01"))
-        prefab.addComponent("ResetActionComponent")
-
-        prefab.addComponent("TransformComponent", {"position" : new Vector2(100, 33)})
-        prefab.addComponent("GravityComponent", {"vector" : new Vector2(-40, -20)})
-        prefab.addComponent("ASCIIColiderComponent")
-        prefab.addComponent("ASCIISpriteComponent", {"sprite" :
-        [
-        " |",
-        "/_\\",
-        "|F|",
-        "/_\\"
-        ]})
-
-        // ------------------------------------------------------------------------------- //
-        prefab = ResourcesSystem.addPrefab(new Prefab("snowman_01"))
-        prefab.addComponent("ResetActionComponent")
-
-        prefab.addComponent("TransformComponent", {"position" : new Vector2(140, 29)})
-        prefab.addComponent("GravityComponent", {"vector" : new Vector2(-40, 0)})
-        prefab.addComponent("ASCIIColiderComponent")
-        prefab.addComponent("ASCIISpriteComponent", {"sprite" :
-        [
-        "    __",
-        "  _|==|_",
-        "   ('')",
-        " <(`^^')>",
-        " (`^'^'`)",
-        "  ------"
-        ]})
-
         // TextCanvasSystem
         let text_canvas = Game.getSystem("ASCIICanvasSystem")
         text_canvas.setSize(new Vector2(140, 35))
@@ -142,23 +59,9 @@ Game.onCompleate(() =>
         start_menu.setPosition(50, 40, "%")
         start_menu.addWidget(new Label("&#10052; Дед Мороз &#10052;", "font-size: 48pt; color: white;"))
         start_menu.addWidget(new Separator("margin: 10px"))
-        start_menu.addWidget(new Button("Начать", button_style, () =>
-        {
-            EntitiesSystem.getNamedEntity("actor").setEnabled(true)
-            EntitiesSystem.resetAll()
-            AudioSystem.play("bg_01")
-            start_menu.setVisible(false)
-            hud.show()
-
-        }))
-        start_menu.addWidget(new Button("Разработчик", button_style, () =>
-        {
-            window.open("https://github.com/Kolxoz-chan");
-        }))
-        start_menu.addWidget(new Button("Выйти", button_style, () =>
-        {
-            window.close();
-        }))
+        start_menu.addWidget(new Button("Начать", button_style))
+        start_menu.addWidget(new Button("Разработчик", button_style))
+        start_menu.addWidget(new Button("Выйти", button_style))
 
         // Fail main
         let fail_menu = gui.addWidget("fail_menu", new Frame())
@@ -166,19 +69,8 @@ Game.onCompleate(() =>
         fail_menu.setPosition(50, 40, "%")
         fail_menu.addWidget(new Label("&#10052; Игра окончена &#10052;", "font-size: 48pt; color: white;"))
         fail_menu.addWidget(new Separator("margin: 10px"))
-        fail_menu.addWidget(new Button("Занова", button_style, () =>
-        {
-            EntitiesSystem.getNamedEntity("actor").setEnabled(true)
-            EntitiesSystem.resetAll()
-            AudioSystem.play("bg_01")
-            fail_menu.setVisible(false)
-            hud.show()
-        }))
-        fail_menu.addWidget(new Button("В меню", button_style, () =>
-        {
-            fail_menu.setVisible(false)
-            start_menu.setVisible(true)
-        }))
+        fail_menu.addWidget(new Button("Занова", button_style))
+        fail_menu.addWidget(new Button("В меню", button_style))
 
         // Win main
         let win_menu = gui.addWidget("win_menu", new Frame())
@@ -186,227 +78,14 @@ Game.onCompleate(() =>
         win_menu.setPosition(50, 40, "%")
         win_menu.addWidget(new Label("&#10052; Победа &#10052;", "font-size: 48pt; color: white;"))
         win_menu.addWidget(new Separator("margin: 10px"))
-        win_menu.addWidget(new Button("Продолжить", button_style, () =>
-        {
-            EntitiesSystem.getNamedEntity("actor").setEnabled(true)
-            EntitiesSystem.resetAll()
-            AudioSystem.play("bg_01")
-            win_menu.setVisible(false)
-            hud.show()
-
-        }))
-        win_menu.addWidget(new Button("В меню", button_style, () =>
-        {
-            win_menu.setVisible(false)
-            start_menu.setVisible(true)
-        }))
+        win_menu.addWidget(new Button("Продолжить", button_style))
+        win_menu.addWidget(new Button("В меню", button_style))
 
         // HUD screen
         let hud = gui.addWidget("hud_screen", new Frame())
         hud.setPosition(50, 10, "%")
         hud.hide()
-        let hud_time = hud.addWidget(new Label("", "font-size: 36pt; color: white;"))
-        hud.on("update", () =>
-        {
-            let actor = EntitiesSystem.getNamedEntity("actor")
-            let timers = actor.getComponent("TimersTriggerComponent")
-            let timer = timers.getTimer(0)
-
-            let time = timer.time - timer.value
-            let minutes = Math.floor(time / 60)
-            let seconds = Math.floor(time - minutes * 60)
-
-            if(minutes < 10) minutes = "0" + minutes
-            if(seconds < 10) seconds = "0" + seconds
-
-
-            hud_time.setText("&#9885;  " + minutes + ":" + seconds)
-        })
-
-
-        // EntitiesSystem -------------------------------------------------------------------------------------------- //
-        let entities = Game.getSystem("EntitiesSystem")
-
-        // ------------------------------------------------------------------------------- //
-        let objects = new Entity("objects")
-        entities.addEntity(objects)
-
-        // ------------------------------------------------------------------------------- //
-        let ent = new Entity()
-
-        ent.addComponent("ResetActionComponent")
-        ent.addComponent("SpawnActionComponent")
-        ent.addComponent("TransformComponent", {"position" : new Vector2(150, 22)})
-        ent.addComponent("RandomTimersTriggerComponent", {"timers" :
-        [
-          {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
-          {
-              "SpawnActionComponent" : {"prefab" : "tree_01"},
-          }}
-        ]})
-        objects.addChild(ent)
-
-
-        // ------------------------------------------------------------------------------- //
-        ent = new Entity()
-
-        ent.addComponent("ResetActionComponent")
-        ent.addComponent("SpawnActionComponent")
-        ent.addComponent("TransformComponent", {"position" : new Vector2(150, 26)})
-        ent.addComponent("RandomTimersTriggerComponent", {"timers" :
-        [
-          {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
-          {
-              "SpawnActionComponent" : {"prefab" : "bird_01"},
-          }}
-        ]})
-        objects.addChild(ent)
-
-        // ------------------------------------------------------------------------------- //
-        ent = new Entity()
-
-        ent.addComponent("ResetActionComponent")
-        ent.addComponent("SpawnActionComponent")
-        ent.addComponent("TransformComponent", {"position" : new Vector2(150, 15)})
-        ent.addComponent("RandomTimersTriggerComponent", {"timers" :
-        [
-          {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
-          {
-              "SpawnActionComponent" : {"prefab" : "bird_01"},
-          }}
-        ]})
-        objects.addChild(ent)
-
-        // ------------------------------------------------------------------------------- //
-        ent = new Entity()
-
-        ent.addComponent("ResetActionComponent")
-        ent.addComponent("SpawnActionComponent")
-        ent.addComponent("TransformComponent", {"position" : new Vector2(150, 4)})
-        ent.addComponent("RandomTimersTriggerComponent", {"timers" :
-        [
-          {"time_min" : 0.5, "time_max" : 5.0, "loop" : true, "actions" :
-          {
-              "SpawnActionComponent" : {"prefab" : "bird_01"},
-          }}
-        ]})
-        objects.addChild(ent)
-
-        // ------------------------------------------------------------------------------- //
-        ent = new Entity()
-        ent.addComponent("TransformComponent", {"position" : new Vector2(6, 1), "size" : new Vector2(138, 33)})
-        ent.addComponent("ASCIIParticlesComponent",
-        {
-            "timer" : 0.1,
-            "max_count" : 30,
-            "templates" :
-            [
-                {
-                    "sprite" : "*",
-                    "lifetime" : 2.0,
-                    "position" : new Rect(0.0, 0.0, 1.0, 0.1),
-                    "func" : function(particle)
-                    {
-                        particle.position.y += 20 * TimeSystem.getDeltaTime();
-                        particle.position.x -= 30 * TimeSystem.getDeltaTime();
-                    }
-                }
-            ]
-        })
-        objects.addChild(ent)
-
-        // ------------------------------------------------------------------------------- //
-        ent = new Entity()
-        ent.addComponent("TransformComponent", {"position" : new Vector2(0, 34)})
-        ent.addComponent("ASCIIColiderComponent")
-        ent.addComponent("ASCIISpriteComponent", {"sprite" : ["_".repeat(140)]})
-        objects.addChild(ent)
-
-        // ------------------------------------------------------------------------------- //
-        ent = new Entity()
-        ent.addComponent("TransformComponent", {"position" : new Vector2(0, 0)})
-        ent.addComponent("ASCIIColiderComponent")
-        ent.addComponent("ASCIISpriteComponent", {"sprite" : ["_".repeat(140)]})
-        objects.addChild(ent)
-
-        // ------------------------------------------------------------------------------- //
-        ent = new Entity()
-        ent.addComponent("TransformComponent", {"position" : new Vector2(0, 1)})
-        ent.addComponent("ASCIIColiderComponent")
-        ent.addComponent("ASCIISpriteComponent", {"sprite" : new Array(34).fill("|")})
-        objects.addChild(ent)
-
-        // ------------------------------------------------------------------------------- //
-        ent = new Entity()
-        ent.addComponent("TransformComponent", {"position" : new Vector2(139, 1)})
-        ent.addComponent("ASCIIColiderComponent")
-        ent.addComponent("ASCIISpriteComponent", {"sprite" : new Array(34).fill("|")})
-        objects.addChild(ent)
-
-
-        // ------------------------------------------------------------------------------- //
-        ent = new Entity("actor")
-        ent.setEnabled(false)
-
-        ent.addComponent("DisableActionComponent")
-        ent.addComponent("GUIActionComponent")
-        ent.addComponent("SpawnActionComponent")
-        ent.addComponent("TransformComponent", {"position" : new Vector2(5, 5)})
-        ent.addComponent("MovingControllerComponent", {"speed" : 30})
-        ent.addComponent("GravityComponent", {"vector" : new Vector2(0, 10)})
-        ent.addComponent("ASCIIColiderComponent", {"coliding" : true})
-
-        ent.addComponent("TimersTriggerComponent", {"timers" :
-        [
-          {"time" : 60.0,
-          "actions" :
-          {
-            "DisableActionComponent" : {},
-            "GUIActionComponent" : 
-            {
-                "win_menu" : {"action" : "show"},
-                "hud_screen" : {"action" : "hide"}
-            }
-          },
-          "tik" :
-          {
-            "GUIActionComponent" : 
-            {
-                "hud_screen" : {"action" : "update"}
-            }
-          }}
-        ]})
-
-        ent.addComponent("ColideTriggerComponent", {"actions" :
-        {
-            "DisableActionComponent" : {},
-            "GUIActionComponent" :
-            {
-                "fail_menu" : {"action" : "show"},
-                "hud_screen" : {"action" : "hide"}
-            }
-        }})
-
-        ent.addComponent("KeyboardTriggerComponent", {"actions" :
-        [
-            {"key" : "KeyE", "type" : "clicked", "components" :
-            {
-                "SpawnActionComponent" : {"prefab" : "price_01"}
-            }}
-        ]})
-
-        ent.addComponent("ASCIISpriteComponent", {"sprite" :
-        [
-          "     __",
-          "    *|_\\",
-          "    _(_'o",
-          "o_o/ /\\ V\\_",
-          "|=||_|__)  )=)",
-          "|_|___LL__/_/",
-          "========='='"
-
-        ]})
-        objects.addChild(ent)
+        hud.addWidget(new Label("", "font-size: 36pt; color: white;"))
 
 
 
@@ -414,9 +93,3 @@ Game.onCompleate(() =>
     })
   })
 })
-
-
-/* --- Start game -------------------------------------------------------  */
-setTimeout(() =>
-{
-}, 2000)

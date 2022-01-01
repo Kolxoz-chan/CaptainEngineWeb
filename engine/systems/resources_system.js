@@ -6,23 +6,50 @@ class ResourcesSystem
 	static bitmaps = {}
 	static prefabs = {}
 	static sounds = {}
+	static scripts = {}
 
 	static init()
 	{
 
 	}
 
-
 	static loadTexture(name, src, relative=true, func = null)
 	{
-		ResourcesSystem.textures[name] = new Image()
-		ResourcesSystem.textures[name].crossOrigin="anonymous"
-		ResourcesSystem.textures[name].src = src
-		if(func) ResourcesSystem.textures[name].onload = func;
-		ResourcesSystem.textures[name].onerror = function()
+		Game.load_queue.push(new Promise((resolve, reject) => 
 		{
-			alert("Image " + src + " not loaded!")
-		}
+			ResourcesSystem.textures[name] = new Image()
+			ResourcesSystem.textures[name].src = src
+			ResourcesSystem.textures[name].onload = function()
+			{
+				if(func) func(this);
+				resolve()
+			}
+			ResourcesSystem.textures[name].onerror = function()
+			{
+				let err = "Image " + src + " not loaded!"
+				alert(err)
+				reject(new Error(err))
+			}
+		}))
+	}
+
+	static loadPrefabs(src)
+	{
+		ResourcesSystem.loadByURL(src, "text", (result) =>
+		{
+			let arr = Game.parse(result)
+			for(let name in arr)
+			{
+				let obj = arr[name]
+				let prefab = ResourcesSystem.newPrefab(name)
+				for(let comp in obj)
+				{
+					prefab.addComponent(comp, obj[comp])
+				}
+				
+				ResourcesSystem.prefabs[name] = prefab
+			}
+		})
 	}
 
 	static loadAnimations(src)
@@ -51,24 +78,31 @@ class ResourcesSystem
 
 	static loadByURL(url, type = "text", func = function() {})
 	{
-		var xhr = new XMLHttpRequest(url);
-	    xhr.open('GET', url, true);
-	    xhr.responseType = type
-	    xhr.onload = function()
-	    {
-	        func(xhr.response)
-	    }
-	    xhr.onerror = function()
-	    {
-	    	alert("Resource " + url + " not loaded!")
-	    }
-	    xhr.send();
+		Game.load_queue.push(new Promise((resolve, reject) => 
+		{
+			var xhr = new XMLHttpRequest(url);
+		    xhr.open('GET', url, true);
+		    xhr.responseType = type
+		    xhr.onload = function()
+		    {
+		        func(xhr.response)
+		        resolve()
+		    }
+		    xhr.onerror = function()
+		    {
+		    	let err = "Resource " + url + " not loaded!"
+		    	alert(err)
+		    	reject(new Error(err))
+		    }
+		    xhr.send();
+		}))
 	}
 
-	static addPrefab(asset)
+	static newPrefab(name)
 	{
-		ResourcesSystem.prefabs[asset.name] = asset;
-		return asset;
+		let prefab = new Prefab(name)
+		ResourcesSystem.prefabs[name] = prefab;
+		return prefab;
 	}
 
 	static addTexture(name, obj)
@@ -89,6 +123,11 @@ class ResourcesSystem
 	static getPrefab(name)
 	{
 		return ResourcesSystem.prefabs[name];
+	}
+
+	static getScript(name)
+	{
+		return ResourcesSystem.scripts[name]
 	}
 
 	static getAnimation(name)

@@ -113,6 +113,12 @@ class Game
 				if(func) func()
 				resolve()
 			}
+			script.onerror = () =>
+			{
+				let err = "Module " + src + " not loaded!"
+				alert(err)
+				reject(new Error(err))
+			}
 		}))
 	}
 
