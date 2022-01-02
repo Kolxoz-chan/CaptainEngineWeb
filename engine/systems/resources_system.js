@@ -52,6 +52,30 @@ class ResourcesSystem
 		})
 	}
 
+	static loadStyle(src)
+	{
+		Game.load_queue.push(new Promise((resolve, reject) => 
+		{
+			let head = document.head;
+			let link = document.createElement("link");
+
+			link.type = "text/css";
+			link.rel = "stylesheet";
+			link.href = src;
+			link.onload = () =>
+			{
+				resolve()
+			}
+			link.onerror = () =>
+			{
+				let err = "Style " + src + " not loaded!"
+				alert(err)
+				reject(new Error(err))
+			}
+			head.appendChild(link);
+		}))
+	}
+
 	static loadAnimations(src)
 	{
 		ResourcesSystem.loadByURL(src, "text", (result) =>
@@ -139,5 +163,10 @@ class ResourcesSystem
 	{
 		let prefab = ResourcesSystem.getPrefab(name)
 		return prefab.getEntity(props)
+	}
+
+	static callScript(name)
+	{
+		ResourcesSystem.scripts[name]()
 	}
 }

@@ -34,6 +34,47 @@ class GUISystem
 		GUISystem.widgets[name] = widget
 		return widget
 	}
+
+	static loadGUI(src)
+	{
+		let createWidget = function(data)
+		{
+			// Create object
+			let widget = Game.parse("new " + data.type + "()")
+
+			// Settings
+			if(data.style) widget.setStyle(data.style)
+			if(data.text) widget.setText(data.text)
+			if(data.position) widget.setPosition(data.position.x, data.position.y)	
+			if(data.size) widget.setSize(data.size.w, data.size.h)
+			if(data.class) widget.setClass(data.class)
+
+			// Adding events
+			for(let name in data.events)
+			{
+				widget.addEvent(name, data.events[name])
+			}
+
+			// Loading widgets
+			for(let i in data.widgets)
+			{
+				let obj = data.widgets[i]
+				widget.addWidget(createWidget(obj))
+			}
+
+			return widget
+		}
+
+		ResourcesSystem.loadByURL(src, "text", (value) =>
+		{
+			let arr = JSON.parse(value)
+			for(let name in arr)
+			{
+				let obj = createWidget(arr[name])
+				GUISystem.addWidget(name, obj)
+			}
+		})
+	}
 }
 
 class Widget
@@ -41,37 +82,44 @@ class Widget
 	widget = null;
 	parent = null;
 	childs = [];
-	events = {};
-	default_style = "margin: 0; user-select: none; display: block;"
 
 	constructor(type, style = "")
 	{
 		this.widget = document.createElement(type);
-		this.widget.style.cssText += this.default_style + style
-
-		this.on("show", () => {this.show()})
-		this.on("hide", () => {this.hide()})
+		this.widget.style.cssText += "user-select: none; display: block;" + style
 	}
 
-	setPosition(x, y, type="px")
+	setPosition(x, y)
 	{
 		this.widget.style.position = "absolute"
-		this.widget.style.left = Number.isInteger(x) ? x + type : x;
-		this.widget.style.top = Number.isInteger(y) ? y + type : y
-		if(type == "%")
+		this.widget.style.left = x;
+		this.widget.style.top = y
+		let transform = ""
+
+		if(typeof(x) == "string")
 		{
-			this.widget.style.cssText += `transform: translate(-${x}%, -${y}%)`;
+			if(x.includes("%")) transform += `translateX(-${x}) `;
 		}
-		else
+		if(typeof(y) == "string")
 		{
-			this.widget.style.cssText += "transform: translate(0, 0)";
+			if(y.includes("%")) transform += `translateY(-${y}) `;
+		}
+
+		if(transform)
+		{
+			this.widget.style.cssText += "transform: " + transform + "; "
 		}
 	}
 
-	setSize(w, h, type="px")
+	setClass(value)
 	{
-		this.widget.style.width = Number.isInteger(w) ? w + type : w
-		this.widget.style.height = Number.isInteger(h) ? h + type : h
+		this.widget.setAttribute("class", value)
+	}
+
+	setSize(w, h)
+	{
+		this.widget.style.width = w
+		this.widget.style.height = h
 	}
 
 	setStyle(style)
@@ -102,7 +150,10 @@ class Widget
 
 	addEvent(type, func)
 	{
-		this.widget[type] = func
+		this.widget[type] = function()
+		{
+			ResourcesSystem.callScript(func)
+		}
 	}
 
 	addWidget(obj)
@@ -116,11 +167,6 @@ class Widget
 	getWidget()
 	{
 		return this.widget;
-	}
-
-	on(name, func)
-	{
-		this.events[name] = func
 	}
 }
 
@@ -136,7 +182,7 @@ class Label extends Widget
 {
 	constructor(text = "", style = "")
 	{
-		super("p", style)
+		super("p", style) 
 		this.widget.innerHTML = text
 	}
 
@@ -150,11 +196,9 @@ class Button extends Widget
 {
 	constructor(text = "", style = "")
 	{
-		style = "border: 2px solid black; background-color: white; font-size: 20pt;" + style
+		//style = "border: 2px solid black; background-color: white; " + style
 		super("button", style)
 		this.widget.innerHTML = text
-		if(func) this.widget.onclick = func
-
 	}
 }
 

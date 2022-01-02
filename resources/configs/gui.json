@@ -1,0 +1,24 @@
+{
+	"main_menu" :
+	{
+		"type" : "Frame",
+		"position" : {"x" : "50%", "y" : "50%"},
+		"widgets" : 
+		[
+			{"type" : "Label", "text" : "&#10052; Дед Мороз &#10052;", "class" : "menu_title"},
+			{"type" : "Separator", "style" : "margin: 10px"},
+			{"type" : "Button", "text" : "Начать", "class" : "menu_button", "events" :
+			{
+
+			}},
+			{"type" : "Button", "text" : "Разработчик", "class" : "menu_button", "events" :
+			{
+
+			}},
+			{"type" : "Button", "text" : "Выйти", "class" : "menu_button", "events" :
+			{
+				"onclick" : "exit_button"
+			}}
+		]
+	}
+}

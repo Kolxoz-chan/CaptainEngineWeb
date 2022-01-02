@@ -24,3 +24,8 @@ scripts.update_timer = function()
 
     hud_time.setText("&#9885;  " + minutes + ":" + seconds)
 }
+
+scripts.exit_button = function()
+{
+    window.close()
+}

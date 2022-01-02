@@ -19,10 +19,11 @@ Game.addSystems(
 // Loading componeents
 Game.onCompleate(() =>
 {
+
   Game.include("engine/addons/json_loader.js")
   Game.include("engine/components/transform_components.js")
   Game.include("engine/components/drawable_components.js")
-  Game.include("engine/components/controller_components.js")
+  Game.include("engine/components/controller_components.js") 
   Game.include("engine/components/action_components.js")
   Game.include("engine/components/trigger_components.js")
   Game.include("engine/components/colider_components.js")
@@ -34,9 +35,12 @@ Game.onCompleate(() =>
     ResourcesSystem.loadAudio("bg_01", "resources/sounds/bg_01.mp3")
 
     // Configs
+    Game.include("resources/scripts/gui_actions.js")
+    ResourcesSystem.loadStyle("resources/configs/styles.css")
     ResourcesSystem.loadAnimations("resources/configs/animations.json")
     ResourcesSystem.loadPrefabs("resources/configs/prefabs.json")
     JSONLoader.loadEntities("resources/configs/entities.json")
+    GUISystem.loadGUI("resources/configs/gui.json")
 
     Game.onCompleate(() => 
     {
@@ -47,21 +51,14 @@ Game.onCompleate(() =>
         // InputSystem
         let input = Game.getSystem("InputSystem")
         input.setEvents(["keydown", "keyup"])
-
+/*
         // GUISystem ----------------------------------------------------------------------------------------------- //
         let gui = Game.getSystem("GUISystem")
 
         // Styles
-        let button_style = "background-color: black; color: white; border: 2px solid white; width: 70%; margin: auto; margin-top: 10px;"
+        let button_style = ""
 
-        // Start menu
-        let start_menu = gui.addWidget("main_menu", new Frame())
-        start_menu.setPosition(50, 40, "%")
-        start_menu.addWidget(new Label("&#10052; Дед Мороз &#10052;", "font-size: 48pt; color: white;"))
-        start_menu.addWidget(new Separator("margin: 10px"))
-        start_menu.addWidget(new Button("Начать", button_style))
-        start_menu.addWidget(new Button("Разработчик", button_style))
-        start_menu.addWidget(new Button("Выйти", button_style))
+        
 
         // Fail main
         let fail_menu = gui.addWidget("fail_menu", new Frame())
@@ -87,7 +84,7 @@ Game.onCompleate(() =>
         hud.hide()
         hud.addWidget(new Label("", "font-size: 36pt; color: white;"))
 
-
+*/
 
         Game.start();
     })
