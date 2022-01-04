@@ -3,6 +3,7 @@ class GUISystem
 {
 	static block = null
 	static widgets = {}
+	static widgets_by_id = {}
 
 	static init(id)
 	{
@@ -29,6 +30,11 @@ class GUISystem
 		return GUISystem.widgets[name];
 	}
 
+	static getWidgetById(id)
+	{
+		return GUISystem.widgets_by_id[id]
+	}
+
 	static addWidget(name, widget)
 	{
 		GUISystem.widgets[name] = widget
@@ -48,6 +54,8 @@ class GUISystem
 			if(data.position) widget.setPosition(data.position.x, data.position.y)	
 			if(data.size) widget.setSize(data.size.w, data.size.h)
 			if(data.class) widget.setClass(data.class)
+			if(data.id) widget.setId(data.id)
+			if(data.visible != undefined) widget.setVisible(data.visible)
 
 			// Adding events
 			for(let name in data.events)
@@ -109,6 +117,13 @@ class Widget
 		{
 			this.widget.style.cssText += "transform: " + transform + "; "
 		}
+	}
+
+	setId(id)
+	{
+		if(this.widget.id) GUISystem.widgets_by_id[this.widget.id] = null
+		this.id = id
+		GUISystem.widgets_by_id[id] = this
 	}
 
 	setClass(value)

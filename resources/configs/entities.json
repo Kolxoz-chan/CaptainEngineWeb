@@ -136,6 +136,7 @@
 				{
 					"DisableActionComponent" : {},
 					"GUIActionComponent" : {},
+					"ScriptActionComponent" : {},
 					"SpawnActionComponent" : {},
 					"TransformComponent" : {"position" : new Vector2(5, 5)},
 					"MovingControllerComponent" : {"speed" : 30},
@@ -143,21 +144,21 @@
 					"ASCIIColiderComponent" : {"coliding" : true},
 					"TimersTriggerComponent" : {"timers" :
 			        [
-			          {"time" : 60.0,
+			          {"time" : 3600.0,
 			          "actions" :
 			          {
 			            "DisableActionComponent" : {},
 			            "GUIActionComponent" : 
 			            {
-			                "win_menu" : {"action" : "show"},
-			                "hud_screen" : {"action" : "hide"}
+			                "win_menu" : true,
+			                "hud_screen" : false
 			            }
 			          },
 			          "tik" :
 			          {
-			            "GUIActionComponent" : 
+			            "ScriptActionComponent" : 
 			            {
-			                "hud_screen" : {"action" : "update"}
+			                "update_timer" : {}
 			            }
 			          }}
 			        ]},
@@ -166,8 +167,8 @@
 			            "DisableActionComponent" : {},
 			            "GUIActionComponent" :
 			            {
-			                "fail_menu" : {"action" : "show"},
-			                "hud_screen" : {"action" : "hide"}
+			                "fail_menu" : true,
+			                "hud_screen" : false
 			            }
 			        }},
 			        "KeyboardTriggerComponent" : {"actions" :

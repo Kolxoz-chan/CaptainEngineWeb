@@ -34,8 +34,7 @@ class GUIActionComponent extends ComponentBase
 			let widget = GUISystem.getWidget(name)
 			if(widget)
 			{
-				let func = widget.events[data[name].action]
-				if(func) func()
+				widget.setVisible(data[name])
 			}
 		}
 	}
@@ -88,53 +87,13 @@ class SpawnActionComponent extends ComponentBase
 	}
 }
 
-/* Attribute Change Event
-class AttributeEventComponent extends ComponentBase
+class ScriptActionComponent extends ComponentBase
 {
-	default_properties =
+	action(data)
 	{
-		"attribute" : null,
-		"action" : null,
-		"value" : null
-	}
-
-	init()
-	{
-		if(this.attribute) this.value = this.join(this.attribute).getValue()
-	}
-
-	update()ResetActionComponent
-	{
-		let attribute = this.joined[this.attribute]
-		let new_value = attribute.getValue();
-		if(this.value != new_value && this.action) this.action(this.value, new_value)
-		this.value = new_value;
-	}
-}*/
-
-/* Radius Scanner
-class RadiusScannerComponent extends ComponentBase
-{
-
-	init()
-	{
-		this.join("TransformComponent")
-	}
-
-	update()
-	{
-		var container = this.owner.parent;
-		for(var i in container.childs)
+		for(let name in data)
 		{
-			var obj = container.childs[i];
-			var A = this.joined["TransformComponent"].getCenter()
-			var B = obj.getComponent("TransformComponent").getCenter()
-			var distance = A.getDistance(B)
-
-			if(obj != this.owner && distance <= this.radius && this.onRegister)
-			{
-				this.onRegister(obj);
-			}
+			ResourcesSystem.callScript(name)
 		}
-	}
-} */
+	} 
+}

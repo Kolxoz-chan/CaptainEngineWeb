@@ -9,15 +9,65 @@
 			{"type" : "Separator", "style" : "margin: 10px"},
 			{"type" : "Button", "text" : "Начать", "class" : "menu_button", "events" :
 			{
-
+				"onclick" : "new_game_button"
 			}},
 			{"type" : "Button", "text" : "Разработчик", "class" : "menu_button", "events" :
 			{
-
+				"onclick" : "author_button"
 			}},
 			{"type" : "Button", "text" : "Выйти", "class" : "menu_button", "events" :
 			{
 				"onclick" : "exit_button"
+			}}
+		]
+	},
+
+	"hud_screen" :
+	{
+		"type" : "Frame",
+		"position" : {"x" : "50%", "y" : "10%"},
+		"widgets" : 
+		[
+			{"type" : "Label", "class" : "menu_label", "id" : "hud_timer_label"}
+		]
+	},
+
+	"fail_menu" :
+	{
+		"type" : "Frame",
+		"visible" : false,
+		"position" : {"x" : "50%", "y" : "40%"},
+		"widgets" :
+		[
+			{"type" : "Label", "text" : "&#10052; Игра окончена &#10052;", "class" : "menu_title"},
+			{"type" : "Separator", "style" : "margin: 10px"},
+			{"type" : "Button", "text" : "Занова", "class" : "menu_button", "events" :
+			{
+				"onclick" : "new_game_button"
+			}},
+			{"type" : "Button", "text" : "В меню", "class" : "menu_button", "events" :
+			{
+				"onclick" : "main_menu_button"
+			}}
+		]
+	},
+
+	"win_menu" : 
+	{
+		"type" : "Frame",
+		"visible" : false,
+		"position" : {"x" : "50%", "y" : "40%"},
+		"widgets" :
+		[
+			{"type" : "Label", "text" : "&#10052; Победа &#10052;", "class" : "menu_title"},
+			{"type" : "Separator", "style" : "margin: 10px"},
+			{"type" : "Button", "text" : "Продолжить", "class" : "menu_button", "events" :
+			{
+				"onclick" : "new_game_button"
+			}},
+			{"type" : "Button", "text" : "В меню", "class" : "menu_button", "events" :
+			{
+				"onclick" : "main_menu_button"
 			}}
 		]
 	}

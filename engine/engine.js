@@ -11,7 +11,7 @@ class Game
 		{
 		  alert(`${message}\n${url}, ${line}:${col}`);
 		}
-
+ 
 		Game.widget = document.getElementById(id)
 		Game.widget.style.cursor = "default"
 		Game.widget.style.userSelect = "none"
@@ -70,11 +70,12 @@ class Game
 		}
 	}
 
-	static addSystem(src, system)
+	static addSystem(src, system, func = null)
 	{
 		Game.include("engine/systems/" + src, () =>
 		{
 			Game.systems[system] = Game.parse(system)
+			if(func) func(Game.systems[system])
 		})
 	}
 
