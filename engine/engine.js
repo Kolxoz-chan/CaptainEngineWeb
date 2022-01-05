@@ -4,6 +4,7 @@ class Game
 	static systems = {};
 	static is_started = false;
 	static load_queue = []
+	static sections = []
 
 	static init(id)
 	{
@@ -25,12 +26,22 @@ class Game
 		Game.include("engine/components/base_components.js")
 	}
 
-	static onCompleate(func)
+	static section(func)
+	{
+		Game.sections.push(func)
+		if(Game.sections.length == 1)
+		{
+			Game.nextSection()
+		}
+	}
+
+	static nextSection()
 	{
 		Promise.all(Game.load_queue).then(() =>
 		{
 			Game.load_queue = []
-			func()
+			Game.sections.shift()()
+			if(Game.sections.length > 0) Game.nextSection()
 		})
 	}
 
@@ -82,14 +93,6 @@ class Game
 	static parse(code)
 	{
 		return eval("() => { return "+ code +"; }")()
-	}
-
-	static addSystems(data)
-	{
-		for(let name in data)
-		{
-			Game.addSystem(name, data[name])
-		}
 	}
 
 	static getWidget()

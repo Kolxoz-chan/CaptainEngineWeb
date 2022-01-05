@@ -144,7 +144,7 @@
 					"ASCIIColiderComponent" : {"coliding" : true},
 					"TimersTriggerComponent" : {"timers" :
 			        [
-			          {"time" : 3600.0,
+			          {"time" : 60.0,
 			          "actions" :
 			          {
 			            "DisableActionComponent" : {},
