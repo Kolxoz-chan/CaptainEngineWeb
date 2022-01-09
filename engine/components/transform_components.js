@@ -7,7 +7,6 @@ class TransformComponent extends ComponentBase
 		props.position = new Vector2(0, 0);
 		props.velocity = new Vector2(0, 0);
 		props.size = new Vector2(0, 0);
-		props.axis = new Vector2(0.5, 0.5);
 
 		super.init(props)
 	}
@@ -39,11 +38,6 @@ class TransformComponent extends ComponentBase
 		this.setProperty("angle", a);
 	}
 
-	setAxis(x, y)
-	{
-		this.setProperty("axis", new Vector2(x, y))
-	}
-
 	setVelocity(vec)
 	{
 		this.setProperty("velocity", vec);
@@ -71,13 +65,6 @@ class TransformComponent extends ComponentBase
 				vec = this.owner.parent.getComponent("TransformComponent").getPosition()
 			}
 		}
-		/*
-		if(this.position_type == VALUE_RELATIVE)
-		{
-			let size = this.getSize().invert()
-			vec = Camera.getPosition()
-			vec = vec.add(pos.mulVec(Camera.getSize().add(new Vector2(size.x, size.y * 2))))
-		}*/
 		return pos.add(vec);
 	}
 
@@ -96,11 +83,6 @@ class TransformComponent extends ComponentBase
 	getAngle()
 	{
 		return this.getProperty("angle");
-	}
-
-	getAxis()
-	{
-		return this.getProperty("axis");
 	}
 
 	move(vector)
@@ -156,6 +138,50 @@ class TransformComponent extends ComponentBase
 		let center = this.getCenter()
 		let angle = center.getDirection(point)
 		this.setAngle(angle)
+	}
+}
+
+class GridLayoutComponent extends ComponentBase
+{
+	init(props)
+	{
+		props.padding = 0
+		props.spacing = 0
+		props.item_size = new Vector2(64, 64)
+
+		super.init(props)
+	}
+
+	getItemSize()
+	{
+		return this.getProperty("item_size")
+	}
+}
+
+class GridItemComponent extends ComponentBase
+{
+	init(props)
+	{
+		props.position = new Vector2(0, 0)
+
+		super.init(props)
+	}
+
+	getPosition()
+	{
+		return this.getProperty("position")
+	}
+
+	update()
+	{
+		let transform = this.owner.getComponent("TransformComponent")
+		let grid = this.owner.parent.getComponent("GridLayoutComponent")
+
+		let pos = this.getPosition()
+		let size = grid.getItemSize()
+
+		transform.setPosition(pos.mulVec(size))
+		transform.setSize(size)
 	}
 }
 
@@ -389,5 +415,82 @@ class GravityComponent extends ComponentBase
 	{
 		let vec = this.getVector();
 		this.joined["TransformComponent"].move(vec.mul(TimeSystem.getDeltaTime()))
+	}
+}
+
+class MapGeneratorComponent extends ComponentBase
+{
+	init(props)
+	{
+		props.map_size = new Vector2(64, 64)
+		props.prefabs = {} // {"tree_01" : {"chance" : {"value" : 20}, "in_radius" : {"object" : "tree_01"}}
+
+		super.init(props)
+	}
+
+	getMapSize()
+	{
+		return this.getProperty("map_size")
+	}
+
+	getPrefabs()
+	{
+		return this.getProperty("prefabs")
+	}
+
+	condition(name, args)
+	{
+		
+	}
+
+	createEntity(prefabs, vec)
+	{
+		let obj = null
+
+		for(let name in prefabs)
+		{
+			let result = true
+			let arr = prefabs[name]
+			for(let i in arr)
+			{
+				let cond = arr[i]
+				let key = Object.keys(cond)[0]
+				this.condition(key, cond[key])
+			}
+		}
+
+		{
+			"coin_01" :
+			[
+				{"chance" : [50]},
+				{"not" :
+				[
+					{"in_radius" : [5, "player"]}
+				]}
+				
+			]
+		}
+
+		return obj
+	}
+
+	update()
+	{
+		if(this.isEnabled())
+		{
+			let size = this.getMapSize()
+			let prefabs = this.getPrefabs()
+			for(let y=0; y<size.y; y++)
+			{
+				for(let x=0; x<size.x; x++)
+				{
+					let obj = this.createEntity(prefabs, new Vector2(x, y))
+					if(obj)
+					{
+						this.owner.addChild(obj)
+					}
+				}
+			}
+		}
 	}
 }

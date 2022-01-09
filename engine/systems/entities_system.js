@@ -35,6 +35,7 @@ class EntitiesSystem
 		}
 		this.entities.push(obj);
 		obj.init();
+		obj.reset(false)
 
 		return obj;
 	}

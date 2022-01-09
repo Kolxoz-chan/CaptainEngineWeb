@@ -47,12 +47,6 @@ class Game
 
 	static start()
 	{
-		for(let key in Game.systems)
-		{
-			let sys = Game.systems[key]
-			sys.init()
-		}
-
 		if(!Game.is_started)
 		{
 			Game.is_started = true;
@@ -86,6 +80,7 @@ class Game
 		Game.include("engine/systems/" + src, () =>
 		{
 			Game.systems[system] = Game.parse(system)
+			Game.systems[system].init()
 			if(func) func(Game.systems[system])
 		})
 	}

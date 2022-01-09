@@ -11,13 +11,13 @@ Game.section(() =>
     Game.addSystem("resources_system.js", "ResourcesSystem")
     Game.addSystem("gui_system.js", "GUISystem")
     Game.addSystem("audio_system.js", "AudioSystem")
-    Game.addSystem("ascii_canvas_system.js", "ASCIICanvasSystem", (system) =>
-    {
-        system.setSize(new Vector2(140, 35))
-    })
     Game.addSystem("input_system.js", "InputSystem", (system) =>
     {
-        system.setEvents(["keydown", "keyup"])
+        system.setEvents("mousemove", "mousedown", "mouseup")
+    })
+    Game.addSystem("canvas2d_system.js", "Canvas2DSystem", (system) =>
+    {
+        system.setSize(new Vector2(1280, 720))
     })
 
     // Loading componeents
@@ -33,16 +33,7 @@ Game.section(() =>
 // Loading resources
 Game.section(() => 
 {
-    // Audio
-    ResourcesSystem.loadAudio("bg_01", "resources/sounds/bg_01.mp3")
-
-    // Configs
-    Game.include("resources/scripts/gui_actions.js")
-    ResourcesSystem.loadAnimations("resources/configs/animations.json")
-    ResourcesSystem.loadPrefabs("resources/configs/prefabs.json")
     JSONLoader.loadEntities("resources/configs/entities.json")
-    GUISystem.loadGUI("resources/configs/gui.json")
-    ResourcesSystem.loadStyle("resources/styles.css")
 })
 
 // Start engine

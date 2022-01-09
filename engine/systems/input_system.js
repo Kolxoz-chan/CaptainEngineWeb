@@ -31,10 +31,11 @@ class InputSystem
 
 	static handleEvent(event)
 	{
-		//console.log(event.type)
 		if(event.type == "mousemove")
 		{
-			InputSystem.mouse_pos = new Vector2(event.clientX-Game.canvas.offsetLeft,event.clientY-Game.canvas.offsetTop);
+			let mouse = new Vector2(event.clientX, event.clientY)
+			let offset = Canvas2DSystem.getPosition()
+			InputSystem.mouse_pos = mouse.sub(offset);
 		}
 		else if(event.type == "keydown")
 		{
@@ -52,11 +53,11 @@ class InputSystem
 		{
 			InputSystem.mouse_pressed[event.button] = false;
 		}
-		//console.log(this.mouse_pressed)
 	}
 
-	static setEvents(arr)
+	static setEvents()
 	{
+		let arr =  Array.from(arguments)
 		for(var i in arr)
 		{
 			document.body.addEventListener(arr[i], this.handleEvent);

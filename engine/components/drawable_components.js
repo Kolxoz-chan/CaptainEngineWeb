@@ -9,8 +9,6 @@ class DrawableComponent extends ComponentBase
 		props.stroke_color = new Color(0, 0, 0)
 		props.line_width = 1.0
 		props.opacity = 1.0
-		props.autodraw = true
-		props.is_drawn = false
 
 		this.join("TransformComponent")
 
@@ -62,53 +60,18 @@ class DrawableComponent extends ComponentBase
 		return this.getOpacity() > 0.0;
 	}
 
-	setDrawn(value)
-	{
-		this.setProperty("is_drawn", value)
-	}
-
 	update()
 	{
-		if(this.isVisible() && (this.getProperty("autodraw") || this.getProperty("is_drawn")))
+		if(this.isVisible())
 		{
-			/* Get data */
 			let transform_component = this.joined["TransformComponent"]
+
 			let position = transform_component.getPosition()
 			let size = transform_component.getSize()
+			let angle = transform_component.getAngle()
 
-			/* Settings */
-			//this.applyStyles();
-			//this.applyTransformation()
-
-			this.draw(position, size);
-
-			/* Reset*/
-			//Game.context.resetTransform();
-			this.setDrawn(false);
+			this.draw(position, size, angle);
 		}
-	}
-
-	applyStyles()
-	{
-		Game.context.globalAlpha = this.getOpacity();
-		Game.context.fillStyle = this.getFillColor();
-		Game.context.strokeStyle = this.getStrokeColor();
-		Game.context.lineWidth = this.getLineWidth();
-	}
-
-	applyTransformation()
-	{
-		let transform_component = this.joined["TransformComponent"]
-		let position = transform_component.getPosition()
-		let size = transform_component.getSize()
-		let angle = transform_component.getAngle()
-		let axis = transform_component.getAxis()
-
-		Camera.apply_transform()
-
-		Game.context.translate(position.x + size.x * axis.x, position.y + size.y * axis.y)
-		Game.context.rotate(Math.PI / 180 * angle);
-		Game.context.translate(-size.x * axis.x - position.x, -size.y * axis.y - position.y)
 	}
 }
 
@@ -117,13 +80,12 @@ class RectShapeComponent extends DrawableComponent
 {
 	init(props)
 	{
-		super.props(props)
+		super.init(props)
 	}
 
-	draw(position, size)
+	draw(position, size, angle)
 	{
-		Game.context.fillRect(position.x, position.y, size.x, size.y);
-		if(this.getLineWidth() > 0.0) Game.context.strokeRect(position.x, position.y, size.x, size.y);
+		Canvas2DSystem.drawRect(position, size, angle, this.properties)
 	}
 }
 

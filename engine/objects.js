@@ -51,11 +51,11 @@ class Entity
 		for(var key in this.components) this.components[key].init({});
 	}
 
-	reset()
+	reset(destroy = true)
 	{
 		for(var key in this.components) this.components[key].reset();
 		for(var key in this.childs) this.childs[key].reset();
-		if(!this.isNative())
+		if(!this.isNative() && destroy)
 		{
 			this.delete()
 		}
@@ -471,6 +471,11 @@ class Rect
 	bottom()
 	{
 		return this.y + this.h;
+	}
+
+	center()
+	{
+		return new Vector2(this.x + this.w / 2, this.y + this.h / 2)
 	}
 
 	divVec(vec)
