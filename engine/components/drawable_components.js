@@ -97,15 +97,9 @@ class CircleShapeComponent extends DrawableComponent
 		super.init(props)
 	}
 
-	draw(position, size)
+	draw(position, size, angle)
 	{
-		let radiuses = new Vector2(size.x/2, size.y/2)
-		let center = position.add(radiuses)
-
-		Game.context.beginPath();
-		Game.context.ellipse(center.x, center.y, radiuses.x, radiuses.y, Math.PI, 0, Math.PI * 2, true);
-		Game.context.fill();
-		Game.context.stroke();
+		Canvas2DSystem.drawCircle(position, size, angle, this.properties)
 	}
 }
 
@@ -397,7 +391,7 @@ class AnimatedComponent extends ComponentBase
 		if(typeof(clip) == "string")
 		{
 			let value = ResourcesSystem.getAnimation(clip)
-			if(value) 
+			if(value)
 			{
 				this.setClip(value)
 			}
@@ -438,7 +432,7 @@ class AnimatedComponent extends ComponentBase
 	}
 
 	update()
-	{	
+	{
 		let clip = this.getCilp()
 		if(clip)
 		{

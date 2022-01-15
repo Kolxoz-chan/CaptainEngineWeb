@@ -7,6 +7,7 @@ class ResourcesSystem
 	static prefabs = {}
 	static sounds = {}
 	static scripts = {}
+	static actions = {}
 
 	static init()
 	{
@@ -15,7 +16,7 @@ class ResourcesSystem
 
 	static loadTexture(name, src, relative=true, func = null)
 	{
-		Game.load_queue.push(new Promise((resolve, reject) => 
+		Game.load_queue.push(new Promise((resolve, reject) =>
 		{
 			ResourcesSystem.textures[name] = new Image()
 			ResourcesSystem.textures[name].src = src
@@ -46,7 +47,7 @@ class ResourcesSystem
 				{
 					prefab.addComponent(comp, obj[comp])
 				}
-				
+
 				ResourcesSystem.prefabs[name] = prefab
 			}
 		})
@@ -54,7 +55,7 @@ class ResourcesSystem
 
 	static loadStyle(src)
 	{
-		Game.load_queue.push(new Promise((resolve, reject) => 
+		Game.load_queue.push(new Promise((resolve, reject) =>
 		{
 			let head = document.head;
 			let link = document.createElement("link");
@@ -102,7 +103,7 @@ class ResourcesSystem
 
 	static loadByURL(url, type = "text", func = function() {})
 	{
-		Game.load_queue.push(new Promise((resolve, reject) => 
+		Game.load_queue.push(new Promise((resolve, reject) =>
 		{
 			var xhr = new XMLHttpRequest(url);
 		    xhr.open('GET', url, true);
@@ -168,5 +169,69 @@ class ResourcesSystem
 	static callScript(name)
 	{
 		ResourcesSystem.scripts[name]()
+	}
+}
+
+// Actions loading
+let actions = ResourcesSystem.actions
+actions.ResetAction = (obj, data) =>
+{
+	obj.reset();
+}
+
+actions.DestroyAction = (obj, data) =>
+{
+	obj.parent.deleteChild(this.owner)
+}
+
+actions.DisableAction = (obj, data) =>
+{
+	obj.setEnabled(false)
+}
+
+actions.GUIShowAction = (obj, data) =>
+{
+	for(let name in data)
+	{
+		let widget = GUISystem.getWidget(name)
+		if(widget)
+		{
+			widget.setVisible(data[name])
+		}
+	}
+}
+
+actions.DissolveAction = (obj, data) =>
+{
+	//this.joined["DrawableComponent"].setOpacity(data.time / data.max_time)
+}
+
+actions.SpawnAction = (obj, data) =>
+{
+	if(data.prefab)
+	{
+		let prefab = ResourcesSystem.getPrefab(data.prefab)
+		let settings = data.settings ? data.settings : {}
+		let layer = data.layer ? data.layer : this.owner.parent
+		let position = this.joined["TransformComponent"].getPosition()
+
+		if(data.offset)
+		{
+			position = position.addVec(data.offset)
+		}
+
+		layer.addChild(prefab.getEntity(
+		{
+			...settings,
+			"TransformComponent" : {"position" : position},
+		}))
+	}
+}
+
+actions.ScriptAction = (obj, data) =>
+{
+	for(let name in data)
+	{
+		ResourcesSystem.callScript(name)
 	}
 }

@@ -10,7 +10,7 @@ class InputSystem
 
 	static init()
 	{
-		
+
 	}
 
 	static update()
@@ -33,9 +33,12 @@ class InputSystem
 	{
 		if(event.type == "mousemove")
 		{
-			let mouse = new Vector2(event.clientX, event.clientY)
-			let offset = Canvas2DSystem.getPosition()
-			InputSystem.mouse_pos = mouse.sub(offset);
+			if(Canvas2DSystem)
+			{
+				let mouse = new Vector2(event.clientX, event.clientY)
+				let offset = Canvas2DSystem.getPosition()
+				InputSystem.mouse_pos = mouse.sub(offset);
+			}
 		}
 		else if(event.type == "keydown")
 		{

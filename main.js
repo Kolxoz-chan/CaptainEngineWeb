@@ -2,7 +2,7 @@
 Game.init("game-block");
 
 // Loading engine
-Game.section(() => 
+Game.section(() =>
 {
     // Loading systems
     Game.addSystem("time_system.js", "TimeSystem")
@@ -24,20 +24,22 @@ Game.section(() =>
     Game.include("engine/addons/json_loader.js")
     Game.include("engine/components/transform_components.js")
     Game.include("engine/components/drawable_components.js")
-    Game.include("engine/components/controller_components.js") 
-    Game.include("engine/components/action_components.js")
+    Game.include("engine/components/controller_components.js")
     Game.include("engine/components/trigger_components.js")
     Game.include("engine/components/colider_components.js")
 })
 
 // Loading resources
-Game.section(() => 
+Game.section(() =>
 {
     JSONLoader.loadEntities("resources/configs/entities.json")
+    ResourcesSystem.loadPrefabs("resources/configs/prefabs.json")
+    GUISystem.loadGUI("resources/configs/gui.json")
+    ResourcesSystem.loadStyle("resources/styles.css")
 })
 
 // Start engine
-Game.section(() => 
+Game.section(() =>
 {
     Game.start();
 })

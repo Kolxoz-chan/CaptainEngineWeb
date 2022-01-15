@@ -380,7 +380,7 @@ class PursuerComponent extends ComponentBase
 }
 
 /* Camera component */
-class CameraComponent extends ComponentBase
+class CameraOperatorComponent extends ComponentBase
 {
 	init(props)
 	{
@@ -391,7 +391,7 @@ class CameraComponent extends ComponentBase
 	update()
 	{
 		let transform_component = this.joined["TransformComponent"]
-		Camera.setCenter(transform_component.getCenter())
+		CameraSystem.setCenter(transform_component.getCenter())
 	}
 }
 
@@ -440,38 +440,38 @@ class MapGeneratorComponent extends ComponentBase
 
 	condition(name, args)
 	{
-		
+		if(name == "chance")
+		{
+			return MathSystem.random_chance(args[0])
+		}
 	}
 
 	createEntity(prefabs, vec)
 	{
-		let obj = null
-
 		for(let name in prefabs)
 		{
 			let result = true
 			let arr = prefabs[name]
+
 			for(let i in arr)
 			{
 				let cond = arr[i]
 				let key = Object.keys(cond)[0]
-				this.condition(key, cond[key])
+				result = result && this.condition(key, cond[key])
+			}
+
+			if(result)
+			{
+				return ResourcesSystem.createEntity(name,
+				{
+					"GridItemComponent" : {"position" : vec},
+					"TransformComponent" : {}
+
+				})
 			}
 		}
 
-		{
-			"coin_01" :
-			[
-				{"chance" : [50]},
-				{"not" :
-				[
-					{"in_radius" : [5, "player"]}
-				]}
-				
-			]
-		}
-
-		return obj
+		return null
 	}
 
 	update()
@@ -491,6 +491,7 @@ class MapGeneratorComponent extends ComponentBase
 					}
 				}
 			}
+			this.setEnabled(false)
 		}
 	}
 }

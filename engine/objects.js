@@ -109,7 +109,7 @@ class Entity
 			for(let i in this.childs)
 			{
 				let child = this.childs[i]
-				if(child.isEnabled() && child.update) 
+				if(child.isEnabled() && child.update)
 				{
 					child.update();
 				}
@@ -165,6 +165,7 @@ class Entity
 		this.childs.push(obj)
 		obj.parent = this;
 		obj.init();
+		obj.reset(false)
 	}
 
 	delete()

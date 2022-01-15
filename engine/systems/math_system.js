@@ -14,4 +14,9 @@ class MathSystem
 		}
 		return null
 	}
+
+	static random_chance(value)
+	{
+		return Math.round(Math.random() * 100) <= value
+	}
 }

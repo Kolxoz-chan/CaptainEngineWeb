@@ -1,8 +1,7 @@
 /* CameraSystem class */
 class CameraSystem
 {
-	//static size = new Vector2(0, 0);
-	//static position = new Vector2(0, 0);
+	static position = new Vector2(0, 0);
 	static angle = 0;
 	static zoom = 1.0;
 	static updated = false;
@@ -10,7 +9,7 @@ class CameraSystem
 
 	static init()
 	{
-		
+
 	}
 
 	static update()
@@ -51,25 +50,19 @@ class CameraSystem
 		CameraSystem.setPosition(new Vector2(point.x - size.x / 2, point.y - size.y / 2))
 	}
 
-	static setSize(vec)
-	{
-		CameraSystem.data.size = vec;
-	}
-
-
 	static apply_transform()
 	{
-		if(Game.context)
+		if(Canvas2DSystem)
 		{
 			let center = CameraSystem.getCenter()
 			let size = CameraSystem.getSize();
-			Game.context.translate(-center.x + size.x / 2, -center.y + size.y / 2)
+			Canvas2DSystem.buffer.translate(-center.x + size.x / 2, -center.y + size.y / 2)
 		}
 	}
 
 	static getSize()
 	{
-		return CameraSystem.size;
+		return Canvas2DSystem.getSize().mul(CameraSystem.zoom)
 	}
 
 	static getRect()

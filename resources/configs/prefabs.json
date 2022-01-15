@@ -1,0 +1,19 @@
+{
+  "cell_01" :
+  {
+    "RectShapeComponent" : {"fill_color" : new Color(255, 255, 0)}
+  },
+  "money_01" :
+  {
+    "CircleShapeComponent" : {"fill_color" : new Color(255, 165, 0), "line_width" : 3}
+  },
+  "wall_01" :
+  {
+    "RectShapeComponent" : {"fill_color" : new Color(125, 125, 125), "line_width" : 3}
+  },
+  "bonus_01" :
+  {
+    "CircleShapeComponent" : {"fill_color" : new Color(255, 0, 255), "line_width" : 3}
+  }
+
+}

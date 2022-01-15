@@ -2,40 +2,56 @@
 	{
 		"name" : "map",
 
-		"components" : 
+		"components" :
 		{
-			"GridLayoutComponent" : {}
-		},
+			"GridLayoutComponent" : {},
+			"MapGeneratorComponent" :
+			{
+				"map_size" : new Vector2(16, 16),
+				"prefabs" : { "cell_01" : [] }
+			}
+		}
+	},
 
-		"entities" : 
+	{
+		"name" : "objects",
+
+		"components" :
+		{
+			"GridLayoutComponent" : {},
+			"MapGeneratorComponent" :
+			{
+				"map_size" : new Vector2(16, 16),
+				"prefabs" :
+				{
+					"money_01" :
+					[
+						{"chance" : [5]}
+					],
+					"wall_01" :
+					[
+						{"chance" : [10]}
+					],
+					"bonus_01" :
+					[
+						{"chance" : [5]}
+					]
+				},
+			}
+		},
+		"entities" :
 		[
 			{
-				"name" : "test",
-				"components" : 
+				"name" : "player",
+				"components" :
 				{
+					"CircleShapeComponent" : {"fill_color" : Color.blue(), "line_width" : 3},
 					"TransformComponent" : {},
-					"RectShapeComponent" : {},
-					"GridItemComponent" : {"position" : new Vector2(1, 1)}
-				}
-			},
-			{
-				"name" : "test",
-				"components" : 
-				{
-					"TransformComponent" : {},
-					"RectShapeComponent" : {},
-					"GridItemComponent" : {"position" : new Vector2(1, 2)}
-				}
-			},
-			{
-				"name" : "test",
-				"components" : 
-				{
-					"TransformComponent" : {},
-					"RectShapeComponent" : {},
-					"GridItemComponent" : {"position" : new Vector2(2, 3)}
+					"GridItemComponent" : {"position" : new Vector2(0, 0)},
+					"CameraOperatorComponent" : {}
 				}
 			}
 		]
+
 	}
 ]

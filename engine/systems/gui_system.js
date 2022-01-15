@@ -38,6 +38,7 @@ class GUISystem
 	static addWidget(name, widget)
 	{
 		GUISystem.widgets[name] = widget
+		GUISystem.block.appendChild(widget.widget)
 		return widget
 	}
 
@@ -51,7 +52,7 @@ class GUISystem
 			// Settings
 			if(data.style) widget.setStyle(data.style)
 			if(data.text) widget.setText(data.text)
-			if(data.position) widget.setPosition(data.position.x, data.position.y)	
+			if(data.position) widget.setPosition(data.position.x, data.position.y)
 			if(data.size) widget.setSize(data.size.w, data.size.h)
 			if(data.class) widget.setClass(data.class)
 			if(data.id) widget.setId(data.id)
@@ -176,6 +177,7 @@ class Widget
 		obj.parent = this
 		this.childs.push(obj)
 		this.widget.appendChild(obj.getWidget())
+
 		return obj
 	}
 
@@ -197,7 +199,7 @@ class Label extends Widget
 {
 	constructor(text = "", style = "")
 	{
-		super("p", style) 
+		super("p", style)
 		this.widget.innerHTML = text
 	}
 

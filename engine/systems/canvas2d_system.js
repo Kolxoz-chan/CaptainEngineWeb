@@ -12,8 +12,8 @@ class Canvas2DSystem
 		/* Init canvas*/
 		this.canvas = document.createElement("canvas");
 		this.context = this.canvas.getContext("2d");
-		this.canvas.style.margin = "auto" 
-		this.canvas.style.display = "block" 
+		this.canvas.style.margin = "auto"
+		this.canvas.style.display = "block"
 
 		this.buffer_canvas = document.createElement("canvas");
 		this.buffer = this.buffer_canvas.getContext("2d");
@@ -77,13 +77,15 @@ class Canvas2DSystem
 
 	static applyTransform(position, size, angle)
 	{
+    if(CameraSystem) CameraSystem.apply_transform()
+
 		if(angle != 0)
 		{
 			let axis = Rect.fromPosSize(position, size).center()
 			this.buffer.translate(position.x + size.x * axis.x, position.y + size.y * axis.y)
 			this.buffer.rotate(Math.PI / 180 * angle);
 			this.buffer.translate(-size.x * axis.x - position.x, -size.y * axis.y - position.y)
-		}	
+		}
 	}
 
 	static clear()
@@ -101,12 +103,12 @@ class Canvas2DSystem
 	static drawRect(position, size, angle, styles)
 	{
 		// Settings
-		this.applyStyles(styles)	
+		this.applyStyles(styles)
 		this.applyTransform(position, size, angle)
-		
+
 		// Draw
 		this.buffer.fillRect(position.x, position.y, size.x, size.y);
-		if(styles.line_width > 0.0) 
+		if(styles.line_width > 0.0)
 		{
 			this.buffer.strokeRect(position.x, position.y, size.x, size.y);
 		}
@@ -114,6 +116,23 @@ class Canvas2DSystem
 		// Reset settings
 		this.buffer.resetTransform()
 	}
+
+  static drawCircle(position, size, angle, styles)
+	{
+    let radiuses = new Vector2(size.x/2, size.y/2)
+		let center = position.add(radiuses)
+
+		// Settings
+		this.applyStyles(styles)
+		this.applyTransform(position, size, angle)
+
+		// Draw
+		this.buffer.beginPath();
+		this.buffer.ellipse(center.x, center.y, radiuses.x, radiuses.y, Math.PI, 0, Math.PI * 2, true);
+		this.buffer.fill();
+		this.buffer.stroke();
+
+		// Reset settings
+		this.buffer.resetTransform()
+	}
 }
-
-

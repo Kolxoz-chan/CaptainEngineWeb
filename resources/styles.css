@@ -1,0 +1,38 @@
+.cards_deck > :first-child
+{
+  transform: rotate(-10deg) translateY(55%);
+}
+
+.cards_deck > :last-child
+{
+  transform: rotate(10deg) translateY(55%);
+}
+
+.cards_deck > :nth-child(2)
+{
+  transform: rotate(-5deg) translateY(45%);
+}
+
+.cards_deck > :nth-last-child(2)
+{
+  transform: rotate(5deg) translateY(45%);
+}
+
+.card
+{
+  width: 150px;
+  height: 225px;
+  margin: 5px;
+  background-color: white;
+  text-align: center;
+  border: 2px solid black;
+  border-radius: 10px;
+  display: inline-block;
+  box-shadow: 0 0 10px;
+  transform: translateY(40%);
+}
+
+.card:hover
+{
+  transform: translateY(0%);
+}
