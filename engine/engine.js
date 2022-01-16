@@ -12,11 +12,11 @@ class Game
 		{
 		  alert(`${message}\n${url}, ${line}:${col}`);
 		}
- 
+
 		Game.widget = document.getElementById(id)
 		Game.widget.style.cursor = "default"
 		Game.widget.style.userSelect = "none"
-		
+
 		Game.widget.oncontextmenu = function() {return false}
 		Game.widget.onselectstart = function() {return false}
 
@@ -28,6 +28,7 @@ class Game
 
 	static section(func)
 	{
+
 		Game.sections.push(func)
 		if(Game.sections.length == 1)
 		{
@@ -37,12 +38,19 @@ class Game
 
 	static nextSection()
 	{
-		Promise.all(Game.load_queue).then(() =>
+		try
 		{
-			Game.load_queue = []
-			Game.sections.shift()()
-			if(Game.sections.length > 0) Game.nextSection()
-		})
+			Promise.all(Game.load_queue).then(() =>
+			{
+				Game.load_queue = []
+				Game.sections.shift()()
+				if(Game.sections.length > 0) Game.nextSection()
+			})
+		}
+		catch(error)
+		{
+			alert('Error ' + e.name + ":" + e.message + "\n" + e.stack);
+		}
 	}
 
 	static start()
@@ -102,12 +110,12 @@ class Game
 
 	static include(src, func = null)
 	{
-		Game.load_queue.push(new Promise((resolve, reject) => 
+		Game.load_queue.push(new Promise((resolve, reject) =>
 		{
 			let script = document.createElement("script")
 			document.head.appendChild(script)
 			script.src = src;
-			script.onload = () => 
+			script.onload = () =>
 			{
 				if(func) func()
 				resolve()

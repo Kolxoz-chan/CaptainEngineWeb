@@ -213,7 +213,6 @@ class Button extends Widget
 {
 	constructor(text = "", style = "")
 	{
-		//style = "border: 2px solid black; background-color: white; " + style
 		super("button", style)
 		this.widget.innerHTML = text
 	}
@@ -224,5 +223,14 @@ class Separator extends Widget
 	constructor(style = "")
 	{
 		super("hr", style)
+	}
+}
+
+class Picture extends Widget
+{
+	constructor(src = "", style = "")
+	{
+		super("img", style)
+		this.widget.src = text
 	}
 }

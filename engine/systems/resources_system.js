@@ -9,9 +9,20 @@ class ResourcesSystem
 	static scripts = {}
 	static actions = {}
 
+	static buffer = null
+	static buffer_canvas = null
+
 	static init()
 	{
+		ResourcesSystem.buffer_canvas = document.createElement("canvas")
+		ResourcesSystem.buffer = ResourcesSystem.buffer_canvas.getContext("2d")
+	}
 
+	static cropImage(img, x, y, w, h)
+	{
+		ResourcesSystem.buffer_canvas.width = w
+		ResourcesSystem.buffer_canvas.width = h
+		ResourcesSystem.buffer.drawImage(img, x, y, w, h, 0, 0, w, h)
 	}
 
 	static loadTexture(name, src, relative=true, func = null)
@@ -33,6 +44,36 @@ class ResourcesSystem
 			}
 		}))
 	}
+
+	static loadTileset(name, src, width, height, padding = 0, spacing = 0)
+	{
+		Game.load_queue.push(new Promise((resolve, reject) =>
+		{
+			let img = new Image()
+			img.src = src
+			img.onload = function()
+			{
+				let w = Math.floor(img.width / width)
+				let h = Math.floor(img.height / height)
+
+				for(let y=0; y<h; y++)
+				{
+					for(let x=0; x<w; x++)
+					{
+						let tile = ResourcesSystem.cropImage(img, x * width, y * height, width, height)
+						ResourcesSystem.textures[name + "_" + x + "x" + y] = tile
+					}
+				}
+				resolve()
+			}
+			img.onerror = function()
+			{
+				let err = "Image " + src + " not loaded!"
+				alert(err)
+				reject(new Error(err))
+			}
+		}))
+	} 
 
 	static loadPrefabs(src)
 	{

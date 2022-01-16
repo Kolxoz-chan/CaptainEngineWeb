@@ -36,3 +36,8 @@
 {
   transform: translateY(0%);
 }
+
+.card p
+{
+  font-weight: bold;
+}

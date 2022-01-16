@@ -7,65 +7,7 @@
     "class" : "cards_deck",
     "widgets" :
     [
-      {
-        "type" : "Frame",
-        "class" : "card",
-        "widgets" :
-        [
-          {
-            "type" : "Label",
-            "text" : "Вперёд"
-          }
-        ]
-      },
-
-      {
-        "type" : "Frame",
-        "class" : "card",
-        "widgets" :
-        [
-          {
-            "type" : "Label",
-            "text" : "Поворот"
-          }
-        ]
-      },
-
-      {
-        "type" : "Frame",
-        "class" : "card",
-        "widgets" :
-        [
-          {
-            "type" : "Label",
-            "text" : "Перемещение"
-          }
-        ]
-      },
-
-      {
-        "type" : "Frame",
-        "class" : "card",
-        "widgets" :
-        [
-          {
-            "type" : "Label",
-            "text" : "Телепортация"
-          }
-        ]
-      },
-
-      {
-        "type" : "Frame",
-        "class" : "card",
-        "widgets" :
-        [
-          {
-            "type" : "Label",
-            "text" : "Разворот"
-          }
-        ]
-      }
+      
     ]
   }
 }

@@ -14,7 +14,17 @@ class MathSystem
 		}
 		return null
 	}
-
+/*
+	static random_choice_priority(arr)
+	{
+		if(arr.length)
+		{
+			let index = Math.floor(Math.random() * arr.length)
+			return arr[index]
+		}
+		return null
+	}
+*/
 	static random_chance(value)
 	{
 		return Math.round(Math.random() * 100) <= value
