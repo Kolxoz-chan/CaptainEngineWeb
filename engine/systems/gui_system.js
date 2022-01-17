@@ -164,6 +164,26 @@ class Widget
 		this.widget.style.display = "none"
 	}
 
+	destroy()
+	{
+		if(this.widget.parentNode) this.widget.parentNode.removeChild(this.widget)
+
+		let index = this.parent.childs.indexOf(this)
+		alert(index)
+		this.parent.childs.splice(index, 1)
+	}
+
+	clearChilds()
+	{
+		//alert(this.childs)
+		for(let i in this.childs)
+		{
+			this.childs[i].destroy()
+		}
+
+		this.childs = []
+	}
+
 	addEvent(type, func)
 	{
 		this.widget[type] = function()
@@ -231,6 +251,6 @@ class Picture extends Widget
 	constructor(src = "", style = "")
 	{
 		super("img", style)
-		this.widget.src = text
+		this.widget.src = src
 	}
 }

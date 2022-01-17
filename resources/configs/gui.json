@@ -4,10 +4,6 @@
     "type" : "Frame",
     "position" : {"x" : "50%", "y" : "100%"},
     "style" : "display: flex;",
-    "class" : "cards_deck",
-    "widgets" :
-    [
-      
-    ]
+    "class" : "cards_deck"
   }
 }

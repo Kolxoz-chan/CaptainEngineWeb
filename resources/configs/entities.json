@@ -45,8 +45,8 @@
 				"name" : "player",
 				"components" :
 				{
-					"CircleShapeComponent" : {"fill_color" : Color.blue(), "line_width" : 3},
-					"TransformComponent" : {},
+					"ImageComponent" : {"image" : "test"},
+					"TransformComponent" : {"angle" : 180},
 					"GridItemComponent" : {"position" : new Vector2(0, 0)},
 					"CameraOperatorComponent" : {}
 				}

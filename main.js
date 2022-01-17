@@ -40,6 +40,7 @@ Game.section(() =>
     ResourcesSystem.loadStyle("resources/styles.css")
     Game.include("resources/scripts/playing_cards.js")
     Game.include("resources/scripts/turtle_battle.js")
+    ResourcesSystem.loadTexture("test", "resources/textures/test.png")
     ResourcesSystem.loadTileset("cards", "resources/textures/cards.png", 100, 100)
 })
 
@@ -52,7 +53,7 @@ Game.section(() =>
     let cards = TurtleBattle.getCards(5)
     for(let i in cards)
     {
-      cards_deck.widget.appendChild(cards[i].widget)
+      cards_deck.addWidget(cards[i])
     }
 
     Game.start();

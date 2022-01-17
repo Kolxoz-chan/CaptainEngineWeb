@@ -6,14 +6,34 @@ class AheadCard
 
 	static action()
 	{
+		let player = EntitiesSystem.getNamedEntity("player")
+		let transform = player.getComponent("TransformComponent")
+		let grid = player.getComponent("GridItemComponent")
+		let angle = transform.getAngle() % 360;
 
+		if(angle == 0)
+		{
+			grid.move(new Vector2(0, -1))
+		}
+		else if(angle == 90)
+		{
+			grid.move(new Vector2(1, 0))
+		}
+		else if(angle == 180)
+		{
+			grid.move(new Vector2(0, 1))
+		}
+		else if(angle == 270)
+		{
+			grid.move(new Vector2(-1, 0))
+		}
 	}
 }
 
 class TurnCard
 {
 	static name = "ПОВОРОТ"
-	static icon = ""
+	static icon = "cards_1x0"
 	static description = "Вы можете повернуться на 90 градусов в любую сторону"
 
 	static action()
@@ -25,19 +45,21 @@ class TurnCard
 class UTurnCard
 {
 	static name = "РАЗВОРОТ"
-	static icon = ""
+	static icon = "cards_2x0"
 	static description = "Вы можете развернуться в обратную сторону"
 
 	static action()
 	{
-
+		let player = EntitiesSystem.getNamedEntity("player")
+		let transform = player.getComponent("TransformComponent")
+		transform.rotate(180)
 	}
 }
 
 class JumpCard
 {
 	static name = "ПРЫЖОК"
-	static icon = ""
+	static icon = "cards_1x1"
 	static description = "Вы можете перепрыгнуть через рядомстаящуюю стену или игрока"
 
 	static action()
@@ -49,19 +71,19 @@ class JumpCard
 class ResetCard
 {
 	static name = "СБРОС"
-	static icon = ""
+	static icon = "cards_0x1"
 	static description = "Вы можете заменить весь свой набор карт на новый"
 
 	static action()
 	{
-
+		GUISystem.getWidget("cards_deck").clearChilds()
 	}
 }
 
 class DoublingCard
 {
 	static name = "УДВОЕНИЕ"
-	static icon = ""
+	static icon = "cards_2x1"
 	static description = "Эффект любой карты увеличивается в два раза"
 
 	static action()

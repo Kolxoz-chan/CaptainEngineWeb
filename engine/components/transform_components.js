@@ -172,6 +172,17 @@ class GridItemComponent extends ComponentBase
 		return this.getProperty("position")
 	}
 
+	setPosition(vec)
+	{
+		this.setProperty("position", vec)
+	}
+
+	move(vec)
+	{
+		let pos = this.getPosition()
+		this.setPosition(pos.add(vec))
+	}
+
 	update()
 	{
 		let transform = this.owner.getComponent("TransformComponent")

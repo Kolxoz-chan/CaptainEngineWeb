@@ -77,14 +77,15 @@ class Canvas2DSystem
 
 	static applyTransform(position, size, angle)
 	{
-    if(CameraSystem) CameraSystem.apply_transform()
+		if(CameraSystem) CameraSystem.apply_transform()
 
 		if(angle != 0)
 		{
-			let axis = Rect.fromPosSize(position, size).center()
-			this.buffer.translate(position.x + size.x * axis.x, position.y + size.y * axis.y)
+			let offset = new Vector2(position.x + size.x / 2, position.y + size.y/2)
+
+			this.buffer.translate(offset.x, offset.y)
 			this.buffer.rotate(Math.PI / 180 * angle);
-			this.buffer.translate(-size.x * axis.x - position.x, -size.y * axis.y - position.y)
+			this.buffer.translate(-offset.x, -offset.y)
 		}
 	}
 
@@ -131,6 +132,21 @@ class Canvas2DSystem
 		this.buffer.ellipse(center.x, center.y, radiuses.x, radiuses.y, Math.PI, 0, Math.PI * 2, true);
 		this.buffer.fill();
 		this.buffer.stroke();
+
+		// Reset settings
+		this.buffer.resetTransform()
+	}
+
+	static drawImage(position, size, angle, styles)
+	{
+		let img = ResourcesSystem.textures[styles.image]
+		if(!img) return
+
+		// Settings
+		this.applyStyles(styles)
+		this.applyTransform(position, size, angle)
+
+		this.buffer.drawImage(img, position.x, position.y, size.x, size.y);
 
 		// Reset settings
 		this.buffer.resetTransform()

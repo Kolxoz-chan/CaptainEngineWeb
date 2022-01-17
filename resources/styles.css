@@ -41,3 +41,9 @@
 {
   font-weight: bold;
 }
+
+.card_frame
+{
+  border: 2px solid black;
+  margin:  9%;
+}

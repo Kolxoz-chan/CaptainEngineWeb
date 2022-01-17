@@ -143,26 +143,14 @@ class ImageComponent extends DrawableComponent
 		super.init(props)
 	}
 
-	getTexture()
-	{
-		let texture = this.getProperty("texture")
-		return Resources.bitmaps[texture] ? Resources.bitmaps[texture]  : Resources.getTexture(texture)
-	}
-
-
 	isVisible()
 	{
-		return this.getTexture() && this.getOpacity() > 0.0
+		return this.getProperty("image") && this.getOpacity() > 0.0
 	}
 
-	draw(position, size)
+	draw(position, size, angle)
 	{
-		let image = this.getTexture()
-		if(image)
-		{
-			Game.context.drawImage(image, position.x, position.y);
-			//if(this.line_width > 0.0) Game.context.strokeRect(rect.x, rect.y, rect.w, rect.h);
-		}
+		Canvas2DSystem.drawImage(position, size, angle, this.properties)
 	}
 }
 

@@ -21,8 +21,14 @@ class ResourcesSystem
 	static cropImage(img, x, y, w, h)
 	{
 		ResourcesSystem.buffer_canvas.width = w
-		ResourcesSystem.buffer_canvas.width = h
+		ResourcesSystem.buffer_canvas.height = h
 		ResourcesSystem.buffer.drawImage(img, x, y, w, h, 0, 0, w, h)
+
+
+		var img = new Image();
+		img.src = ResourcesSystem.buffer_canvas.toDataURL();
+
+		return img
 	}
 
 	static loadTexture(name, src, relative=true, func = null)
