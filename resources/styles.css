@@ -47,3 +47,36 @@
   border: 2px solid black;
   margin:  9%;
 }
+
+.turn_menu p
+{
+  font-weight: bold;
+  color:  white;
+  font-size: 18pt;
+}
+
+.turn_menu
+{
+  width: 300px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px;
+}
+
+.menu_buttons
+{
+  width: 300px;
+}
+
+.menu_buttons :first-child
+{
+  transform: rotateY(180deg);
+}
+
+.menu_buttons img
+{
+  display: inline-block;
+  filter: invert(100%);
+}

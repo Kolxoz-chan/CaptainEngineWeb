@@ -5,11 +5,12 @@ class TurtleBattle
   static init()
   {
     TurtleBattle.cards_deck = [AheadCard, TurnCard, UTurnCard, JumpCard, ResetCard, DoublingCard]
+    TurtleBattle.addCards(5)
   }
 
-  static getCards(count)
+  static addCards(count)
   {
-    let arr = []
+    let cards_deck = GUISystem.getWidget("cards_deck")
     for(let i=0; i<count; i++)
     {
       let card = MathSystem.random_choice(TurtleBattle.cards_deck);
@@ -17,14 +18,13 @@ class TurtleBattle
       if(src) src = src.src
 
       // Widget
-      let card_frame = new Frame()
+      let card_frame = cards_deck.addWidget(new Frame())
       card_frame.setClass("card")
       card_frame.widget.onclick = function()
       {
         card_frame.destroy()
         card.action()
       }
-      arr.push(card_frame)
 
       let frame = card_frame.addWidget(new Frame())
       frame.setClass("card_frame")
@@ -33,7 +33,5 @@ class TurtleBattle
       frame.addWidget(new Label(card.name))
       frame.addWidget(new Picture(src)).setPosition("50%", "50%")
     }
-
-    return arr
   }
 }

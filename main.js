@@ -34,27 +34,28 @@ Game.section(() =>
 // Loading resources
 Game.section(() =>
 {
-    JSONLoader.loadEntities("resources/configs/entities.json")
-    ResourcesSystem.loadPrefabs("resources/configs/prefabs.json")
-    GUISystem.loadGUI("resources/configs/gui.json")
-    ResourcesSystem.loadStyle("resources/styles.css")
-    Game.include("resources/scripts/playing_cards.js")
-    Game.include("resources/scripts/turtle_battle.js")
     ResourcesSystem.loadTexture("test", "resources/textures/test.png")
     ResourcesSystem.loadTileset("cards", "resources/textures/cards.png", 100, 100)
+
+    JSONLoader.loadEntities("resources/configs/entities.json")
+
+    ResourcesSystem.loadPrefabs("resources/configs/prefabs.json")
+    ResourcesSystem.loadStyle("resources/styles.css")
+
+    Game.include("resources/scripts/playing_cards.js")
+    Game.include("resources/scripts/turtle_battle.js")
 })
 
 // Start engine
 Game.section(() =>
 {
+    GUISystem.loadGUI("resources/configs/gui.json")
+})
 
+// Start engine
+Game.section(() =>
+{
     TurtleBattle.init()
-    let cards_deck = GUISystem.getWidget("cards_deck")
-    let cards = TurtleBattle.getCards(5)
-    for(let i in cards)
-    {
-      cards_deck.addWidget(cards[i])
-    }
 
     Game.start();
 })

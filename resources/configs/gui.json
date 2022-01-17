@@ -5,5 +5,37 @@
     "position" : {"x" : "50%", "y" : "100%"},
     "style" : "display: flex;",
     "class" : "cards_deck"
+  },
+
+  "turn_menu" : 
+  {
+    "type" : "Frame",
+    "position" : {"x" : "50%", "y" : "50%"},
+    "class" : "turn_menu",
+    "widgets" :
+    [
+      {
+        "type" : "Label",
+        "text" : "ПОВОРОТ",
+        "position" : {"x" : "50%", "y" : "0px"}
+      },
+
+      {
+        "type" : "Frame",
+        "class" : "menu_buttons",
+        "widgets" : 
+        [
+          {
+            "type" : "Picture",
+            "image" : "cards_1x0"
+          },
+
+          {
+            "type" : "Picture",
+            "image" : "cards_1x0"
+          }
+        ]
+      }
+    ]
   }
 }

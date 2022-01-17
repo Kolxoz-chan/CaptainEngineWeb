@@ -56,6 +56,7 @@ class GUISystem
 			if(data.size) widget.setSize(data.size.w, data.size.h)
 			if(data.class) widget.setClass(data.class)
 			if(data.id) widget.setId(data.id)
+			if(data.image) widget.setImage(data.image)
 			if(data.visible != undefined) widget.setVisible(data.visible)
 
 			// Adding events
@@ -169,19 +170,15 @@ class Widget
 		if(this.widget.parentNode) this.widget.parentNode.removeChild(this.widget)
 
 		let index = this.parent.childs.indexOf(this)
-		alert(index)
 		this.parent.childs.splice(index, 1)
 	}
 
 	clearChilds()
 	{
-		//alert(this.childs)
-		for(let i in this.childs)
+		while(this.childs.length > 0)
 		{
-			this.childs[i].destroy()
+			this.childs[0].destroy()
 		}
-
-		this.childs = []
 	}
 
 	addEvent(type, func)
@@ -251,6 +248,14 @@ class Picture extends Widget
 	constructor(src = "", style = "")
 	{
 		super("img", style)
-		this.widget.src = src
+		if(src) this.setImage(src)
+	}
+
+	setImage(name)
+	{
+		let img = ResourcesSystem.textures[name]
+		if(!img) return 
+
+		this.widget.src = img.src
 	}
 }

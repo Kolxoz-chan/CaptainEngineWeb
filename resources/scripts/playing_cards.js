@@ -9,7 +9,7 @@ class AheadCard
 		let player = EntitiesSystem.getNamedEntity("player")
 		let transform = player.getComponent("TransformComponent")
 		let grid = player.getComponent("GridItemComponent")
-		let angle = transform.getAngle() % 360;
+		let angle = Math.abs(transform.getAngle()) % 360;
 
 		if(angle == 0)
 		{
@@ -77,6 +77,7 @@ class ResetCard
 	static action()
 	{
 		GUISystem.getWidget("cards_deck").clearChilds()
+		TurtleBattle.addCards(5)
 	}
 }
 
