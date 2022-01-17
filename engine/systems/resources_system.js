@@ -282,3 +282,12 @@ actions.ScriptAction = (obj, data) =>
 		ResourcesSystem.callScript(name)
 	}
 }
+
+actions.TransformAction = (obj, data) =>
+{
+	let transform = obj.getComponent("TransformComponent")
+
+	if(data.position) obj.move(data.position);
+	if(data.size) obj.grow(data.size);
+	if(data.angle) obj.rotate(data.angle);
+}

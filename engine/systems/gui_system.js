@@ -96,7 +96,7 @@ class Widget
 	constructor(type, style = "")
 	{
 		this.widget = document.createElement(type);
-		this.widget.style.cssText += "user-select: none; display: block;" + style
+		this.widget.style.cssText += style
 	}
 
 	setPosition(x, y)

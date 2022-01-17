@@ -38,7 +38,7 @@ class TurnCard
 
 	static action()
 	{
-
+		GUISystem.getWidget("turn_menu").show()
 	}
 }
 

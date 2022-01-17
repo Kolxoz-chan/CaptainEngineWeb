@@ -10,14 +10,14 @@
   "turn_menu" : 
   {
     "type" : "Frame",
+    "visible" : false,
     "position" : {"x" : "50%", "y" : "50%"},
     "class" : "turn_menu",
     "widgets" :
     [
       {
         "type" : "Label",
-        "text" : "ПОВОРОТ",
-        "position" : {"x" : "50%", "y" : "0px"}
+        "text" : "ПОВОРОТ"
       },
 
       {

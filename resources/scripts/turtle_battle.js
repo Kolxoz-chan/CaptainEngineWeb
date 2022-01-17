@@ -14,8 +14,6 @@ class TurtleBattle
     for(let i=0; i<count; i++)
     {
       let card = MathSystem.random_choice(TurtleBattle.cards_deck);
-      let src = ResourcesSystem.textures[card.icon]
-      if(src) src = src.src
 
       // Widget
       let card_frame = cards_deck.addWidget(new Frame())
@@ -31,7 +29,7 @@ class TurtleBattle
       frame.setSize("80%", "85%")
       
       frame.addWidget(new Label(card.name))
-      frame.addWidget(new Picture(src)).setPosition("50%", "50%")
+      frame.addWidget(new Picture(card.icon)).setPosition("50%", "50%")
     }
   }
 }

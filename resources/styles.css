@@ -42,6 +42,17 @@
   font-weight: bold;
 }
 
+.card 
+{
+  font-weight: bold;
+}
+
+.card img
+{
+  width: 100px;
+  height: 100px;
+}
+
 .card_frame
 {
   border: 2px solid black;
@@ -63,11 +74,13 @@
   border: 2px solid white;
   border-radius: 10px;
   box-shadow: 0 0 10px;
+  text-align: center;
 }
 
 .menu_buttons
 {
   width: 300px;
+  text-align: center;
 }
 
 .menu_buttons :first-child
@@ -79,4 +92,8 @@
 {
   display: inline-block;
   filter: invert(100%);
+  margin: 10px;
+  border: 2px solid black;
+  border-radius: 10px;
+
 }
