@@ -14,6 +14,11 @@
   "bonus_01" :
   {
     "CircleShapeComponent" : {"fill_color" : new Color(255, 0, 255), "line_width" : 3}
+  },
+  "action_button" :
+  {
+    "RectShapeComponent" : {"fill_color" : new Color(255, 0, 0), "line_width" : 3}
   }
+
 
 }

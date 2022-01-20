@@ -3,11 +3,8 @@ class ResourcesSystem
 {
 	static animations = {}
 	static textures = {}
-	static bitmaps = {}
 	static prefabs = {}
 	static sounds = {}
-	static scripts = {}
-	static actions = {}
 
 	static buffer = null
 	static buffer_canvas = null
@@ -79,7 +76,7 @@ class ResourcesSystem
 				reject(new Error(err))
 			}
 		}))
-	} 
+	}
 
 	static loadPrefabs(src)
 	{
@@ -197,11 +194,6 @@ class ResourcesSystem
 		return ResourcesSystem.prefabs[name];
 	}
 
-	static getScript(name)
-	{
-		return ResourcesSystem.scripts[name]
-	}
-
 	static getAnimation(name)
 	{
 		return ResourcesSystem.animations[name]
@@ -212,82 +204,4 @@ class ResourcesSystem
 		let prefab = ResourcesSystem.getPrefab(name)
 		return prefab.getEntity(props)
 	}
-
-	static callScript(name)
-	{
-		ResourcesSystem.scripts[name]()
-	}
-}
-
-// Actions loading
-let actions = ResourcesSystem.actions
-actions.ResetAction = (obj, data) =>
-{
-	obj.reset();
-}
-
-actions.DestroyAction = (obj, data) =>
-{
-	obj.parent.deleteChild(this.owner)
-}
-
-actions.DisableAction = (obj, data) =>
-{
-	obj.setEnabled(false)
-}
-
-actions.GUIShowAction = (obj, data) =>
-{
-	for(let name in data)
-	{
-		let widget = GUISystem.getWidget(name)
-		if(widget)
-		{
-			widget.setVisible(data[name])
-		}
-	}
-}
-
-actions.DissolveAction = (obj, data) =>
-{
-	//this.joined["DrawableComponent"].setOpacity(data.time / data.max_time)
-}
-
-actions.SpawnAction = (obj, data) =>
-{
-	if(data.prefab)
-	{
-		let prefab = ResourcesSystem.getPrefab(data.prefab)
-		let settings = data.settings ? data.settings : {}
-		let layer = data.layer ? data.layer : this.owner.parent
-		let position = this.joined["TransformComponent"].getPosition()
-
-		if(data.offset)
-		{
-			position = position.addVec(data.offset)
-		}
-
-		layer.addChild(prefab.getEntity(
-		{
-			...settings,
-			"TransformComponent" : {"position" : position},
-		}))
-	}
-}
-
-actions.ScriptAction = (obj, data) =>
-{
-	for(let name in data)
-	{
-		ResourcesSystem.callScript(name)
-	}
-}
-
-actions.TransformAction = (obj, data) =>
-{
-	let transform = obj.getComponent("TransformComponent")
-
-	if(data.position) obj.move(data.position);
-	if(data.size) obj.grow(data.size);
-	if(data.angle) obj.rotate(data.angle);
 }

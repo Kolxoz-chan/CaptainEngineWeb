@@ -78,7 +78,7 @@ class RandomTimersTriggerComponent extends TimersTriggerComponent
 	{
 		let timers = this.getProperty("timers")
 		let timer = timers[i]
-		
+
 		timer.time = Math.random() * (timer.time_max - timer.time_min) + timer.time_min;
 		timer.value = 0;
 	}
@@ -89,7 +89,7 @@ class KeyboardTriggerComponent extends TriggerComponent
 {
 	init(props)
 	{
-		props.actions = []	// {"key" : "KeyA", "type" : "click", "components" : [SomeActionComponent]}
+		props.actions = []	// {"key" : "KeyA", "type" : "clicked", "components" : [SomeActionComponent]}
 		super.init(props)
 	}
 
@@ -114,6 +114,8 @@ class KeyboardTriggerComponent extends TriggerComponent
 		}
 	}
 }
+
+
 
 /* Timer component*/
 class ColideTriggerComponent extends TriggerComponent

@@ -92,6 +92,7 @@ class Widget
 	widget = null;
 	parent = null;
 	childs = [];
+	events = {};
 
 	constructor(type, style = "")
 	{
@@ -181,12 +182,24 @@ class Widget
 		}
 	}
 
-	addEvent(type, func)
+	addEvent(type, event)
 	{
-		this.widget[type] = function()
+		if(!this.events[type])
 		{
-			ResourcesSystem.callScript(func)
+			this.events[type] = []
+
+			this.widget[type] = () =>
+			{
+				let actions = this.events[type]
+				for(let i in actions)
+				{
+					let action = actions[i]
+					let name = Object.keys(action)[0]
+					ActionsSystem.callAction(name, action[name])
+				}
+			}
 		}
+		this.events[type] = Object.assign(this.events[type], event)
 	}
 
 	addWidget(obj)
@@ -254,7 +267,7 @@ class Picture extends Widget
 	setImage(name)
 	{
 		let img = ResourcesSystem.textures[name]
-		if(!img) return 
+		if(!img) return
 
 		this.widget.src = img.src
 	}

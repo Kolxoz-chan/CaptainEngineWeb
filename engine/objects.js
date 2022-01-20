@@ -381,7 +381,7 @@ class Line
 	getIntersectsPoint(l2)
 	{
 		let a1 = this.p2.y - this.p1.y;
-		let b1 = this.p1.x - this.p2.x;
+		let b1 = this.p1.x - thicanvass.p2.x;
 		let c1 = -this.p1.x * this.p2.y + this.p1.y * this.p2.x;
 
 		let a2 = l2.p2.y - l2.p1.y;

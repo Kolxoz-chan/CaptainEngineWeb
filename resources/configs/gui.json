@@ -7,7 +7,7 @@
     "class" : "cards_deck"
   },
 
-  "turn_menu" : 
+  "turn_menu" :
   {
     "type" : "Frame",
     "visible" : false,
@@ -23,11 +23,19 @@
       {
         "type" : "Frame",
         "class" : "menu_buttons",
-        "widgets" : 
+        "widgets" :
         [
           {
             "type" : "Picture",
-            "image" : "cards_1x0"
+            "image" : "cards_1x0",
+            "events" :
+            {
+              "onclick" :
+              [
+                {"TransformAction" : {"target" : "player", "rotate" : 90}},
+                {"GUIVisibleAction" : {"turn_menu" : false}}
+              ]
+            }
           },
 
           {

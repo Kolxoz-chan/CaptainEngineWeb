@@ -38,7 +38,9 @@ class TurnCard
 
 	static action()
 	{
-		GUISystem.getWidget("turn_menu").show()
+		let player = EntitiesSystem.getNamedEntity("player")
+		let grid = player.getComponent("GridItemComponent")
+		ActionsSystem.callAction("TransformAction", {"target" : "player", "rotate" : 90})
 	}
 }
 
@@ -64,7 +66,7 @@ class JumpCard
 
 	static action()
 	{
-
+		
 	}
 }
 
