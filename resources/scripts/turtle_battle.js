@@ -5,6 +5,12 @@ class TurtleBattle
   static init()
   {
     TurtleBattle.cards_deck = [AheadCard, TurnCard, UTurnCard, JumpCard, ResetCard, DoublingCard]
+    TurtleBattle.reset()
+  }
+
+  static reset()
+  {
+    GUISystem.getWidget("cards_deck").clearChilds()
     TurtleBattle.addCards(5)
   }
 

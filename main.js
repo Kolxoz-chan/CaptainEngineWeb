@@ -43,6 +43,7 @@ Game.section(() =>
 
     Game.include("resources/scripts/playing_cards.js")
     Game.include("resources/scripts/turtle_battle.js")
+    Game.include("resources/scripts/custom_actions.js")
 })
 
 // Start engine

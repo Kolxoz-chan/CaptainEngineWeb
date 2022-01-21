@@ -9,12 +9,24 @@ class ActionsSystem
 
 	static addAction(name, func)
 	{
+		if(ActionsSystem.actions[name])
+		{
+			alert("Warning. Redefining an action '" + name + "'")
+		}
 		ActionsSystem.actions[name] = func
 	}
 
 	static callAction(name, data = {})
 	{
-		ActionsSystem.actions[name](data)
+		if(ActionsSystem.actions[name])
+		{
+			ActionsSystem.actions[name](data)
+		}
+		else
+		{
+			alert("Error. There is no action '" + name + "'") 
+		}
+		
 	}
 }
 

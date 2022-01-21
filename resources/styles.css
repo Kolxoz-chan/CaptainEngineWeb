@@ -59,41 +59,19 @@
   margin:  9%;
 }
 
-.turn_menu p
+.action_menu
 {
-  font-weight: bold;
-  color:  white;
-  font-size: 18pt;
+  display: flex;
 }
 
-.turn_menu
+.action_menu button
 {
-  width: 300px;
-  padding: 10px;
-  background-color: rgba(0, 0, 0, 0.8);
-  border: 2px solid white;
-  border-radius: 10px;
-  box-shadow: 0 0 10px;
-  text-align: center;
-}
-
-.menu_buttons
-{
-  width: 300px;
-  text-align: center;
-}
-
-.menu_buttons :first-child
-{
-  transform: rotateY(180deg);
-}
-
-.menu_buttons img
-{
-  display: inline-block;
-  filter: invert(100%);
+  color: white;
   margin: 10px;
-  border: 2px solid black;
+  padding: 10px;
+  width: 200px;
+  font-size: 25pt;
+  border: 2px solid white;
+  background-color: black;
   border-radius: 10px;
-
 }

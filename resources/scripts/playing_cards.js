@@ -7,25 +7,28 @@ class AheadCard
 	static action()
 	{
 		let player = EntitiesSystem.getNamedEntity("player")
-		let transform = player.getComponent("TransformComponent")
-		let grid = player.getComponent("GridItemComponent")
-		let angle = Math.abs(transform.getAngle()) % 360;
+		if(player)
+		{
+			let transform = player.getComponent("TransformComponent")
+			let grid = player.getComponent("GridItemComponent")
+			let angle = Math.abs(transform.getAngle()) % 360;
 
-		if(angle == 0)
-		{
-			grid.move(new Vector2(0, -1))
-		}
-		else if(angle == 90)
-		{
-			grid.move(new Vector2(1, 0))
-		}
-		else if(angle == 180)
-		{
-			grid.move(new Vector2(0, 1))
-		}
-		else if(angle == 270)
-		{
-			grid.move(new Vector2(-1, 0))
+			if(angle == 0)
+			{
+				grid.move(new Vector2(0, -1))
+			}
+			else if(angle == 90)
+			{
+				grid.move(new Vector2(1, 0))
+			}
+			else if(angle == 180)
+			{
+				grid.move(new Vector2(0, 1))
+			}
+			else if(angle == 270)
+			{
+				grid.move(new Vector2(-1, 0))
+			}
 		}
 	}
 }
@@ -66,7 +69,30 @@ class JumpCard
 
 	static action()
 	{
-		
+		let player = EntitiesSystem.getNamedEntity("player")
+		if(player)
+		{
+			let transform = player.getComponent("TransformComponent")
+			let grid = player.getComponent("GridItemComponent")
+			let angle = Math.abs(transform.getAngle()) % 360;
+
+			if(angle == 0)
+			{
+				grid.move(new Vector2(0, -1))
+			}
+			else if(angle == 90)
+			{
+				grid.move(new Vector2(1, 0))
+			}
+			else if(angle == 180)
+			{
+				grid.move(new Vector2(0, 1))
+			}
+			else if(angle == 270)
+			{
+				grid.move(new Vector2(-1, 0))
+			}
+		}
 	}
 }
 
@@ -78,8 +104,7 @@ class ResetCard
 
 	static action()
 	{
-		GUISystem.getWidget("cards_deck").clearChilds()
-		TurtleBattle.addCards(5)
+		TurtleBattle.reset()
 	}
 }
 

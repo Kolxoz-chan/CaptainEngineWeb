@@ -7,43 +7,35 @@
     "class" : "cards_deck"
   },
 
-  "turn_menu" :
+  "action_menu" :
   {
     "type" : "Frame",
-    "visible" : false,
-    "position" : {"x" : "50%", "y" : "50%"},
-    "class" : "turn_menu",
+    "position" : {"x" : "50%", "y" : "5%"},
+    "class" : "action_menu",
     "widgets" :
     [
       {
-        "type" : "Label",
-        "text" : "ПОВОРОТ"
+        "type" : "Button",
+        "text" : "Пропуск"
       },
 
       {
-        "type" : "Frame",
-        "class" : "menu_buttons",
-        "widgets" :
-        [
-          {
-            "type" : "Picture",
-            "image" : "cards_1x0",
-            "events" :
-            {
-              "onclick" :
-              [
-                {"TransformAction" : {"target" : "player", "rotate" : 90}},
-                {"GUIVisibleAction" : {"turn_menu" : false}}
-              ]
-            }
-          },
+        "type" : "Button",
+        "text" : "Сброс",
+        "events" :
+        {
+          "onclick" :
+          [
+            {"ResetCardDeck" : {}}
+          ]
+        }
+      },
 
-          {
-            "type" : "Picture",
-            "image" : "cards_1x0"
-          }
-        ]
+      {
+        "type" : "Button",
+        "text" : "Сдаться"
       }
     ]
   }
+
 }
