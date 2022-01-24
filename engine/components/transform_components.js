@@ -148,6 +148,7 @@ class GridLayoutComponent extends ComponentBase
 		props.padding = 0
 		props.spacing = 0
 		props.item_size = new Vector2(64, 64)
+		props.map = {}
 
 		super.init(props)
 	}
@@ -156,6 +157,12 @@ class GridLayoutComponent extends ComponentBase
 	{
 		return this.getProperty("item_size")
 	}
+
+	setOnMap(pos, obj)
+	{
+		if(!props.map[pos.x]) props.map[pos.x] = {}
+		props.map[pos.x][pos.y] = obj
+	}
 }
 
 class GridItemComponent extends ComponentBase
@@ -163,8 +170,10 @@ class GridItemComponent extends ComponentBase
 	init(props)
 	{
 		props.position = new Vector2(0, 0)
-
 		super.init(props)
+		let grid = this.owner.detComponent("GridLayoutComponent")
+		grid.setOnMap(props.position, this)
+
 	}
 
 	getPosition()
