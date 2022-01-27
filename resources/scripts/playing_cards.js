@@ -12,23 +12,14 @@ class AheadCard
 			let transform = player.getComponent("TransformComponent")
 			let grid = player.getComponent("GridItemComponent")
 			let angle = Math.abs(transform.getAngle()) % 360;
+			let vec = new Vector2(0, 0)
 
-			if(angle == 0)
-			{
-				grid.move(new Vector2(0, -1))
-			}
-			else if(angle == 90)
-			{
-				grid.move(new Vector2(1, 0))
-			}
-			else if(angle == 180)
-			{
-				grid.move(new Vector2(0, 1))
-			}
-			else if(angle == 270)
-			{
-				grid.move(new Vector2(-1, 0))
-			}
+			if(angle == 0) vec = new Vector2(0, -1)
+			else if(angle == 90) vec = new Vector2(1, 0)
+			else if(angle == 180) vec = new Vector2(0, 1)
+			else if(angle == 270) vec = new Vector2(-1, 0)
+
+			grid.move(vec)
 		}
 	}
 }
@@ -70,28 +61,23 @@ class JumpCard
 	static action()
 	{
 		let player = EntitiesSystem.getNamedEntity("player")
+		let map = EntitiesSystem.getNamedEntity("map")
 		if(player)
 		{
 			let transform = player.getComponent("TransformComponent")
 			let grid = player.getComponent("GridItemComponent")
 			let angle = Math.abs(transform.getAngle()) % 360;
+			let vec = new Vector2(0,0);
+			map = map.getComponent("GridLayoutComponent")
 
-			if(angle == 0)
-			{
-				grid.move(new Vector2(0, -1))
-			}
-			else if(angle == 90)
-			{
-				grid.move(new Vector2(1, 0))
-			}
-			else if(angle == 180)
-			{
-				grid.move(new Vector2(0, 1))
-			}
-			else if(angle == 270)
-			{
-				grid.move(new Vector2(-1, 0))
-			}
+			if(angle == 0) vec = new Vector2(0, -1)
+			else if(angle == 90) vec = new Vector2(1, 0)
+			else if(angle == 180) vec = new Vector2(0, 1)
+			else if(angle == 270) vec = new Vector2(-1, 0)
+
+			//map.getMapItem()
+
+			grid.move(vec)
 		}
 	}
 }

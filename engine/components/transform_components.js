@@ -153,6 +153,21 @@ class GridLayoutComponent extends ComponentBase
 		super.init(props)
 	}
 
+	getMap()
+	{
+		return this.getProperty("map")
+	}
+
+	getMapItem(vec)
+	{
+		let map = this.getMap()
+		if(map[vec.x])
+		{
+			return map[vec.x][vec.y]
+		}
+		return null
+	}
+
 	getItemSize()
 	{
 		return this.getProperty("item_size")
@@ -160,8 +175,9 @@ class GridLayoutComponent extends ComponentBase
 
 	setOnMap(pos, obj)
 	{
-		if(!props.map[pos.x]) props.map[pos.x] = {}
-		props.map[pos.x][pos.y] = obj
+		let map = this.getMap()
+		if(!map[pos.x]) map[pos.x] = {}
+		map[pos.x][pos.y] = obj
 	}
 }
 
@@ -171,19 +187,21 @@ class GridItemComponent extends ComponentBase
 	{
 		props.position = new Vector2(0, 0)
 		super.init(props)
-		let grid = this.owner.detComponent("GridLayoutComponent")
-		grid.setOnMap(props.position, this)
-
+		let grid = this.owner.parent.getComponent("GridLayoutComponent")
 	}
 
 	getPosition()
 	{
+
 		return this.getProperty("position")
 	}
 
 	setPosition(vec)
 	{
+		let grid = this.owner.parent.getComponent("GridLayoutComponent")
+		grid.setOnMap(this.getPosition(), null)
 		this.setProperty("position", vec)
+		grid.setOnMap(vec, this.owner)
 	}
 
 	move(vec)
@@ -200,6 +218,7 @@ class GridItemComponent extends ComponentBase
 		let pos = this.getPosition()
 		let size = grid.getItemSize()
 
+		grid.setOnMap(pos, this.owner)
 		transform.setPosition(pos.mulVec(size))
 		transform.setSize(size)
 	}
