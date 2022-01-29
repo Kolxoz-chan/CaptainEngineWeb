@@ -229,7 +229,7 @@ class Label extends Widget
 {
 	constructor(text = "", style = "")
 	{
-		super("p", style)
+		super("label", style)
 		this.widget.innerHTML = text
 	}
 

@@ -35,9 +35,11 @@ Game.section(() =>
 // Loading resources
 Game.section(() =>
 {
-    EntitiesSystem.loadEntities("resources/configs/entities.json")
+    ResourcesSystem.loadTexture("coin_01", "resources/textures/coin.png")
     ResourcesSystem.loadTexture("test", "resources/textures/test.png")
     ResourcesSystem.loadTileset("cards", "resources/textures/cards.png", 100, 100)
+
+    EntitiesSystem.loadEntities("resources/configs/entities.json")
     ResourcesSystem.loadPrefabs("resources/configs/prefabs.json")
     ResourcesSystem.loadStyle("resources/styles.css")
 

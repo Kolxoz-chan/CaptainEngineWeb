@@ -29,6 +29,7 @@ Object.copy = function(obj, target = null)
 class Entity
 {
 	name = ""
+	type = ""
 
 	enabled = true;
 	parent = null;
@@ -718,6 +719,7 @@ class Prefab
 		}
 
 		let obj = new Entity()
+		obj.type = this.name
 		for(let i in comps)
 		{
 			obj.addComponent(i, comps[i])

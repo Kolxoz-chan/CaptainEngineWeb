@@ -42,7 +42,7 @@
   font-weight: bold;
 }
 
-.card 
+.card
 {
   font-weight: bold;
 }
@@ -59,12 +59,7 @@
   margin:  9%;
 }
 
-.action_menu
-{
-  display: flex;
-}
-
-.action_menu button
+.action_button
 {
   color: white;
   margin: 10px;
@@ -74,4 +69,23 @@
   border: 2px solid white;
   background-color: black;
   border-radius: 10px;
+  box-shadow: 0 0 10px black;
+}
+
+.hud_icon
+{
+  display: inline-block;
+  color: white; 
+  background-size: 100% 100%; 
+  font-weight: bold; 
+  margin-left: 20px;
+  margin-right: 20px;
+  text-shadow: 2px 0 2px #000, 0 2px 2px #000, -2px 0 2px #000, 0 -2px 2px #000;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.hud_icon label
+{
+  margin-top: 50%;
 }

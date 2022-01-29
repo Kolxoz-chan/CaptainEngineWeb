@@ -7,35 +7,88 @@
     "class" : "cards_deck"
   },
 
-  "action_menu" :
+  "skip_button" :
+  {
+    "type" : "Button",
+    "text" : "Пропуск",
+    "position" : {"x" : "1%", "y" : "95%"},
+    "class" : "action_button",
+    "events" :
+    {
+      "onclick" :
+      [
+        {"ResetCardDeck" : {}}
+      ]
+    }
+  },
+
+  "giveup_button" :
+  {
+    "type" : "Button",
+    "text" : "Сдаться",
+    "position" : {"x" : "98%", "y" : "95%"},
+    "class" : "action_button",
+    "events" :
+    {
+      "onclick" :
+      [
+        {"CloseGame" : {}}
+      ]
+    }
+  },
+
+  "hud_proerties" :
   {
     "type" : "Frame",
     "position" : {"x" : "50%", "y" : "5%"},
-    "class" : "action_menu",
     "widgets" :
     [
       {
-        "type" : "Button",
-        "text" : "Пропуск"
+        "type" : "Frame",
+        "size" : {"w" : "50px", "h" : "50px"},
+        "class" : "hud_icon",
+        "style" : "background-image: url(./resources/textures/coin.png);",
+        "widgets" :
+        [
+          {
+            "type" : "Label",
+            "text" : "100"
+            
+          }
+        ]
       },
 
       {
-        "type" : "Button",
-        "text" : "Сброс",
-        "events" :
-        {
-          "onclick" :
-          [
-            {"ResetCardDeck" : {}}
-          ]
-        }
+        "type" : "Frame",
+        "size" : {"w" : "72px", "h" : "72px"},
+        "class" : "hud_icon",
+        "style" : "background-image: url(./resources/textures/timer.png);",
+        "widgets" :
+        [
+          {
+            "type" : "Label",
+            "text" : "40",
+            "style" : "font-size: 30pt"
+          }
+        ]
       },
 
       {
-        "type" : "Button",
-        "text" : "Сдаться"
+        "type" : "Frame",
+        "size" : {"w" : "50px", "h" : "50px"},
+        "class" : "hud_icon",
+        "style" : "background-image: url(./resources/textures/coin.png);",
+        "widgets" :
+        [
+          {
+            "type" : "Label",
+            "text" : "100"
+            
+          }
+        ]
       }
     ]
   }
+
 
 }
