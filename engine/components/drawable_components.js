@@ -5,10 +5,19 @@ class DrawableComponent extends ComponentBase
 
 	init(props)
 	{
+		// Background
 		props.fill_color =  new Color(255, 255, 255)
+		props.opacity = 1.0
+
+		// Border
 		props.stroke_color = new Color(0, 0, 0)
 		props.line_width = 1.0
-		props.opacity = 1.0
+
+		// Shadow
+		props.shadow_color = new Color(0, 0, 0);
+		props.shadow_blur = 0;
+		props.shadow_offset = new Vector2(0, 0)
+
 
 		this.join("TransformComponent")
 

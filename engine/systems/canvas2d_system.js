@@ -14,12 +14,18 @@ class Canvas2DSystem
 		this.context = this.canvas.getContext("2d");
 		this.canvas.style.margin = "auto"
 		this.canvas.style.display = "block"
+		this.canvas.style.backgroundSize = "cover"
 
 		this.buffer_canvas = document.createElement("canvas");
 		this.buffer = this.buffer_canvas.getContext("2d");
 
 		this.block = Game.getWidget()
 		this.block.appendChild(this.canvas);
+	}
+
+	static setBackground(value)
+	{
+		this.canvas.style.background = value
 	}
 
   static getMaxSize()
@@ -73,6 +79,12 @@ class Canvas2DSystem
 		this.buffer.fillStyle = styles.fill_color;
 		this.buffer.strokeStyle = styles.stroke_color;
 		this.buffer.lineWidth = styles.line_width;
+
+		// Shadow
+		this.buffer.shadowBlur = styles.shadow_blur
+		this.buffer.shadowColor = styles.shadow_color
+		this.buffer.shadowOffsetX = styles.shadow_offset.x
+		this.buffer.shadowOffsetY = styles.shadow_offset.y
 	}
 
 	static applyTransform(position, size, angle)

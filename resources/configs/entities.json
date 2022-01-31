@@ -4,6 +4,8 @@
 
 		"components" :
 		{
+			"TransformComponent" : {"size" : new Vector2(1024, 1024)},
+			"RectShapeComponent" : {"stroke_color" : "black", "line_width" : 10, "shadow_blur" : 10},
 			"GridLayoutComponent" : {},
 			"MapGeneratorComponent" :
 			{
@@ -18,6 +20,7 @@
 
 		"components" :
 		{
+			"TransformComponent" : {},
 			"GridLayoutComponent" : {},
 			"MapGeneratorComponent" :
 			{
@@ -45,9 +48,9 @@
 				"name" : "player",
 				"components" :
 				{
-					"ImageComponent" : {"image" : "test"},
+					"ImageComponent" : {"image" : "turtle_01","shadow_blur" : 2, "shadow_offset" : new Vector2(-2, 2)},
 					"TransformComponent" : {"angle" : 180},
-					"GridItemComponent" : {"position" : new Vector2(0, 0)},
+					"GridItemComponent" : {"position" : new Vector2(0, 0), "padding" : new Vector2(10, 10)},
 					"CameraOperatorComponent" : {}
 				}
 			}
@@ -56,9 +59,22 @@
 
 	{
 		"name" : "controls",
+
+		"components" :
+		{
+			"GridLayoutComponent" : {}
+		},
+
 		"entities" :
 		[
-			
+			{
+				"components" :
+				{
+					"TransformComponent" : {},
+					"ImageComponent" : {"image" : "arrows_2x1"},
+					"GridItemComponent" : {"position" : new Vector2(1, 0), "padding" : new Vector2(10, 10)}
+				}
+			}
 		]
 	}
 ]

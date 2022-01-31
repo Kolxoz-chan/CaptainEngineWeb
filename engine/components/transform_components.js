@@ -145,8 +145,8 @@ class GridLayoutComponent extends ComponentBase
 {
 	init(props)
 	{
-		props.padding = 0
-		props.spacing = 0
+		props.offset = new Vector2(0, 0)
+		props.spacing = new Vector2(0, 0)
 		props.item_size = new Vector2(64, 64)
 		props.map = {}
 
@@ -156,6 +156,16 @@ class GridLayoutComponent extends ComponentBase
 	getMap()
 	{
 		return this.getProperty("map")
+	}
+
+	getOffset()
+	{
+		return this.getProperty("offset")
+	}
+
+	getSpacing()
+	{
+		return this.getProperty("spacing")
 	}
 
 	getMapItem(vec)
@@ -185,23 +195,35 @@ class GridItemComponent extends ComponentBase
 {
 	init(props)
 	{
+		props.padding = new Vector2(0, 0)
 		props.position = new Vector2(0, 0)
 		super.init(props)
-		let grid = this.owner.parent.getComponent("GridLayoutComponent")
 	}
 
 	getPosition()
 	{
-
 		return this.getProperty("position")
+	}
+
+	getPadding()
+	{
+		return this.getProperty("padding")
 	}
 
 	setPosition(vec)
 	{
-		let grid = this.owner.parent.getComponent("GridLayoutComponent")
-		grid.setOnMap(this.getPosition(), null)
-		this.setProperty("position", vec)
-		grid.setOnMap(vec, this.owner)
+		if(!this.owner.parent) 
+		{
+			this.setProperty("position", vec)
+		}
+		else
+		{
+			
+			let grid = this.owner.parent.getComponent("GridLayoutComponent")
+			grid.setOnMap(this.getPosition(), null)
+			this.setProperty("position", vec)
+			grid.setOnMap(vec, this.owner)
+		}
 	}
 
 	move(vec)
@@ -217,10 +239,12 @@ class GridItemComponent extends ComponentBase
 
 		let pos = this.getPosition()
 		let size = grid.getItemSize()
+		let padding = this.getPadding()
+		let offset = grid.getOffset()
 
 		grid.setOnMap(pos, this.owner)
-		transform.setPosition(pos.mulVec(size))
-		transform.setSize(size)
+		transform.setPosition(pos.mulVec(size).add(padding).add(offset))
+		transform.setSize(size.add(padding.invert().mul(2)))
 	}
 }
 
@@ -397,7 +421,6 @@ class PursuerComponent extends ComponentBase
 
 	update()
 	{
-
 		let obj = this.getTarget()
 
 		if(obj)
@@ -501,12 +524,21 @@ class MapGeneratorComponent extends ComponentBase
 
 			if(result)
 			{
-				return ResourcesSystem.createEntity(name,
+				let ent = ResourcesSystem.createEntity(name,
 				{
-					"GridItemComponent" : {"position" : vec},
 					"TransformComponent" : {}
-
 				})
+
+				if(ent.hasComponent("GridItemComponent"))
+				{
+					ent.getComponent("GridItemComponent").setDefaultProperty("position", vec)
+				}
+				else
+				{
+					ent.addComponent("GridItemComponent", {"position" : vec})
+				}
+
+				return ent;
 			}
 		}
 

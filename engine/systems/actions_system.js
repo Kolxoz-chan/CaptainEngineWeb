@@ -51,7 +51,8 @@ ActionsSystem.addAction("SpawnAction", (data) =>
 	{
 		let prefab = ResourcesSystem.getPrefab(data.prefab)
 		let settings = data.settings ? data.settings : {}
-		let layer = data.layer ? data.layer : this.owner.parent
+		let layer = EntitiesSystem.getNamedEntity(data.layer)
+		if(!layer) layer = this.owner.parent
 		let position = this.joined["TransformComponent"].getPosition()
 
 		if(data.offset)

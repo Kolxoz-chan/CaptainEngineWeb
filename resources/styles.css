@@ -37,8 +37,10 @@
   transform: translateY(0%);
 }
 
-.card p
+.card label
 {
+  display: block;
+  margin-top: 10px;
   font-weight: bold;
 }
 
@@ -67,25 +69,25 @@
   width: 200px;
   font-size: 25pt;
   border: 2px solid white;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   box-shadow: 0 0 10px black;
 }
 
-.hud_icon
+.hud_proerties label
 {
-  display: inline-block;
-  color: white; 
-  background-size: 100% 100%; 
-  font-weight: bold; 
-  margin-left: 20px;
-  margin-right: 20px;
+  font-size: 25px;
+  margin: auto;
+  color: white;
   text-shadow: 2px 0 2px #000, 0 2px 2px #000, -2px 0 2px #000, 0 -2px 2px #000;
-  text-align: center;
-  vertical-align: middle;
+  font-weight: bold;
 }
 
-.hud_icon label
+.hud_icon
 {
-  margin-top: 50%;
+  display: inline-flex;
+  background-size: 100% 100%;
+  margin-left: 20px;
+  margin-right: 20px;
+  text-align: center;
 }

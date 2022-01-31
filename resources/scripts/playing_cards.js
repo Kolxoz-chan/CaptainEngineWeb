@@ -43,6 +43,8 @@ class TurnCard
 		let player = EntitiesSystem.getNamedEntity("player")
 		let grid = player.getComponent("GridItemComponent")
 		ActionsSystem.callAction("TransformAction", {"target" : "player", "rotate" : 90})
+		//ActionsSystem.callAction("SpawnAction")
+
 	}
 }
 

@@ -19,6 +19,7 @@ Game.section(() =>
     Game.addSystem("canvas2d_system.js", "Canvas2DSystem", (system) =>
     {
         system.setSize(new Vector2(1280, 720))
+        system.setBackground("url(resources/textures/bg_3.jpg)")
     })
 
     // Loading componeents
@@ -35,9 +36,13 @@ Game.section(() =>
 // Loading resources
 Game.section(() =>
 {
+    ResourcesSystem.loadTexture("floor_01", "resources/textures/floor_01.png")
+    ResourcesSystem.loadTexture("turtle_01", "resources/textures/turtle.png")
+    ResourcesSystem.loadTexture("stone_01", "resources/textures/stone.png")
+    ResourcesSystem.loadTexture("gift_01", "resources/textures/gift.png")
     ResourcesSystem.loadTexture("coin_01", "resources/textures/coin.png")
-    ResourcesSystem.loadTexture("test", "resources/textures/test.png")
     ResourcesSystem.loadTileset("cards", "resources/textures/cards.png", 100, 100)
+    ResourcesSystem.loadTileset("arrows", "resources/textures/arrows.png", 64, 64)
 
     EntitiesSystem.loadEntities("resources/configs/entities.json")
     ResourcesSystem.loadPrefabs("resources/configs/prefabs.json")

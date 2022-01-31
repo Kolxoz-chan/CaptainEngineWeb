@@ -58,6 +58,11 @@ class ComponentBase
 		}
 	}
 
+	setDefaultProperty(name, value)
+	{
+		this.default_properties[name] = value
+	}
+
 	getProperty(name)
 	{
 		if(this.properties[name] != undefined)
