@@ -36,13 +36,13 @@ Game.section(() =>
 // Loading resources
 Game.section(() =>
 {
+    ResourcesSystem.loadTexture("arrow", "resources/textures/arrow.png")
     ResourcesSystem.loadTexture("floor_01", "resources/textures/floor_01.png")
     ResourcesSystem.loadTexture("turtle_01", "resources/textures/turtle.png")
     ResourcesSystem.loadTexture("stone_01", "resources/textures/stone.png")
     ResourcesSystem.loadTexture("gift_01", "resources/textures/gift.png")
     ResourcesSystem.loadTexture("coin_01", "resources/textures/coin.png")
     ResourcesSystem.loadTileset("cards", "resources/textures/cards.png", 100, 100)
-    ResourcesSystem.loadTileset("arrows", "resources/textures/arrows.png", 64, 64)
 
     EntitiesSystem.loadEntities("resources/configs/entities.json")
     ResourcesSystem.loadPrefabs("resources/configs/prefabs.json")

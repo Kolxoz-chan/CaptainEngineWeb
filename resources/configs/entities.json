@@ -49,7 +49,7 @@
 				"components" :
 				{
 					"ImageComponent" : {"image" : "turtle_01","shadow_blur" : 2, "shadow_offset" : new Vector2(-2, 2)},
-					"TransformComponent" : {"angle" : 180},
+					"TransformComponent" : {"angle" : 90},
 					"GridItemComponent" : {"position" : new Vector2(0, 0), "padding" : new Vector2(10, 10)},
 					"CameraOperatorComponent" : {}
 				}
@@ -67,14 +67,7 @@
 
 		"entities" :
 		[
-			{
-				"components" :
-				{
-					"TransformComponent" : {},
-					"ImageComponent" : {"image" : "arrows_2x1"},
-					"GridItemComponent" : {"position" : new Vector2(1, 0), "padding" : new Vector2(10, 10)}
-				}
-			}
+			
 		]
 	}
 ]

@@ -17,10 +17,13 @@
     "ImageComponent" : {"image" : "gift_01", "shadow_blur" : 2, "shadow_offset" : new Vector2(-2, 2)},
     "GridItemComponent" : {"padding" : new Vector2(10, 10)}
   },
-  "action_button" :
+  "rotate_button" :
   {
-    "RectShapeComponent" : {"fill_color" : new Color(255, 0, 0), "line_width" : 3}
+    "TransformComponent" : {},
+    "ImageComponent" : {"image" : "arrow"},
+    "GridItemComponent" : {"padding" : new Vector2(10, 10)}
   }
+
 
 
 }

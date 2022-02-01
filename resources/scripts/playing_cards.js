@@ -42,8 +42,38 @@ class TurnCard
 	{
 		let player = EntitiesSystem.getNamedEntity("player")
 		let grid = player.getComponent("GridItemComponent")
-		ActionsSystem.callAction("TransformAction", {"target" : "player", "rotate" : 90})
-		//ActionsSystem.callAction("SpawnAction")
+		let transform = player.getComponent("TransformComponent")
+		let position = grid.getPosition()
+		let angle = transform.getAngle()
+		//ActionsSystem.callAction("TransformAction", {"target" : "player", "rotate" : 90})
+
+		if(angle % 180 == 0)
+		{
+			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" : 
+			{
+				"TransformComponent" : {"angle" : 90},
+				"GridItemComponent" : {"position" : position.add(new Vector2(1, 0)), "padding" : new Vector2(10, 10)}
+			}})
+			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" : 
+			{
+				"TransformComponent" : {"angle" : 270},
+				"GridItemComponent" : {"position" : position.add(new Vector2(-1, 0)), "padding" : new Vector2(10, 10)}
+			}})
+		}
+		else
+		{
+			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" : 
+			{
+				"TransformComponent" : {"angle" : 0},
+				"GridItemComponent" : {"position" : position.add(new Vector2(0, -1)), "padding" : new Vector2(10, 10)}
+			}})
+			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" : 
+			{
+				"TransformComponent" : {"angle" : 180},
+				"GridItemComponent" : {"position" : position.add(new Vector2(0, 1)), "padding" : new Vector2(10, 10)}
+			}})
+		}
+
 
 	}
 }

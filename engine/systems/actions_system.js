@@ -52,19 +52,17 @@ ActionsSystem.addAction("SpawnAction", (data) =>
 		let prefab = ResourcesSystem.getPrefab(data.prefab)
 		let settings = data.settings ? data.settings : {}
 		let layer = EntitiesSystem.getNamedEntity(data.layer)
-		if(!layer) layer = this.owner.parent
-		let position = this.joined["TransformComponent"].getPosition()
 
-		if(data.offset)
+		if(!layer) layer = data.self.owner.parent
+		if(data.self)
 		{
-			position = position.addVec(data.offset)
+			if(!settings["TransformComponent"]) settings["TransformComponent"] = {};
+			let transform = settings["TransformComponent"];
+			transform.position = data.self.joined["TransformComponent"].getPosition()
+			if(data.offset) transform.position = transform.position.addVec(data.offset)
 		}
 
-		layer.addChild(prefab.getEntity(
-		{
-			...settings,
-			"TransformComponent" : {"position" : position},
-		}))
+		layer.addChild(prefab.getEntity(settings))
 	}
 })
 ActionsSystem.addAction("TransformAction", (data) =>
