@@ -49,28 +49,57 @@ class TurnCard
 
 		if(angle % 180 == 0)
 		{
-			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" : 
+			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" :
 			{
 				"TransformComponent" : {"angle" : 90},
-				"GridItemComponent" : {"position" : position.add(new Vector2(1, 0)), "padding" : new Vector2(10, 10)}
+				"GridItemComponent" : {"position" : position.add(new Vector2(1, 0)), "padding" : new Vector2(10, 10)},
+				"RectColiderComponent" : {},
+				"MouseTriggerComponent" : {"actions" : [{"button" : 0, "type" : "clicked", "actions" :
+				{
+					"ResetAction" : {"obj" : "controls"},
+					"TransformAction" : {"target" : "player","angle" : 90}
+				}
+			}]}
 			}})
-			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" : 
+			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" :
 			{
 				"TransformComponent" : {"angle" : 270},
-				"GridItemComponent" : {"position" : position.add(new Vector2(-1, 0)), "padding" : new Vector2(10, 10)}
+				"GridItemComponent" : {"position" : position.add(new Vector2(-1, 0)), "padding" : new Vector2(10, 10)},
+				"RectColiderComponent" : {},
+				"MouseTriggerComponent" : {"actions" : [{"button" : 0, "type" : "clicked", "actions" :
+				{
+					"ResetAction" : {"obj" : "controls"},
+					"TransformAction" : {"target" : "player","angle" : 270}
+				}
+
+			}]}
 			}})
 		}
 		else
 		{
-			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" : 
+			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" :
 			{
 				"TransformComponent" : {"angle" : 0},
-				"GridItemComponent" : {"position" : position.add(new Vector2(0, -1)), "padding" : new Vector2(10, 10)}
+				"GridItemComponent" : {"position" : position.add(new Vector2(0, -1)), "padding" : new Vector2(10, 10)},
+				"RectColiderComponent" : {},
+				"MouseTriggerComponent" : {"actions" : [{"button" : 0, "type" : "clicked", "actions" :
+				{
+					"ResetAction" : {"obj" : "controls"},
+					"TransformAction" : {"target" : "player","angle" : 0}
+				}
+			}]}
 			}})
-			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" : 
+			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" :
 			{
 				"TransformComponent" : {"angle" : 180},
-				"GridItemComponent" : {"position" : position.add(new Vector2(0, 1)), "padding" : new Vector2(10, 10)}
+				"GridItemComponent" : {"position" : position.add(new Vector2(0, 1)), "padding" : new Vector2(10, 10)},
+				"RectColiderComponent" : {},
+				"MouseTriggerComponent" : {"actions" : [{"button" : 0, "type" : "clicked", "actions" :
+				{
+					"ResetAction" : {"obj" : "controls"},
+					"TransformAction" : {"target" : "player","angle" : 180}
+				}
+			}]}
 			}})
 		}
 

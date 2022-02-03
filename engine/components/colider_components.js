@@ -95,7 +95,7 @@ class RectColiderComponent extends ColiderComponent
 
 	getRect()
 	{
-		return this.joined["TransformComponent"].getRect().addRect(this.getOffset())
+		return this.joined["TransformComponent"].getRect()//.addRect(this.getOffset())
 	}
 
 	isContained(point)

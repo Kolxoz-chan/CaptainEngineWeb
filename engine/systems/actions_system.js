@@ -24,16 +24,20 @@ class ActionsSystem
 		}
 		else
 		{
-			alert("Error. There is no action '" + name + "'") 
+			alert("Error. There is no action '" + name + "'")
 		}
-		
+
 	}
 }
 
 // Actions loading
-ActionsSystem.addAction("ResetAction", (data) => { obj.reset(); })
 ActionsSystem.addAction("DestroyAction", (data) => { obj.parent.deleteChild(this.owner)})
 ActionsSystem.addAction("DisableAction", (data) => { obj.setEnabled(false) });
+ActionsSystem.addAction("ResetAction", (data) =>
+{
+	let obj = EntitiesSystem.getNamedEntity(data.obj)
+	obj.reset(); 
+})
 ActionsSystem.addAction("GUIVisibleAction", (data) =>
 {
 	for(let name in data)
@@ -72,11 +76,11 @@ ActionsSystem.addAction("TransformAction", (data) =>
 	{
 		let transform = obj.getComponent("TransformComponent")
 
-		if(data.position) transform.setPosition(data.position);
-		if(data.size) transform.setSize(data.size);
-		if(data.angle) transform.setAngle(data.angle);
-		if(data.move) transform.move(data.move);
-		if(data.scale) transform.scale(data.scale);
-		if(data.rotate) transform.rotate(data.rotate);
+		if(data.position != undefined) transform.setPosition(data.position);
+		if(data.size != undefined) transform.setSize(data.size);
+		if(data.angle != undefined) transform.setAngle(data.angle);
+		if(data.move != undefined) transform.move(data.move);
+		if(data.scale != undefined) transform.scale(data.scale);
+		if(data.rotate != undefined) transform.rotate(data.rotate);
 	}
 })

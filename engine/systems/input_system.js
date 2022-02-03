@@ -60,16 +60,16 @@ class InputSystem
 
 	static setEvents()
 	{
-		let arr =  Array.from(arguments)
-		for(var i in arr)
+		this.events = Array.from(arguments)
+		for(var i in this.events)
 		{
-			document.body.addEventListener(arr[i], this.handleEvent);
+			document.body.addEventListener(this.events[i], this.handleEvent);
 		}
 	}
 
 	static getGlobalMouse()
 	{
-		let point = Camera.getPosition()
+		let point = CameraSystem.getPosition()
 		return new Vector2(this.mouse_pos.x + point.x, this.mouse_pos.y + point.y);
 	}
 

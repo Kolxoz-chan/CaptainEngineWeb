@@ -4,8 +4,7 @@ class TriggerComponent extends ComponentBase
 	{
 		for(let name in arr)
 		{
-			let component = this.owner.getComponent(name)
-			component.action(arr[name])
+			ActionsSystem.callAction(name, arr[name])
 		}
 	}
 }
@@ -89,7 +88,7 @@ class KeyboardTriggerComponent extends TriggerComponent
 {
 	init(props)
 	{
-		props.actions = []	// {"key" : "KeyA", "type" : "clicked", "components" : [SomeActionComponent]}
+		props.actions = []	// {"key" : "KeyA", "type" : "clicked", "actions" : {"SomeActionComponent" : {}}}
 		super.init(props)
 	}
 
@@ -109,13 +108,49 @@ class KeyboardTriggerComponent extends TriggerComponent
 
 			if(value)
 			{
-				this.activate(action.components)
+				this.activate(action.actions)
 			}
 		}
 	}
 }
 
+/* Timer component*/
+class MouseTriggerComponent extends TriggerComponent
+{
+	init(props)
+	{
+		props.actions = []	// {"button" : 1, "type" : "clicked", "actions" : {"SomeActionComponent" : {}}}
+		super.init(props)
+	}
 
+	update()
+	{
+		let props = this.getProperty("actions")
+		for(let i in props)
+		{
+			let value = false
+			let action = props[i]
+			switch(action.type)
+			{
+				case "clicked":  value = InputSystem.isMouseClicked(action.button); break;
+				case "pressed":  value = InputSystem.isMousePressed(action.button); break;
+				case "released": value = InputSystem.isMouseReleased(action.button); break;
+			}
+			
+			if(value)
+			{
+				if(this.owner.hasComponent("ColiderComponent"))
+				{
+					let colider = this.owner.getComponent("ColiderComponent")
+					if(colider.isContained(InputSystem.getGlobalMouse()))
+					{
+						this.activate(action.actions)
+					}
+				}
+			}
+		}
+	}
+}
 
 /* Timer component*/
 class ColideTriggerComponent extends TriggerComponent

@@ -23,7 +23,4 @@
     "ImageComponent" : {"image" : "arrow"},
     "GridItemComponent" : {"padding" : new Vector2(10, 10)}
   }
-
-
-
 }
