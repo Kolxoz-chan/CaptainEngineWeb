@@ -2,8 +2,8 @@
   "cards_deck" :
   {
     "type" : "Frame",
+    "display" : "flex",
     "position" : {"x" : "50%", "y" : "100%"},
-    "style" : "display: flex;",
     "class" : "cards_deck"
   },
 
@@ -48,7 +48,7 @@
         "type" : "Frame",
         "class" : "action_button",
         "style" : "display: inline-block;",
-        "widgets" : 
+        "widgets" :
         [
           {
             "type" : "Label",
@@ -64,9 +64,9 @@
             "widgets" :
             [
               {
+                "id" : "money_label",
                 "type" : "Label",
-                "text" : "100"
-
+                "text" : "0"
               }
             ]
           }
@@ -92,7 +92,7 @@
         "type" : "Frame",
         "class" : "action_button",
         "style" : "display: inline-block;",
-        "widgets" : 
+        "widgets" :
         [
           {
             "type" : "Frame",
@@ -102,9 +102,9 @@
             "widgets" :
             [
               {
+                "id" : "steps_label",
                 "type" : "Label",
-                "text" : "4"
-
+                "text" : "0"
               }
             ]
           },

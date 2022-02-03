@@ -25,6 +25,11 @@ class AheadCard
 			if(obj)
 			{
 				if(obj.type == "wall_01") return
+				if(obj.type == "money_01")
+				{
+					TurtleBattle.money++
+	        GUISystem.getWidgetById("money_label").setText(TurtleBattle.money)
+				}
 				obj.delete()
 			}
 			grid.move(vec)
@@ -45,65 +50,51 @@ class TurnCard
 		let transform = player.getComponent("TransformComponent")
 		let position = grid.getPosition()
 		let angle = transform.getAngle()
-		//ActionsSystem.callAction("TransformAction", {"target" : "player", "rotate" : 90})
+
+		ActionsSystem.callAction("GUIVisibleAction", {"cards_deck" : false})
+
+		let pos_A = new Vector2(0, 1)
+		let pos_B = new Vector2(0, -1)
+		let rotation = 90
 
 		if(angle % 180 == 0)
 		{
-			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" :
-			{
-				"TransformComponent" : {"angle" : 90},
-				"GridItemComponent" : {"position" : position.add(new Vector2(1, 0)), "padding" : new Vector2(10, 10)},
-				"RectColiderComponent" : {},
-				"MouseTriggerComponent" : {"actions" : [{"button" : 0, "type" : "clicked", "actions" :
-				{
-					"ResetAction" : {"obj" : "controls"},
-					"TransformAction" : {"target" : "player","angle" : 90}
-				}
-			}]}
-			}})
-			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" :
-			{
-				"TransformComponent" : {"angle" : 270},
-				"GridItemComponent" : {"position" : position.add(new Vector2(-1, 0)), "padding" : new Vector2(10, 10)},
-				"RectColiderComponent" : {},
-				"MouseTriggerComponent" : {"actions" : [{"button" : 0, "type" : "clicked", "actions" :
-				{
-					"ResetAction" : {"obj" : "controls"},
-					"TransformAction" : {"target" : "player","angle" : 270}
-				}
-
-			}]}
-			}})
+			pos_A = new Vector2(1, 0)
+			pos_B = new Vector2(-1, 0)
 		}
-		else
+		if (angle >= 0 && angle < 180)
 		{
-			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" :
-			{
-				"TransformComponent" : {"angle" : 0},
-				"GridItemComponent" : {"position" : position.add(new Vector2(0, -1)), "padding" : new Vector2(10, 10)},
-				"RectColiderComponent" : {},
-				"MouseTriggerComponent" : {"actions" : [{"button" : 0, "type" : "clicked", "actions" :
-				{
-					"ResetAction" : {"obj" : "controls"},
-					"TransformAction" : {"target" : "player","angle" : 0}
-				}
-			}]}
-			}})
-			ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" :
-			{
-				"TransformComponent" : {"angle" : 180},
-				"GridItemComponent" : {"position" : position.add(new Vector2(0, 1)), "padding" : new Vector2(10, 10)},
-				"RectColiderComponent" : {},
-				"MouseTriggerComponent" : {"actions" : [{"button" : 0, "type" : "clicked", "actions" :
-				{
-					"ResetAction" : {"obj" : "controls"},
-					"TransformAction" : {"target" : "player","angle" : 180}
-				}
-			}]}
-			}})
+			pos_A = pos_A.invert()
+			pos_B = pos_B.invert()
 		}
 
+		ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" :
+		{
+			"TransformComponent" : {"angle" : angle - rotation},
+			"GridItemComponent" : {"position" : position.add(pos_A), "padding" : new Vector2(10, 10)},
+			"RectColiderComponent" : {},
+			"MouseTriggerComponent" : {"actions" : [{"button" : 0, "type" : "clicked", "actions" :
+			{
+				"ResetAction" : {"obj" : "controls"},
+				"TransformAction" : {"target" : "player","rotate" : -rotation},
+				"GUIVisibleAction" : {"cards_deck" : true}
+			}
+		}]}
+		}})
+		ActionsSystem.callAction("SpawnAction", {"prefab" : "rotate_button", "layer" : "controls", "settings" :
+		{
+			"TransformComponent" : {"angle" : angle + rotation},
+			"GridItemComponent" : {"position" : position.add(pos_B), "padding" : new Vector2(10, 10)},
+			"RectColiderComponent" : {},
+			"MouseTriggerComponent" : {"actions" : [{"button" : 0, "type" : "clicked", "actions" :
+			{
+				"ResetAction" : {"obj" : "controls"},
+				"TransformAction" : {"target" : "player","rotate" : rotation},
+				"GUIVisibleAction" : {"cards_deck" : true}
+			}
 
+		}]}
+		}})
 	}
 }
 
@@ -144,13 +135,14 @@ class JumpCard
 			else if(angle == 180) vec = new Vector2(0, 1)
 			else if(angle == 270) vec = new Vector2(-1, 0)
 
-			if(map.getMapItem(pos.add(vec))) vec = vec.mul(2)
+			let obj1 = map.getMapItem(pos.add(vec))
+			if(obj1) vec = vec.mul(2)
 
-			let obj = map.getMapItem(pos.add(vec))
-			if(obj)
+			let obj2 = map.getMapItem(pos.add(vec))
+			if(obj2)
 			{
-				if(obj.type == "wall_01") return
-				obj.delete()
+				if(obj2.type == "wall_01") return
+				obj2.delete()
 			}
 
 			grid.move(vec)

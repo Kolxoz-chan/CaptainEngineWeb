@@ -1,6 +1,8 @@
 class TurtleBattle
 {
   static cards_deck = []
+  static money = 0
+  static steps = 0
 
   static init()
   {
@@ -26,6 +28,8 @@ class TurtleBattle
       card_frame.setClass("card")
       card_frame.widget.onclick = function()
       {
+        TurtleBattle.steps++
+        GUISystem.getWidgetById("steps_label").setText(TurtleBattle.steps)
         card_frame.destroy()
         card.action()
       }
@@ -33,7 +37,7 @@ class TurtleBattle
       let frame = card_frame.addWidget(new Frame())
       frame.setClass("card_frame")
       frame.setSize("80%", "85%")
-      
+
       frame.addWidget(new Label(card.name))
       frame.addWidget(new Picture(card.icon)).setPosition("50%", "50%")
     }

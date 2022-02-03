@@ -50,6 +50,7 @@ class GUISystem
 			let widget = Game.parse("new " + data.type + "()")
 
 			// Settings
+			if(data.display) widget.setDisplay(data.display)
 			if(data.style) widget.setStyle(data.style)
 			if(data.text) widget.setText(data.text)
 			if(data.position) widget.setPosition(data.position.x, data.position.y)
@@ -93,6 +94,7 @@ class Widget
 	parent = null;
 	childs = [];
 	events = {};
+	display = "block"
 
 	constructor(type, style = "")
 	{
@@ -129,6 +131,12 @@ class Widget
 		GUISystem.widgets_by_id[id] = this
 	}
 
+	setDisplay(value)
+	{
+		this.display = value
+		if(this.widget.style.display != "none") this.widget.style.display = value
+	}
+
 	setClass(value)
 	{
 		this.widget.setAttribute("class", value)
@@ -158,7 +166,7 @@ class Widget
 
 	show()
 	{
-		this.widget.style.display = "block"
+		this.widget.style.display = this.display
 	}
 
 	hide()
