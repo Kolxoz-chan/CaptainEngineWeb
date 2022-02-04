@@ -20,8 +20,8 @@ class MathSystem
 		return Math.round(Math.random() * 100) <= value
 	}
 
-	/*
-	static random_choice_priority(arr, priorities = [])
+	
+	static random_choice_priority(arr) // {["value", 10], ["value2", 20], ["value2", 30]}
 	{
 		let len = 0
 
@@ -32,5 +32,4 @@ class MathSystem
 		}
 		return null
 	}
-	*/
 }

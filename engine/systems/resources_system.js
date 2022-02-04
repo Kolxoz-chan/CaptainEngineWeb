@@ -5,6 +5,7 @@ class ResourcesSystem
 	static textures = {}
 	static prefabs = {}
 	static sounds = {}
+	static configs = {}
 
 	static buffer = null
 	static buffer_canvas = null
@@ -94,6 +95,14 @@ class ResourcesSystem
 
 				ResourcesSystem.prefabs[name] = prefab
 			}
+		})
+	}
+
+	static loadJSONConfigs(name, src)
+	{
+		ResourcesSystem.loadByURL(src, "text", (result) =>
+		{
+			ResourcesSystem.configs[name] = JSON.parse(result)
 		})
 	}
 

@@ -1,0 +1,37 @@
+{
+	"AheadCard" : 
+	{
+		"name" : "ВПЕРЁД",
+		"icon" : "cards_0x0",
+		"description" : "Вы можете сделать ход по направлению в которое смотрит ваша фишка",
+		"action" : "AheadCardAction"
+	},
+	"TurnCard" : 
+	{
+		"name" : "ПОВОРОТ",
+		"icon" : "cards_1x0",
+		"description" : "Вы можете повернуться на 90 градусов в любую сторону",
+		"action" : "TurnCardAction"
+	},
+	"UTurnCard" :
+	{
+		"name" : "РАЗВОРОТ",
+		"icon" : "cards_2x0",
+		"description" : "Вы можете развернуться в обратную сторону",
+		"action" : "UTurnCardAction"
+	},
+	"ResetCard" : 
+	{
+		"name" : "СБРОС",
+		"icon" : "cards_0x1",
+		"description" : "Вы можете заменить весь свой набор карт на новый",
+		"action" : "ResetCardAction"
+	},
+	"DoublingCard" :
+	{
+		"name" : "УДВОЕНИЕ",
+		"icon" : "cards_2x1",
+		"description" : "Эффект любой карты увеличивается в два раза",
+		"action" : "DoublingCardAction"
+	}
+}

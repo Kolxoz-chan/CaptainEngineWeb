@@ -28,9 +28,6 @@ Game.section(() =>
     Game.include("engine/components/controller_components.js")
     Game.include("engine/components/trigger_components.js")
     Game.include("engine/components/colider_components.js")
-
-    // Loading modules
-    Game.include("engine/addons/json_loader.js")
 })
 
 // Loading resources
@@ -44,11 +41,11 @@ Game.section(() =>
     ResourcesSystem.loadTexture("coin_01", "resources/textures/coin.png")
     ResourcesSystem.loadTileset("cards", "resources/textures/cards.png", 100, 100)
 
+    ResourcesSystem.loadJSONConfigs("cards", "resources/configs/cards.json")
     EntitiesSystem.loadEntities("resources/configs/entities.json")
     ResourcesSystem.loadPrefabs("resources/configs/prefabs.json")
     ResourcesSystem.loadStyle("resources/styles.css")
 
-    Game.include("resources/scripts/playing_cards.js")
     Game.include("resources/scripts/turtle_battle.js")
     Game.include("resources/scripts/custom_actions.js")
 })
