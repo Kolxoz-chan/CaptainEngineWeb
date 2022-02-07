@@ -1,10 +1,25 @@
 class ActionsSystem
 {
 	static actions = {}
+	static update_actions = []
 
 	static init()
 	{
 
+	}
+
+	static update()
+	{
+		let arr = ActionsSystem.update_actions
+		for(let i in arr)
+		{
+			ActionsSystem.callAction(arr[i])
+		}
+	}
+
+	static addUpdateAction(name)
+	{
+		ActionsSystem.update_actions.push(name)
 	}
 
 	static addAction(name, func)

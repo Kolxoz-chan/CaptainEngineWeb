@@ -9,9 +9,12 @@ Game.section(() =>
     Game.addSystem("camera_system.js", "CameraSystem")
     Game.addSystem("entities_system.js", "EntitiesSystem")
     Game.addSystem("resources_system.js", "ResourcesSystem")
-    Game.addSystem("actions_system.js", "ActionsSystem")
     Game.addSystem("gui_system.js", "GUISystem")
     Game.addSystem("audio_system.js", "AudioSystem")
+    Game.addSystem("actions_system.js", "ActionsSystem", (system) =>
+    {
+        system.addUpdateAction("UpdateGameAction")
+    })
     Game.addSystem("input_system.js", "InputSystem", (system) =>
     {
         system.setEvents("mousemove", "mousedown", "mouseup")
@@ -48,6 +51,7 @@ Game.section(() =>
 
     Game.include("resources/scripts/turtle_battle.js")
     Game.include("resources/scripts/custom_actions.js")
+    Game.include("resources/scripts/players.js")
 })
 
 // Start engine

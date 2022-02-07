@@ -1,8 +1,3 @@
-ActionsSystem.addAction("ResetCardDeck", (data) =>
-{
-	TurtleBattle.reset()
-})
-
 ActionsSystem.addAction("CloseGame", (data) =>
 {
 	window.close()
@@ -136,9 +131,40 @@ ActionsSystem.addAction("JumpCardAction", (data) =>
 })
 ActionsSystem.addAction("ResetCardAction", (data) =>
 {
-	TurtleBattle.reset()
+	let player = TurtleBattle.getCurrentPlayer()
+
+	player.cards = TurtleBattle.getCards(5)
+	TurtleBattle.updateDeck()
 })
 ActionsSystem.addAction("DoublingCardAction", (data) =>
 {
+	let player = TurtleBattle.getCurrentPlayer()
+	player.power = 2
+})
+ActionsSystem.addAction("UpdateGameAction", (data) =>
+{
+	TurtleBattle.update()
+})
+ActionsSystem.addAction("SelectCardAction", (data) =>
+{
+	let index = data.index
+	let player = TurtleBattle.getCurrentPlayer()
+	let cards = ResourcesSystem.configs.cards
+	let name = player.cards[index]
 
+	// Delete card
+	player.cards.splice(index, 1)
+	TurtleBattle.updateDeck()
+
+	// Call card action
+	let count = player.power
+	player.power = 1
+	for(let i=0; i<count; i++)
+	{
+		ActionsSystem.callAction(cards[name].action)
+	}
+	
+	// Update counter
+	player.steps++
+    GUISystem.getWidgetById("steps_label").setText(player.steps)
 })

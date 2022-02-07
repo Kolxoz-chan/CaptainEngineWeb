@@ -17,7 +17,7 @@
     {
       "onclick" :
       [
-        {"ResetCardDeck" : {}}
+        {"ResetCardAction" : {}}
       ]
     }
   },
@@ -81,6 +81,7 @@
         "widgets" :
         [
           {
+            "id" : "timer_label",
             "type" : "Label",
             "text" : "40",
             "style" : "font-size: 30pt"
@@ -116,7 +117,12 @@
         ]
       }
     ]
+  },
+
+  "hud_message" :
+  {
+    "type" : "Label",
+    "position" : {"x" : "50%", "y" : "25%"},
+    "style" : "font-size: 30pt; color: white;"
   }
-
-
 }
