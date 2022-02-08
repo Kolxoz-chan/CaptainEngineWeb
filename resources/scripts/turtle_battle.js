@@ -66,11 +66,7 @@ class TurtleBattle
       }
       else
       {
-        player.resetTimer()
         TurtleBattle.nextPlayer()
-        player = TurtleBattle.getCurrentPlayer()
-        TurtleBattle.showMessage("Ходит " + player.name)
-        TurtleBattle.updateDeck()
       }
     }
   }
@@ -110,11 +106,18 @@ class TurtleBattle
 
   static nextPlayer()
   {
+    let player = TurtleBattle.getCurrentPlayer()
+    player.reset()
+
     TurtleBattle.current_player++
     if(TurtleBattle.current_player >= TurtleBattle.players.length)
     {
       TurtleBattle.current_player = 0
     }
+
+    player = TurtleBattle.getCurrentPlayer()
+    TurtleBattle.showMessage("Ходит " + player.name)
+    TurtleBattle.updateDeck()
   }
 
   static addPlayer(player)

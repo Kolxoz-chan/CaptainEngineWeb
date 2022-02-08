@@ -165,6 +165,10 @@ ActionsSystem.addAction("SelectCardAction", (data) =>
 	}
 	
 	// Update counter
-	player.steps++
+	player.steps--
     GUISystem.getWidgetById("steps_label").setText(player.steps)
+    if(player.steps <= 0)
+    {
+    	TurtleBattle.nextPlayer()
+    }
 })

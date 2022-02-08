@@ -105,7 +105,7 @@
               {
                 "id" : "steps_label",
                 "type" : "Label",
-                "text" : "0"
+                "text" : "3"
               }
             ]
           },
