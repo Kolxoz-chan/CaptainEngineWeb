@@ -51,7 +51,7 @@ class GUISystem
 
 			// Settings
 			if(data.display) widget.setDisplay(data.display)
-			if(data.style) widget.setStyle(data.style)
+			if(data.style) widget.setStyles(data.style)
 			if(data.text) widget.setText(data.text)
 			if(data.position) widget.setPosition(data.position.x, data.position.y)
 			if(data.size) widget.setSize(data.size.w, data.size.h)
@@ -148,9 +148,14 @@ class Widget
 		this.widget.style.height = h
 	}
 
-	setStyle(style)
+	setStyles(style)
 	{
 		this.widget.style.cssText += style
+	}
+
+	setStyle(name, value)
+	{
+		this.widget.style[name] = value
 	}
 
 	setText(text)

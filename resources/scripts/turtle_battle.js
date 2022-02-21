@@ -12,10 +12,10 @@ class TurtleBattle
       TurtleBattle.initCards()
 
       // Players
-      TurtleBattle.addPlayer(new Player("Игрок", 40, TurtleBattle.getCards(5)))
-      TurtleBattle.addPlayer(new Player("Вредина", 40, TurtleBattle.getCards(5)))
-      TurtleBattle.addPlayer(new Player("Мелисса", 40, TurtleBattle.getCards(5)))
-      TurtleBattle.addPlayer(new Player("Шуллер", 40, TurtleBattle.getCards(5)))
+      TurtleBattle.addPlayer(new Player("Игрок", 10, TurtleBattle.getCards(5)))
+      TurtleBattle.addPlayer(new BotPlayer("Вредина", 10, TurtleBattle.getCards(5)))
+      TurtleBattle.addPlayer(new BotPlayer("Мелисса", 10, TurtleBattle.getCards(5)))
+      TurtleBattle.addPlayer(new BotPlayer("Шуллер", 10, TurtleBattle.getCards(5)))
 
       let player = TurtleBattle.getCurrentPlayer()
       TurtleBattle.showMessage("Ходит " + player.name)
@@ -66,7 +66,7 @@ class TurtleBattle
       }
       else
       {
-        TurtleBattle.nextPlayer()
+        player = TurtleBattle.nextPlayer()
       }
     }
   }
@@ -118,6 +118,18 @@ class TurtleBattle
     player = TurtleBattle.getCurrentPlayer()
     TurtleBattle.showMessage("Ходит " + player.name)
     TurtleBattle.updateDeck()
+
+    let cards_deck = GUISystem.getWidget("cards_deck")
+    if(player.constructor.name != "Player")
+    {
+      cards_deck.setStyle("pointerEvents", "none")
+    }
+    else
+    {
+      cards_deck.setStyle("pointerEvents", "auto")
+    }
+
+    return player
   }
 
   static addPlayer(player)

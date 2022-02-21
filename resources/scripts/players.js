@@ -56,6 +56,11 @@ class Player
 
 class BotPlayer extends Player
 {
+  constructor(name, timer, cards=[])
+  {
+    super(name, timer, cards)
+  }
+
   update()
   {
 
